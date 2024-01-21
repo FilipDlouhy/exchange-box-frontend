@@ -1,10 +1,15 @@
-import "./index.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import ExchangeBox from "./pages/ExchnageBox";
 
 function App() {
   return (
-    <>
-      <div className="w-36 h-24 bg-black"></div>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/exchange-box" element={<ExchangeBox />} />
+        <Route path="/" element={<Login />} />
+      </Routes>
+    </Router>
   );
 }
 
