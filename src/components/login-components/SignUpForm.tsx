@@ -1,7 +1,8 @@
-import { ChangeEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import generateUrl from "../../contants/url";
 import axios from "axios";
-import { CreateUserDto } from "../../Dtos/create.user.dto";
+import { CreateUserDto } from "../../Dtos/UserDtos/create.user.dto";
+import { handleInputChange } from "./Helpers/InputHelper";
 
 export default function SingUpForm({
   setIsLoggingIn,
@@ -11,23 +12,11 @@ export default function SingUpForm({
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [errorText, setErrorText] = useState<string>();
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    switch (name) {
-      case "name":
-        setName(value);
-        break;
-      case "email":
-        setEmail(value);
-        break;
-      case "password":
-        setPassword(value);
-        break;
-      default:
-        break;
-    }
-  };
+  useEffect(() => {
+    setErrorText("Create an account");
+  }, []);
 
   const createUser = async () => {
     const userData = new CreateUserDto(name, email, password);
@@ -43,7 +32,8 @@ export default function SingUpForm({
         console.error("Error creating user: Server response indicates failure");
       }
     } catch (error) {
-      console.error("Error creating user", error);
+      console.error(error);
+      setErrorText(error.response.data.message);
     }
   };
 
@@ -53,8 +43,14 @@ export default function SingUpForm({
         <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-sm lg:w-96">
             <div>
-              <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                Create an account
+              <h2
+                className={`mt-8 text-2xl font-bold leading-9 tracking-tight ${
+                  errorText !== "Create an account"
+                    ? "text-red-500"
+                    : "text-gray-900"
+                }`}
+              >
+                {errorText}
               </h2>
             </div>
 
@@ -75,7 +71,9 @@ export default function SingUpForm({
                         type="email"
                         autoComplete="email"
                         value={email}
-                        onChange={handleInputChange}
+                        onChange={(e) => {
+                          handleInputChange(e, setEmail);
+                        }}
                         required
                         className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
@@ -97,7 +95,9 @@ export default function SingUpForm({
                         autoComplete="name"
                         required
                         value={name}
-                        onChange={handleInputChange}
+                        onChange={(e) => {
+                          handleInputChange(e, setName);
+                        }}
                         className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -118,7 +118,9 @@ export default function SingUpForm({
                         autoComplete="current-password"
                         required
                         value={password}
-                        onChange={handleInputChange}
+                        onChange={(e) => {
+                          handleInputChange(e, setPassword);
+                        }}
                         className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>

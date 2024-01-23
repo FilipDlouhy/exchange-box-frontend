@@ -1,16 +1,56 @@
+import { useEffect, useState } from "react";
+import { handleInputChange } from "./Helpers/InputHelper";
+import axios from "axios";
+import generateUrl from "../../contants/url";
+import { LoginUserDto } from "../../Dtos/UserDtos/login.user.dto";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+
 export default function LoginForm({
   setIsLoggingIn,
 }: {
   setIsLoggingIn: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [errorText, setErrorText] = useState<string>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setErrorText("Log in to Exchange box");
+  }, []);
+
+  const login = async () => {
+    const url = generateUrl("auth/login");
+    const loginUserDto = new LoginUserDto(email, password);
+
+    try {
+      const response = await axios.post(url, loginUserDto);
+      const { access_token } = response.data;
+
+      if (access_token) {
+        Cookies.set("jwtToken", access_token, { expires: 7 });
+        navigate("/exchange-box");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
   return (
     <>
       <div className="flex w-screen h-screen flex-1">
         <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-sm lg:w-96">
             <div>
-              <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                Log in to Exchnage Box
+              <h2
+                className={`mt-8 text-2xl font-bold leading-9 tracking-tight ${
+                  errorText !== "Log in to Exchange box"
+                    ? "text-red-500"
+                    : "text-gray-900"
+                }`}
+              >
+                {errorText}
               </h2>
             </div>
 
@@ -31,6 +71,9 @@ export default function LoginForm({
                         type="email"
                         autoComplete="email"
                         required
+                        onChange={(e) => {
+                          handleInputChange(e, setEmail);
+                        }}
                         className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -50,6 +93,9 @@ export default function LoginForm({
                         type="password"
                         autoComplete="current-password"
                         required
+                        onChange={(e) => {
+                          handleInputChange(e, setPassword);
+                        }}
                         className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -68,6 +114,10 @@ export default function LoginForm({
 
                   <div>
                     <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        login();
+                      }}
                       type="submit"
                       className="flex my-6 w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
