@@ -30,9 +30,9 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     isAuthenticated().then((authenticated) => {
-      if (!authenticated) {
-        navigate("/");
-      }
+      //  if (!authenticated) {
+      // navigate("/");
+      // }
     });
   }, [navigate]);
 
@@ -44,7 +44,6 @@ const RouterSetup = () => {
 
   useEffect(() => {
     isAuthenticated().then((authenticated) => {
-      console.log(authenticated);
       if (authenticated) {
         navigate("/exchange-box");
       } else {

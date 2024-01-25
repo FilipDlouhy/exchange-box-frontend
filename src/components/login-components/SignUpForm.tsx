@@ -25,7 +25,6 @@ export default function SingUpForm({
 
     try {
       const response = await axios.post(url, userData);
-      console.log(response);
       if (response.data) {
         setIsLoggingIn(true);
       } else {
