@@ -30,9 +30,9 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     isAuthenticated().then((authenticated) => {
-      //  if (!authenticated) {
-      // navigate("/");
-      // }
+      if (!authenticated) {
+        navigate("/");
+      }
     });
   }, [navigate]);
 
