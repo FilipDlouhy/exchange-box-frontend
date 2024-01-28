@@ -9,6 +9,9 @@ import Login from "./pages/Login";
 import ExchangeBox from "./pages/ExchnageBox";
 import generateUrl from "./contants/url";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./store/store";
+import { setUser } from "./store/user-state/userSlice";
 
 // Mock authentication check function
 const isAuthenticated = async (): Promise<boolean> => {
@@ -32,6 +35,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
     isAuthenticated().then((authenticated) => {
       if (!authenticated) {
         navigate("/");
+        return;
       }
     });
   }, [navigate]);
@@ -41,10 +45,37 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
 
 const RouterSetup = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    isAuthenticated().then((authenticated) => {
+    isAuthenticated().then(async (authenticated) => {
       if (authenticated) {
+        const getUrl = generateUrl("auth/get-user-by-token");
+        const response = await axios.get(getUrl, { withCredentials: true });
+
+        const {
+          name,
+          email,
+          id,
+          telephone,
+          longitude,
+          latitude,
+          address,
+          imageUrl,
+        } = response.data;
+
+        dispatch(
+          setUser({
+            name,
+            email,
+            id,
+            telephone,
+            longitude,
+            latitude,
+            address,
+            imageUrl,
+          })
+        );
         navigate("/exchange-box");
       } else {
         navigate("/");

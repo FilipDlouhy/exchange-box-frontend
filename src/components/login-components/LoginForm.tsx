@@ -5,7 +5,9 @@ import generateUrl from "../../contants/url";
 import { LoginUserDto } from "../../Dtos/UserDtos/login.user.dto";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-
+import { AppDispatch } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../store/user-state/userSlice";
 export default function LoginForm({
   setIsLoggingIn,
 }: {
@@ -15,6 +17,7 @@ export default function LoginForm({
   const [email, setEmail] = useState("");
   const [errorText, setErrorText] = useState<string>();
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setErrorText("Log in to Exchange box");
@@ -30,6 +33,32 @@ export default function LoginForm({
 
       if (access_token) {
         Cookies.set("jwtToken", access_token, { expires: 7 });
+        const getUrl = generateUrl("auth/get-user-by-token");
+        const response = await axios.get(getUrl, { withCredentials: true });
+
+        const {
+          name,
+          email,
+          id,
+          telephone,
+          longitude,
+          latitude,
+          address,
+          imageUrl,
+        } = response.data;
+
+        dispatch(
+          setUser({
+            name,
+            email,
+            id,
+            telephone,
+            longitude,
+            latitude,
+            address,
+            imageUrl,
+          })
+        );
         navigate("/exchange-box");
       }
     } catch (error) {

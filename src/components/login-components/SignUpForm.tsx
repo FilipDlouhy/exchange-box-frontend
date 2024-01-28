@@ -21,7 +21,7 @@ export default function SingUpForm({
   const createUser = async () => {
     const userData = new CreateUserDto(name, email, password);
 
-    const url = generateUrl("user/create-user");
+    const url = generateUrl("/user/create-user");
 
     try {
       const response = await axios.post(url, userData);
