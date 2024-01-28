@@ -13,6 +13,7 @@ const friendsMenuSlice = createSlice({
   initialState,
   reducers: {
     setActiveMenu: (state, action: PayloadAction<string>) => {
+      localStorage.setItem("friendsActiveMenu", action.payload);
       state.value = action.payload;
     },
   },

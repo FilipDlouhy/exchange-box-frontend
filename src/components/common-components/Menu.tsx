@@ -1,9 +1,15 @@
 import { useState } from "react";
-import FriendsMenuButton from "./FriendsMenuButton";
-import { FriendsMenuItem } from "./Helpers/friendsInterfaces";
-import "./Helpers/friends.css";
+import MenuButton from "./MenuButton";
+import { MenuItem } from "./Helpers/ComonInterfaces";
+import "./style.css";
 
-export default function FriendsMenu({ menu }: { menu: FriendsMenuItem[] }) {
+export default function Menu({
+  menu,
+  clickFunction,
+}: {
+  menu: MenuItem[];
+  clickFunction: (name: string) => void;
+}) {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [menuAnimation, setMenuAnimation] = useState<string>("");
 
@@ -35,7 +41,11 @@ export default function FriendsMenu({ menu }: { menu: FriendsMenuItem[] }) {
       >
         {menu.map((menuItem) => {
           return (
-            <FriendsMenuButton buttonData={menuItem} key={menuItem.name} />
+            <MenuButton
+              buttonData={menuItem}
+              key={menuItem.name}
+              clickFunction={clickFunction}
+            />
           );
         })}
       </div>

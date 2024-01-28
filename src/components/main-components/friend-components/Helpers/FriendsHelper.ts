@@ -1,6 +1,6 @@
-import { FriendsMenuItem } from "./friendsInterfaces";
+import { MenuItem } from "../../../common-components/Helpers/ComonInterfaces";
 
-export const friendsMenuItems: FriendsMenuItem[] = [
+export const friendsMenuItems: MenuItem[] = [
   {
     name: "myFriends",
     displayName: "My Friends",
