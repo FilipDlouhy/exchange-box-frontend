@@ -76,6 +76,7 @@ const RouterSetup = () => {
             imageUrl,
           })
         );
+
         navigate("/exchange-box");
       } else {
         navigate("/");
