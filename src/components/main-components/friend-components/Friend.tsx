@@ -3,17 +3,48 @@ import {
   UserCircleIcon,
   ArchiveBoxIcon,
   UserPlusIcon,
-  BuildingOfficeIcon,
+  UserMinusIcon,
 } from "@heroicons/react/24/outline";
 import { FriendInfo } from "./Interfaces/FriendInterface";
+import FriendButton from "./FriendButton";
+import generateUrl from "../../../contants/url";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+import { ToggleFriendDto } from "../../../Dtos/UserDtos/toggle.friend.dto";
+import axios from "axios";
 
 export default function Friend({
   person,
   isFriend,
+  setNewFriends,
 }: {
   person: FriendInfo;
   isFriend: boolean;
+  setNewFriends: React.Dispatch<React.SetStateAction<FriendInfo[] | undefined>>;
 }) {
+  const userId = useSelector((state: RootState) => state.user.id);
+
+  const addFriend = async () => {
+    try {
+      const url = generateUrl(`user/create-friend-request`);
+      const toggleFriendDto = new ToggleFriendDto(
+        parseInt(person.id),
+        parseInt(userId)
+      );
+
+      await axios.post(url, toggleFriendDto);
+      setNewFriends((prevFriends) =>
+        prevFriends
+          ? prevFriends.filter((friend) => friend.id !== person.id)
+          : []
+      );
+    } catch (error) {
+      console.error("Error while adding friend:", error);
+
+      throw error;
+    }
+  };
+
   return (
     <li
       key={person.email}
@@ -53,70 +84,72 @@ export default function Friend({
         <div>
           <div>
             <div className="-mt-px flex divide-x divide-gray-200">
-              <div className="flex w-0 flex-1">
-                <p className=" cursor-pointer relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+              <FriendButton
+                icon={
                   <EnvelopeIcon
                     className="h-5 w-5 text-gray-400"
                     aria-hidden="true"
                   />
-                  Send Message
-                </p>
-              </div>
-              <div className="-ml-px flex w-0 flex-1">
-                <p className=" cursor-pointer relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-                  <UserPlusIcon
+                }
+                text="Send Message"
+              />
+
+              <FriendButton
+                icon={
+                  <UserCircleIcon
                     className="h-5 w-5 text-gray-400"
                     aria-hidden="true"
                   />
-                  Go to Profile
-                </p>
-              </div>
+                }
+                text="Go to Profile"
+              />
             </div>
           </div>
           <div>
             <div className="-mt-px flex divide-x divide-gray-200">
-              <div className="flex w-0 flex-1">
-                <p className=" cursor-pointer relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+              <FriendButton
+                icon={
                   <ArchiveBoxIcon
                     className="h-5 w-5 text-gray-400"
                     aria-hidden="true"
                   />
-                  Add Item to Person
-                </p>
-              </div>
-              <div className="-ml-px flex w-0 flex-1">
-                <p className=" cursor-pointer relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-                  <BuildingOfficeIcon
+                }
+                text="Add Item to Person"
+              />
+              <FriendButton
+                icon={
+                  <UserMinusIcon
                     className="h-5 w-5 text-gray-400"
                     aria-hidden="true"
                   />
-                  See exchanges
-                </p>
-              </div>
+                }
+                text="Remove friend"
+              />
             </div>
           </div>
         </div>
       ) : (
         <div>
           <div className="-mt-px flex divide-x divide-gray-200">
-            <div className="flex w-0 flex-1">
-              <p className=" cursor-pointer relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+            <FriendButton
+              icon={
                 <UserPlusIcon
                   className="h-5 w-5 text-gray-400"
                   aria-hidden="true"
                 />
-                Add as a friend
-              </p>
-            </div>
-            <div className="-ml-px flex w-0 flex-1">
-              <p className=" cursor-pointer relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+              }
+              text="Add as a friend"
+              onClick={addFriend}
+            />
+            <FriendButton
+              icon={
                 <UserCircleIcon
                   className="h-5 w-5 text-gray-400"
                   aria-hidden="true"
                 />
-                Go to Profile
-              </p>
-            </div>
+              }
+              text="Go to Profile"
+            />
           </div>
         </div>
       )}

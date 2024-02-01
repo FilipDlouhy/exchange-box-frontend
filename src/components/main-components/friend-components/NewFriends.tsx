@@ -37,7 +37,14 @@ function NewFriends() {
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
           {newFriends?.map((friend) => {
-            return <Friend person={friend} key={friend.id} isFriend={false} />;
+            return (
+              <Friend
+                setNewFriends={setNewFriends}
+                person={friend}
+                key={friend.id}
+                isFriend={false}
+              />
+            );
           })}
         </ul>
       </div>

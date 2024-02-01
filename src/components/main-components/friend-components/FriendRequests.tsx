@@ -1,7 +1,48 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import FriendRequest from "./FriendRequest";
+import { IFriendRequest } from "./Interfaces/FriendRequestInterFace";
+import generateUrl from "../../../contants/url";
+import { RootState } from "../../../store/store";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 function FriendRequests() {
-  return <div>FriendRequests</div>;
+  const [newRequests, setNewRequests] = useState<IFriendRequest[]>();
+  const userId = useSelector((state: RootState) => state.user.id);
+  useEffect(() => {
+    if (newRequests && newRequests.length > 0) {
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const url = generateUrl(`user/get-friend-requests/${userId}`);
+        const response = await axios.get(url);
+        setNewRequests(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [userId]);
+
+  return (
+    <div className="p-10">
+      <ul
+        role="list"
+        className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      >
+        {newRequests?.map((friendReqeust) => (
+          <FriendRequest
+            key={friendReqeust.id}
+            friendReqeust={friendReqeust}
+            setNewRequests={setNewRequests}
+          />
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export default FriendRequests;
