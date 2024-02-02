@@ -24,13 +24,15 @@ export default function Friend({
 }) {
   const userId = useSelector((state: RootState) => state.user.id);
 
-  const addFriend = async () => {
+  const addOrRemoveFriend = async (isAdding: boolean) => {
     try {
-      const url = generateUrl(`user/create-friend-request`);
-      const toggleFriendDto = new ToggleFriendDto(
-        parseInt(person.id),
-        parseInt(userId)
-      );
+      const url = isAdding
+        ? generateUrl(`user/create-friend-request`)
+        : generateUrl(`user/remove-friend`);
+
+      const toggleFriendDto = isAdding
+        ? new ToggleFriendDto(parseInt(person.id), parseInt(userId))
+        : new ToggleFriendDto(parseInt(userId), parseInt(person.id));
 
       await axios.post(url, toggleFriendDto);
       setNewFriends((prevFriends) =>
@@ -124,6 +126,9 @@ export default function Friend({
                   />
                 }
                 text="Remove friend"
+                onClick={() => {
+                  addOrRemoveFriend(false);
+                }}
               />
             </div>
           </div>
@@ -139,7 +144,9 @@ export default function Friend({
                 />
               }
               text="Add as a friend"
-              onClick={addFriend}
+              onClick={() => {
+                addOrRemoveFriend(true);
+              }}
             />
             <FriendButton
               icon={
