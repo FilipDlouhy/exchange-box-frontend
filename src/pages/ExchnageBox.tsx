@@ -12,6 +12,7 @@ import {
   userNavigation,
 } from "./Helpers/ExchangeHelper";
 import { getMainComponentByName } from "../components/main-components/Helpers/Navigations";
+import PopUp from "../components/common-components/PopUp";
 
 export default function ExchangeBox() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -278,6 +279,8 @@ export default function ExchangeBox() {
           </main>
         </div>
       </div>
+
+      <PopUp />
     </>
   );
 }

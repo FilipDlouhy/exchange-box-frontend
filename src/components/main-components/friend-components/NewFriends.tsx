@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import generateUrl from "../../../contants/url";
 import axios from "axios";
 import Friend from "./Friend";
 import { FriendInfo } from "./Interfaces/FriendInterface";
+import { showError } from "../../../store/errorSlice";
 
 function NewFriends() {
   const userId = useSelector((state: RootState) => state.user.id);
 
   const [newFriends, setNewFriends] = useState<FriendInfo[]>();
+  const dispatch = useDispatch();
+
+  const handleShowError = (message: string) => {
+    dispatch(showError(message));
+  };
 
   useEffect(() => {
     if (newFriends && newFriends.length > 0) {
@@ -23,6 +29,7 @@ function NewFriends() {
         setNewFriends(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+        handleShowError(error.message);
       }
     };
 

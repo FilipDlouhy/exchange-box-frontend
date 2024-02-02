@@ -3,12 +3,19 @@ import FriendRequest from "./FriendRequest";
 import { IFriendRequest } from "./Interfaces/FriendRequestInterFace";
 import generateUrl from "../../../contants/url";
 import { RootState } from "../../../store/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { showError } from "../../../store/errorSlice";
 
 function FriendRequests() {
   const [newRequests, setNewRequests] = useState<IFriendRequest[]>();
   const userId = useSelector((state: RootState) => state.user.id);
+  const dispatch = useDispatch();
+
+  const handleShowError = (message: string) => {
+    dispatch(showError(message));
+  };
+
   useEffect(() => {
     if (newRequests && newRequests.length > 0) {
       return;
@@ -21,6 +28,7 @@ function FriendRequests() {
         setNewRequests(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+        handleShowError(error.message);
       }
     };
 

@@ -3,6 +3,8 @@ import { IFriendRequest } from "./Interfaces/FriendRequestInterFace";
 import generateUrl from "../../../contants/url";
 import { ToggleFriendDto } from "../../../Dtos/UserDtos/toggle.friend.dto";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { showError } from "../../../store/errorSlice";
 
 function FriendRequest({
   friendReqeust,
@@ -13,22 +15,34 @@ function FriendRequest({
     React.SetStateAction<IFriendRequest[] | undefined>
   >;
 }) {
+  const dispatch = useDispatch();
+
+  const handleShowError = (message: string) => {
+    dispatch(showError(message));
+  };
+
   const denyOrAcceptRequest = async (accept: boolean) => {
-    const url = accept
-      ? generateUrl(`user/accept-friend-request`)
-      : generateUrl(`user/deny-friend-request`);
+    try {
+      const url = accept
+        ? generateUrl(`user/accept-friend-request`)
+        : generateUrl(`user/deny-friend-request`);
 
-    const toggleFriendDto = new ToggleFriendDto(
-      friendReqeust.userId,
-      friendReqeust.friendId
-    );
+      const toggleFriendDto = new ToggleFriendDto(
+        friendReqeust.userId,
+        friendReqeust.friendId
+      );
 
-    await axios.post(url, toggleFriendDto);
-    setNewRequests((prevRequests) =>
-      prevRequests
-        ? prevRequests.filter((req) => req.id !== friendReqeust.id)
-        : []
-    );
+      await axios.post(url, toggleFriendDto);
+
+      setNewRequests((prevRequests) =>
+        prevRequests
+          ? prevRequests.filter((req) => req.id !== friendReqeust.id)
+          : []
+      );
+    } catch (error) {
+      console.error("Error in denyOrAcceptRequest:", error);
+      handleShowError(error.message);
+    }
   };
 
   return (

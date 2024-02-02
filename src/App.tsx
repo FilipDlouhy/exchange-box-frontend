@@ -21,6 +21,7 @@ const isAuthenticated = async (): Promise<boolean> => {
     return response.data;
   } catch (error) {
     console.error("Error checking token:", error);
+
     return false;
   }
 };
