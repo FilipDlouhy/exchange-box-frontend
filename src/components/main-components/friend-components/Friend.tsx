@@ -8,10 +8,11 @@ import {
 import { FriendInfo } from "./Interfaces/FriendInterface";
 import FriendButton from "./FriendButton";
 import generateUrl from "../../../contants/url";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store/store";
 import { ToggleFriendDto } from "../../../Dtos/UserDtos/toggle.friend.dto";
 import axios from "axios";
+import { setProfileUser } from "../../../store/user-state/profileUserSlice";
 
 export default function Friend({
   person,
@@ -23,6 +24,8 @@ export default function Friend({
   setNewFriends: React.Dispatch<React.SetStateAction<FriendInfo[] | undefined>>;
 }) {
   const userId = useSelector((state: RootState) => state.user.id);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const addOrRemoveFriend = async (isAdding: boolean) => {
     try {
@@ -45,6 +48,10 @@ export default function Friend({
 
       throw error;
     }
+  };
+
+  const goToProfie = async () => {
+    dispatch(setProfileUser({ email: person.email, id: person.id }));
   };
 
   return (
@@ -103,6 +110,9 @@ export default function Friend({
                     aria-hidden="true"
                   />
                 }
+                onClick={() => {
+                  goToProfie();
+                }}
                 text="Go to Profile"
               />
             </div>
@@ -155,6 +165,9 @@ export default function Friend({
                   aria-hidden="true"
                 />
               }
+              onClick={() => {
+                goToProfie();
+              }}
               text="Go to Profile"
             />
           </div>
