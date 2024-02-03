@@ -50,8 +50,10 @@ export default function Friend({
     }
   };
 
-  const goToProfie = async () => {
-    dispatch(setProfileUser({ email: person.email, id: person.id }));
+  const goToProfie = async (isFriend: boolean) => {
+    dispatch(
+      setProfileUser({ email: person.email, id: person.id, isFriend: isFriend })
+    );
   };
 
   return (
@@ -111,7 +113,7 @@ export default function Friend({
                   />
                 }
                 onClick={() => {
-                  goToProfie();
+                  goToProfie(true);
                 }}
                 text="Go to Profile"
               />
@@ -166,7 +168,7 @@ export default function Friend({
                 />
               }
               onClick={() => {
-                goToProfie();
+                goToProfie(false);
               }}
               text="Go to Profile"
             />
