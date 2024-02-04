@@ -1,3 +1,6 @@
+import axios from "axios";
+import { ToggleFriendDto } from "../../../../Dtos/UserDtos/toggle.friend.dto";
+import generateUrl from "../../../../contants/url";
 import { MenuItem } from "../../../common-components/Helpers/ComonInterfaces";
 import FriendRequests from "../FriendRequests";
 import MyFriends from "../MyFriends";
@@ -20,3 +23,30 @@ export const friendsMenuItems: MenuItem[] = [
     component: FriendRequests,
   },
 ];
+
+export const addOrRemoveFriend = async (
+  isAdding: boolean,
+  userId: number,
+  friendId: number,
+  filterUsers: ((friendId: string) => void) | undefined = undefined
+) => {
+  try {
+    const url = isAdding
+      ? generateUrl(`user/create-friend-request`)
+      : generateUrl(`user/remove-friend`);
+
+    const toggleFriendDto = isAdding
+      ? new ToggleFriendDto(friendId, userId)
+      : new ToggleFriendDto(userId, friendId);
+
+    await axios.post(url, toggleFriendDto);
+
+    if (filterUsers) {
+      filterUsers(friendId.toString());
+    }
+  } catch (error) {
+    console.error("Error while adding friend:", error);
+
+    throw error;
+  }
+};
