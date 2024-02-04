@@ -1,4 +1,8 @@
-import { UserMinusIcon, UserPlusIcon } from "@heroicons/react/24/outline";
+import {
+  UserIcon,
+  UserMinusIcon,
+  UserPlusIcon,
+} from "@heroicons/react/24/outline";
 import { IFriendRequest } from "./Interfaces/FriendRequestInterFace";
 import generateUrl from "../../../contants/url";
 import { ToggleFriendDto } from "../../../Dtos/UserDtos/toggle.friend.dto";
@@ -48,13 +52,17 @@ function FriendRequest({
   return (
     <li className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
       <div className="flex flex-1 flex-col p-8">
-        <img
-          className="mx-auto h-32 w-32 flex-shrink-0 rounded-full"
-          src={friendReqeust.friendImageUrl}
-          alt=""
-        />
-        <h3 className="mt-6 text-sm font-medium text-gray-900">
-          {friendReqeust.userName}
+        {friendReqeust.friendImageUrl ? (
+          <img
+            className="mx-auto h-32 w-32 flex-shrink-0 rounded-full"
+            src={friendReqeust.friendImageUrl}
+            alt=""
+          />
+        ) : (
+          <UserIcon className="mx-auto h-32 w-32 flex-shrink-0 rounded-full" />
+        )}
+        <h3 className="mt-6 text-lg font-medium text-gray-900">
+          Name: {friendReqeust.name}
         </h3>
       </div>
       <div>
