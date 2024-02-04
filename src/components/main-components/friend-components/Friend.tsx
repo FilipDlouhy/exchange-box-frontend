@@ -27,6 +27,12 @@ export default function Friend({
 
   const dispatch = useDispatch<AppDispatch>();
 
+  const filterFriend = (friendId: string) => {
+    setNewFriends((prevFriends) =>
+      prevFriends ? prevFriends.filter((friend) => friend.id !== friendId) : []
+    );
+  };
+
   const addOrRemoveFriend = async (isAdding: boolean) => {
     try {
       const url = isAdding
@@ -38,11 +44,8 @@ export default function Friend({
         : new ToggleFriendDto(parseInt(userId), parseInt(person.id));
 
       await axios.post(url, toggleFriendDto);
-      setNewFriends((prevFriends) =>
-        prevFriends
-          ? prevFriends.filter((friend) => friend.id !== person.id)
-          : []
-      );
+
+      filterFriend(person.id);
     } catch (error) {
       console.error("Error while adding friend:", error);
 
