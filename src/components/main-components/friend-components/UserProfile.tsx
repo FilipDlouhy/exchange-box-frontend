@@ -3,12 +3,22 @@ import { AppDispatch, RootState } from "../../../store/store";
 import { EnvelopeIcon } from "@heroicons/react/20/solid";
 import {
   BackspaceIcon,
+  HomeIcon,
   PhoneIcon,
   UserIcon,
   UserMinusIcon,
   UserPlusIcon,
 } from "@heroicons/react/24/outline";
 import { resetProfileUser } from "../../../store/user-state/profileUserSlice";
+import { useEffect, useState } from "react";
+import generateUrl from "../../../contants/url";
+import axios from "axios";
+import { ToggleFriendDto } from "../../../Dtos/UserDtos/toggle.friend.dto";
+import { IUserProfile } from "./Interfaces/UserProfileInterface";
+import UserProfileFriend from "./UserProfileFriend";
+import UserProfileItem from "./UserProfileItem";
+import { addOrRemoveFriend } from "./Helpers/FriendsHelper";
+import { friendStatusEnum } from "./Enums/FriendEnumStatus";
 
 const profile = {
   backgroundImage:
@@ -85,6 +95,34 @@ const people = [
 function UserProfile() {
   const dispatch = useDispatch<AppDispatch>();
   const profileUser = useSelector((state: RootState) => state.profileUser);
+  const userId = useSelector((state: RootState) => state.user.id);
+  const [profileUserData, setProfileUserData] = useState<IUserProfile>();
+  const [friendStatus, setFriendStatus] = useState<number | null>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = generateUrl(`user/get-user-for-profile`);
+
+      try {
+        if (userId && profileUser?.id) {
+          const toggleFriendDto = new ToggleFriendDto(
+            parseInt(userId),
+            parseInt(profileUser.id)
+          );
+          const response = await axios.post(url, toggleFriendDto);
+          setProfileUserData(response.data);
+
+          setFriendStatus(response.data.friendStatus);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (profileUser) {
+      fetchData();
+    }
+  }, [profileUser]);
 
   return (
     <div>
@@ -98,10 +136,10 @@ function UserProfile() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
           <div className="flex">
-            {profile.avatar?.length > 0 ? (
+            {profileUserData?.imageURL?.length > 0 ? (
               <img
                 className="h-24 w-24 rounded-full ring-4 ring-white  sm:h-32 sm:w-32"
-                src={profile.avatar}
+                src={profileUserData?.imageURL}
                 alt=""
               />
             ) : (
@@ -111,10 +149,32 @@ function UserProfile() {
           <div className="mt-6 sm:flex sm:min-w-0 sm:flex-1 sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
             <div className="mt-6 min-w-0 flex-1 sm:hidden md:block">
               <h1 className="truncate text-2xl font-bold text-gray-900">
-                {profile.name}
+                {profileUserData?.name}
               </h1>
             </div>
             <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
+              <button
+                type="button"
+                className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                <HomeIcon
+                  className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+                <span>{profileUserData?.address}</span>
+              </button>
+
+              <button
+                type="button"
+                className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                <PhoneIcon
+                  className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+                <span>Phone: {profileUserData?.telephone}</span>
+              </button>
+
               <button
                 type="button"
                 className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
@@ -126,8 +186,20 @@ function UserProfile() {
                 <span>Message</span>
               </button>
 
-              {profileUser.isFriend ? (
+              {friendStatus !== friendStatusEnum.FriendRequestSent &&
+              friendStatus !== friendStatusEnum.FriendRequestSentRecieved &&
+              friendStatus !== friendStatusEnum.IsFriend ? (
                 <button
+                  onClick={() => {
+                    if (profileUser.id) {
+                      addOrRemoveFriend(
+                        true,
+                        parseInt(userId),
+                        parseInt(profileUser.id)
+                      );
+                      setFriendStatus(friendStatusEnum.FriendRequestSent);
+                    }
+                  }}
                   type="button"
                   className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                 >
@@ -137,8 +209,18 @@ function UserProfile() {
                   />
                   <span>Add Friend</span>
                 </button>
-              ) : (
+              ) : friendStatus === friendStatusEnum.IsFriend ? (
                 <button
+                  onClick={() => {
+                    if (profileUser.id) {
+                      addOrRemoveFriend(
+                        false,
+                        parseInt(userId),
+                        parseInt(profileUser.id)
+                      );
+                      setFriendStatus(friendStatusEnum.NotFriend);
+                    }
+                  }}
                   type="button"
                   className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                 >
@@ -147,6 +229,20 @@ function UserProfile() {
                     aria-hidden="true"
                   />
                   <span>Remove Friend</span>
+                </button>
+              ) : null}
+
+              {(friendStatus === friendStatusEnum.FriendRequestSent ||
+                friendStatus ===
+                  friendStatusEnum.FriendRequestSentRecieved) && (
+                <button className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                  <UserIcon
+                    className="h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  {friendStatus === friendStatusEnum.FriendRequestSent
+                    ? "Friend request sent"
+                    : "Friend request received"}
                 </button>
               )}
 
@@ -168,7 +264,7 @@ function UserProfile() {
         </div>
         <div className="mt-6 hidden min-w-0 flex-1 sm:block md:hidden">
           <h1 className="truncate text-2xl font-bold text-gray-900">
-            {profile.name}
+            {profileUserData?.name}
           </h1>
         </div>
       </div>
@@ -196,64 +292,8 @@ function UserProfile() {
           role="list"
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         >
-          {people.map((person) => (
-            <li
-              key={person.email}
-              className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow"
-            >
-              <div className="flex flex-1 flex-col p-8">
-                <img
-                  className="mx-auto h-32 w-32 flex-shrink-0 rounded-full"
-                  src={person.imageUrl}
-                  alt=""
-                />
-                <h3 className="mt-6 text-sm font-medium text-gray-900">
-                  {person.name}
-                </h3>
-                <dl className="mt-1 flex flex-grow flex-col justify-between">
-                  <dt className="sr-only">Title</dt>
-                  <dd className="text-sm text-gray-500">{person.title}</dd>
-                  <dt className="sr-only">Role</dt>
-                  <dd className="mt-3">
-                    <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                      {person.role}
-                    </span>
-                  </dd>
-                </dl>
-              </div>
-              <div>
-                <div className="-mt-px flex divide-x divide-gray-200">
-                  <div className="flex w-0 flex-1">
-                    {person.isFriend ? (
-                      <button className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-                        <UserMinusIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                        Remove friend
-                      </button>
-                    ) : (
-                      <button className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-                        <UserPlusIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                        Add friend
-                      </button>
-                    )}
-                  </div>
-                  <div className="-ml-px flex w-0 flex-1">
-                    <button className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-                      <UserIcon
-                        className="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Go to Profile
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </li>
+          {profileUserData?.userFriends.map((friend) => (
+            <UserProfileFriend friend={friend} />
           ))}
         </ul>
       </div>
@@ -263,42 +303,8 @@ function UserProfile() {
           role="list"
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {people.map((person) => (
-            <li
-              key={person.email}
-              className="col-span-1 divide-y divide-gray-200 rounded-lg mx-4 bg-white shadow overflow-hidden"
-            >
-              <div className="w-full">
-                <img
-                  className="w-full h-56 object-cover object-center"
-                  src={person.imageUrl}
-                  alt={person.name}
-                />
-              </div>
-              <div className="flex flex-col p-6 space-y-3">
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {person.name}
-                    </h3>
-                  </div>
-                </div>
-                <div className="text-lg font-semibold flex w-full justify-around">
-                  <p className="text-gray-900">
-                    Weight:{" "}
-                    <span className="font-semibold">{person.weight}</span>
-                  </p>
-                  <p className="text-gray-900">
-                    Length:{" "}
-                    <span className="font-semibold">{person.length}</span>
-                  </p>
-                  <p className="text-gray-900">
-                    Height:{" "}
-                    <span className="font-semibold">{person.height}</span>
-                  </p>
-                </div>
-              </div>
-            </li>
+          {profileUserData?.userItems.map((item) => (
+            <UserProfileItem item={item} />
           ))}
         </ul>
       </div>
