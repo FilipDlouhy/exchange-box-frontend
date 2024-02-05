@@ -15,14 +15,14 @@ import generateUrl from "../../../contants/url";
 import axios from "axios";
 import { ToggleFriendDto } from "../../../Dtos/UserDtos/toggle.friend.dto";
 import { IUserProfile } from "./Interfaces/UserProfileInterface";
-import UserProfileFriend from "./UserProfileFriend";
-import UserProfileItem from "./UserProfileItem";
+import UserProfileFriend from "./UserProfileComponents/UserProfileFriend";
+import UserProfileItem from "./UserProfileComponents/UserProfileItem";
 import { addOrRemoveFriend } from "./Helpers/FriendsHelper";
 import { friendStatusEnum } from "./Enums/FriendEnumStatus";
-import Stat from "./Stat";
+import Stat from "./UserProfileComponents/Stat";
 import { IStat } from "./Interfaces/StatInterface";
-import UserProfileData from "./UserProfileData";
-import UserProfileRemoveAddFriendButton from "./UserProfileRemoveAddFriendButton";
+import UserProfileData from "./UserProfileComponents/UserProfileData";
+import UserProfileRemoveAddFriendButton from "./UserProfileComponents/UserProfileRemoveAddFriendButton";
 
 const stats: IStat[] = [];
 

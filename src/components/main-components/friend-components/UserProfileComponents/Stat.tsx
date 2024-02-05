@@ -1,4 +1,4 @@
-import { IStat } from "./Interfaces/StatInterface";
+import { IStat } from "../Interfaces/StatInterface";
 
 function Stat({ stat }: { stat: IStat }) {
   return (
