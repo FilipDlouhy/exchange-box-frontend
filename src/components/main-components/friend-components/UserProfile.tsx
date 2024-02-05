@@ -19,78 +19,12 @@ import UserProfileFriend from "./UserProfileFriend";
 import UserProfileItem from "./UserProfileItem";
 import { addOrRemoveFriend } from "./Helpers/FriendsHelper";
 import { friendStatusEnum } from "./Enums/FriendEnumStatus";
+import Stat from "./Stat";
+import { IStat } from "./Interfaces/StatInterface";
+import UserProfileData from "./UserProfileData";
+import UserProfileRemoveAddFriendButton from "./UserProfileRemoveAddFriendButton";
 
-const profile = {
-  backgroundImage:
-    "https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
-};
-
-const stats = [
-  {
-    name: "Total number of friends",
-    value: "$405,091.00",
-  },
-  {
-    name: "Total items",
-    value: "$12,787.00",
-  },
-  {
-    name: "Successful exchanges",
-    value: "$245,988.00",
-  },
-  {
-    name: "Unsuccessful exchanges",
-    value: "$30,156.00",
-  },
-];
-
-const people = [
-  {
-    isFriend: true,
-
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-  },
-
-  {
-    isFriend: false,
-
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-  },
-  {
-    isFriend: false,
-
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-  },
-
-  {
-    isFriend: false,
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-  },
-];
+const stats: IStat[] = [];
 
 function UserProfile() {
   const dispatch = useDispatch<AppDispatch>();
@@ -129,7 +63,7 @@ function UserProfile() {
       <div>
         <img
           className="h-32 w-full object-cover lg:h-48"
-          src={profile.backgroundImage}
+          src="https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
           alt=""
         />
       </div>
@@ -153,84 +87,43 @@ function UserProfile() {
               </h1>
             </div>
             <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
-              <button
-                type="button"
-                className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              >
-                <HomeIcon
-                  className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-                <span>{profileUserData?.address}</span>
-              </button>
-
-              <button
-                type="button"
-                className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              >
-                <PhoneIcon
-                  className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-                <span>Phone: {profileUserData?.telephone}</span>
-              </button>
-
-              <button
-                type="button"
-                className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              >
-                <EnvelopeIcon
-                  className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-                <span>Message</span>
-              </button>
-
-              {friendStatus !== friendStatusEnum.FriendRequestSent &&
-              friendStatus !== friendStatusEnum.FriendRequestSentRecieved &&
-              friendStatus !== friendStatusEnum.IsFriend ? (
-                <button
-                  onClick={() => {
-                    if (profileUser.id) {
-                      addOrRemoveFriend(
-                        true,
-                        parseInt(userId),
-                        parseInt(profileUser.id)
-                      );
-                      setFriendStatus(friendStatusEnum.FriendRequestSent);
-                    }
-                  }}
-                  type="button"
-                  className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                >
-                  <UserPlusIcon
+              <UserProfileData
+                icon={
+                  <HomeIcon
                     className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
                     aria-hidden="true"
                   />
-                  <span>Add Friend</span>
-                </button>
-              ) : friendStatus === friendStatusEnum.IsFriend ? (
-                <button
-                  onClick={() => {
-                    if (profileUser.id) {
-                      addOrRemoveFriend(
-                        false,
-                        parseInt(userId),
-                        parseInt(profileUser.id)
-                      );
-                      setFriendStatus(friendStatusEnum.NotFriend);
-                    }
-                  }}
-                  type="button"
-                  className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                >
-                  <UserMinusIcon
+                }
+                text={"Adress: " + profileUserData?.address}
+              />
+
+              <UserProfileData
+                icon={
+                  <PhoneIcon
                     className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
                     aria-hidden="true"
                   />
-                  <span>Remove Friend</span>
-                </button>
-              ) : null}
+                }
+                text={"Phone: " + profileUserData?.telephone}
+              />
+
+              <UserProfileData
+                icon={
+                  <EnvelopeIcon
+                    className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                }
+                text={"Message"}
+              />
+
+              <UserProfileRemoveAddFriendButton
+                friendStatus={friendStatus}
+                profileUserId={profileUser.id}
+                setFriendStatus={setFriendStatus}
+                userId={userId}
+                isSmall={false}
+              />
 
               {(friendStatus === friendStatusEnum.FriendRequestSent ||
                 friendStatus ===
@@ -271,18 +164,7 @@ function UserProfile() {
 
       <dl className="mx-auto grid grid-cols-1 gap-px bg-gray-900/5 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <div
-            key={stat.name}
-            className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-10 sm:px-6 xl:px-8"
-          >
-            <dt className="text-sm font-medium leading-6 text-gray-500">
-              {stat.name}
-            </dt>
-
-            <dd className="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">
-              {stat.value}
-            </dd>
-          </div>
+          <Stat stat={stat} />
         ))}
       </dl>
 
