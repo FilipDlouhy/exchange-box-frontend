@@ -189,7 +189,7 @@ export default function ExchangeBox() {
             />
 
             <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-              <form className="relative flex flex-1" action="#" method="GET">
+              <div className="relative flex flex-1">
                 <label htmlFor="search-field" className="sr-only">
                   Search
                 </label>
@@ -204,7 +204,7 @@ export default function ExchangeBox() {
                   type="search"
                   name="search"
                 />
-              </form>
+              </div>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 <button
                   type="button"

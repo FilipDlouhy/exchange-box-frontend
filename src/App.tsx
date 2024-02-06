@@ -13,7 +13,6 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "./store/store";
 import { setUser } from "./store/user-state/userSlice";
 
-// Mock authentication check function
 const isAuthenticated = async (): Promise<boolean> => {
   const url = generateUrl("auth/check-token");
   try {
@@ -26,7 +25,6 @@ const isAuthenticated = async (): Promise<boolean> => {
   }
 };
 
-// Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
