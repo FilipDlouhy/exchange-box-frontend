@@ -6,11 +6,16 @@ import { RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { showError } from "../../../store/errorSlice";
+import { PaginationState } from "../../../contants/PaginationInteface";
 
 function FriendRequests() {
   const [newRequests, setNewRequests] = useState<IFriendRequest[]>();
   const userId = useSelector((state: RootState) => state.user.id);
   const dispatch = useDispatch();
+  const [pagination, setPagination] = useState<PaginationState>({
+    starting: 1,
+    max: 10,
+  });
 
   const handleShowError = (message: string) => {
     dispatch(showError(message));
@@ -24,7 +29,13 @@ function FriendRequests() {
     const fetchData = async () => {
       try {
         const url = generateUrl(`user/get-friend-requests/${userId}`);
-        const response = await axios.get(url);
+
+        const response = await axios.get(url, {
+          params: {
+            page: pagination.starting,
+            limit: pagination.max,
+          },
+        });
         setNewRequests(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
