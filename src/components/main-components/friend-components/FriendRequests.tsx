@@ -12,7 +12,8 @@ function FriendRequests() {
 
   useFetchData<IFriendRequest[]>(
     `user/get-friend-requests/${userId}`,
-    setNewRequests
+    setNewRequests,
+    newRequests
   );
 
   return (

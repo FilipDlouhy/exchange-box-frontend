@@ -2,12 +2,16 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { showError } from "../../../../store/errorSlice";
-import { PaginationState } from "../../../../contants/PaginationInteface";
 import generateUrl from "../../../../contants/url";
+import { PaginationState } from "../../../../contants/PaginationInteface";
 
-type SetData<T> = (data: T | ((prevData: T) => T)) => void;
+type SetData<T> = (data: T) => void;
 
-export const useFetchData = <T>(url: string, setData: SetData<T>): void => {
+export const useFetchData = <T>(
+  url: string,
+  setData: SetData<T>,
+  additionalData: T | undefined
+): void => {
   const pagination: PaginationState = useSelector((state) => state.pagination);
   const dispatch = useDispatch();
   const handleShowError = (message: string) => {
@@ -24,9 +28,8 @@ export const useFetchData = <T>(url: string, setData: SetData<T>): void => {
           },
         });
 
-        setData((prevData) => {
-          return { ...prevData, ...response.data };
-        });
+        const mergedData = { ...additionalData, ...response.data };
+        setData(mergedData);
       } catch (error) {
         console.error("Error fetching data:", error);
         handleShowError(error.message);
@@ -34,5 +37,5 @@ export const useFetchData = <T>(url: string, setData: SetData<T>): void => {
     };
 
     fetchData();
-  }, [url, setData, pagination]);
+  }, [url, setData, pagination, additionalData, dispatch]);
 };

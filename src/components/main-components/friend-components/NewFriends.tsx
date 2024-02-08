@@ -4,7 +4,6 @@ import { RootState } from "../../../store/store";
 import Friend from "./Friend";
 import { FriendInfo } from "./Interfaces/FriendInterface";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
-import { loadMoreConstant } from "../../../contants/LoadMoreConstant";
 import { useFetchData } from "./Hooks/FetchDataHook";
 
 function NewFriends() {
@@ -12,7 +11,11 @@ function NewFriends() {
 
   const [newFriends, setNewFriends] = useState<FriendInfo[]>();
 
-  useFetchData<FriendInfo[]>(`user/get-new-friends/${userId}`, setNewFriends);
+  useFetchData<FriendInfo[]>(
+    `user/get-new-friends/${userId}`,
+    setNewFriends,
+    newFriends
+  );
 
   return (
     <div>

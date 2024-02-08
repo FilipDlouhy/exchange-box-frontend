@@ -4,15 +4,17 @@ import { FriendInfo } from "./Interfaces/FriendInterface";
 import { RootState } from "../../../store/store";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
 import { useFetchData } from "./Hooks/FetchDataHook";
-import { useDispatch, useSelector } from "react-redux";
-import { incrementStarting } from "../../../store/paginationSlice";
+import { useSelector } from "react-redux";
 
 function MyFriends() {
   const [yourFriends, setYourFriends] = useState<FriendInfo[]>();
   const userId = useSelector((state: RootState) => state.user.id);
-  const dispatch = useDispatch();
 
-  useFetchData<FriendInfo[]>(`user/get-friends/${userId}`, setYourFriends);
+  useFetchData<FriendInfo[]>(
+    `user/get-friends/${userId}`,
+    setYourFriends,
+    yourFriends
+  );
 
   return (
     <div className="p-10">
