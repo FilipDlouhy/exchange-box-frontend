@@ -1,11 +1,13 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { incrementStarting } from "../../store/paginationSlice";
 
 const LoadMoreButton = () => {
   const dispatch = useDispatch<AppDispatch>();
-
-  return (
+  const showLoadMorButtons: boolean = useSelector(
+    (state) => state.pagination.showLoadMorButtons
+  );
+  return showLoadMorButtons ? (
     <div className="w-full h-12 flex items-center justify-center mt-3 mb-4">
       <button
         type="button"
@@ -17,7 +19,7 @@ const LoadMoreButton = () => {
         Load More
       </button>
     </div>
-  );
+  ) : null;
 };
 
 export default LoadMoreButton;

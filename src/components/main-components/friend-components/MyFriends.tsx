@@ -22,16 +22,17 @@ function MyFriends() {
         role="list"
         className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
       >
-        {yourFriends?.map((friend) => {
-          return (
-            <Friend
-              person={friend}
-              key={friend.id}
-              isFriend={true}
-              setNewFriends={setYourFriends}
-            />
-          );
-        })}
+        {yourFriends &&
+          yourFriends?.map((friend) => {
+            return (
+              <Friend
+                person={friend}
+                key={friend.id}
+                isFriend={true}
+                setNewFriends={setYourFriends}
+              />
+            );
+          })}
       </ul>
 
       <LoadMoreButton />

@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { showError } from "../../../../store/errorSlice";
 import generateUrl from "../../../../contants/url";
 import { PaginationState } from "../../../../contants/PaginationInteface";
+import { hideButton } from "../../../../store/paginationSlice";
 
 type SetData<T> = (data: T) => void;
 
-export const useFetchData = <T>(
+export const useFetchData = <T extends unknown[]>(
   url: string,
   setData: SetData<T>,
   additionalData: T | undefined
@@ -23,13 +24,20 @@ export const useFetchData = <T>(
       try {
         const response = await axios.get(generateUrl(url), {
           params: {
-            page: 1,
-            limit: 10,
+            page: pagination.starting,
+            limit: pagination.max,
           },
         });
 
-        const mergedData = { ...additionalData, ...response.data };
-        setData(mergedData);
+        if (response.data.length === 0) {
+          dispatch(hideButton());
+        }
+
+        const mergedData = additionalData
+          ? [...additionalData, ...response.data]
+          : [...response.data];
+
+        setData(mergedData as T);
       } catch (error) {
         console.error("Error fetching data:", error);
         handleShowError(error.message);
@@ -37,5 +45,5 @@ export const useFetchData = <T>(
     };
 
     fetchData();
-  }, [url, setData, pagination, additionalData, dispatch]);
+  }, [url, setData, pagination, dispatch]);
 };
