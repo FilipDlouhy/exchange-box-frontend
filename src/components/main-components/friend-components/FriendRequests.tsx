@@ -1,50 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FriendRequest from "./FriendRequest";
 import { IFriendRequest } from "./Interfaces/FriendRequestInterFace";
-import generateUrl from "../../../contants/url";
 import { RootState } from "../../../store/store";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { showError } from "../../../store/errorSlice";
-import { PaginationState } from "../../../contants/PaginationInteface";
+import { useSelector } from "react-redux";
+import { useFetchData } from "./Hooks/FetchDataHook";
+import LoadMoreButton from "../../common-components/LoadMoreButton";
 
 function FriendRequests() {
   const [newRequests, setNewRequests] = useState<IFriendRequest[]>();
   const userId = useSelector((state: RootState) => state.user.id);
-  const dispatch = useDispatch();
-  const [pagination, setPagination] = useState<PaginationState>({
-    starting: 1,
-    max: 10,
-  });
 
-  const handleShowError = (message: string) => {
-    dispatch(showError(message));
-  };
-
-  useEffect(() => {
-    if (newRequests && newRequests.length > 0) {
-      return;
-    }
-
-    const fetchData = async () => {
-      try {
-        const url = generateUrl(`user/get-friend-requests/${userId}`);
-
-        const response = await axios.get(url, {
-          params: {
-            page: pagination.starting,
-            limit: pagination.max,
-          },
-        });
-        setNewRequests(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        handleShowError(error.message);
-      }
-    };
-
-    fetchData();
-  }, [userId]);
+  useFetchData<IFriendRequest[]>(
+    `user/get-friend-requests/${userId}`,
+    setNewRequests
+  );
 
   return (
     <div className="p-10">
@@ -60,6 +29,8 @@ function FriendRequests() {
           />
         ))}
       </ul>
+
+      <LoadMoreButton />
     </div>
   );
 }

@@ -1,52 +1,18 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
-import generateUrl from "../../../contants/url";
-import axios from "axios";
 import Friend from "./Friend";
 import { FriendInfo } from "./Interfaces/FriendInterface";
-import { showError } from "../../../store/errorSlice";
-import { PaginationState } from "../../../contants/PaginationInteface";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
 import { loadMoreConstant } from "../../../contants/LoadMoreConstant";
+import { useFetchData } from "./Hooks/FetchDataHook";
 
 function NewFriends() {
   const userId = useSelector((state: RootState) => state.user.id);
 
   const [newFriends, setNewFriends] = useState<FriendInfo[]>();
-  const [pagination, setPagination] = useState<PaginationState>({
-    starting: 1,
-    max: 3,
-  });
-  const dispatch = useDispatch();
 
-  const handleShowError = (message: string) => {
-    dispatch(showError(message));
-  };
-
-  const fetchData = async () => {
-    try {
-      const url = generateUrl(`user/get-new-friends/${userId}`);
-      const response = await axios.get(url, {
-        params: {
-          page: pagination.starting,
-          limit: pagination.max,
-        },
-      });
-      setNewFriends(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      handleShowError(error.message);
-    }
-  };
-
-  useEffect(() => {
-    if (newFriends && newFriends.length > 0) {
-      return;
-    }
-
-    fetchData();
-  }, [userId]);
+  useFetchData<FriendInfo[]>(`user/get-new-friends/${userId}`, setNewFriends);
 
   return (
     <div>
@@ -68,17 +34,7 @@ function NewFriends() {
         </ul>
       </div>
 
-      <LoadMoreButton
-        loadMoreFunction={() => {
-          if (pagination.starting && pagination.max) {
-            setPagination({
-              starting: pagination.starting + loadMoreConstant,
-              max: pagination.max + loadMoreConstant,
-            });
-          }
-          fetchData();
-        }}
-      />
+      <LoadMoreButton />
     </div>
   );
 }
