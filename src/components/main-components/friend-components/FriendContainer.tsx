@@ -7,6 +7,7 @@ import { setActiveMenu } from "../../../store/friend-state/menuSlice";
 import { DynamicComponentRenderer } from "../../common-components/Helpers/ComonHelpers";
 import UserProfile from "./UserProfile";
 import { resetStarting } from "../../../store/paginationSlice";
+import { clearSearchText } from "../../../store/searchSlice";
 
 function FriendContainer() {
   const activeMenu = useSelector((state: RootState) => state.friendsMenu.value);
@@ -16,6 +17,7 @@ function FriendContainer() {
   const handleMenuButtonClick = (name: string) => {
     dispatch(setActiveMenu(name));
     dispatch(resetStarting());
+    dispatch(clearSearchText());
   };
 
   useEffect(() => {

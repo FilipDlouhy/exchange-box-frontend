@@ -1,20 +1,20 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
 import Friend from "./Friend";
 import { FriendInfo } from "./Interfaces/FriendInterface";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
 import { useFetchData } from "./Hooks/FetchDataHook";
+import { useFetchDataSearch } from "./Hooks/FetchSearchDataHook";
 
 function NewFriends() {
-  const userId = useSelector((state: RootState) => state.user.id);
-
   const [newFriends, setNewFriends] = useState<FriendInfo[]>();
 
-  useFetchData<FriendInfo[]>(
-    `user/get-new-friends/${userId}`,
+  useFetchData<FriendInfo[]>(`user/get-new-friends`, setNewFriends, newFriends);
+
+  useFetchDataSearch<FriendInfo[]>(
+    `user/get-new-friends`,
     setNewFriends,
-    newFriends
+    newFriends,
+    "name"
   );
 
   return (

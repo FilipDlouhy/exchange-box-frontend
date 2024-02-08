@@ -28,10 +28,14 @@ const paginationSlice = createSlice({
     hideButton: (state) => {
       state.showLoadMorButtons = false;
     },
+
+    showButton: (state) => {
+      state.showLoadMorButtons = true;
+    },
   },
 });
 
-export const { incrementStarting, resetStarting, hideButton } =
+export const { incrementStarting, resetStarting, hideButton, showButton } =
   paginationSlice.actions;
 
 export default paginationSlice.reducer;

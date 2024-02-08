@@ -1,19 +1,23 @@
 import { useState } from "react";
 import FriendRequest from "./FriendRequest";
 import { IFriendRequest } from "./Interfaces/FriendRequestInterFace";
-import { RootState } from "../../../store/store";
-import { useSelector } from "react-redux";
 import { useFetchData } from "./Hooks/FetchDataHook";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
+import { useFetchDataSearch } from "./Hooks/FetchSearchDataHook";
 
 function FriendRequests() {
   const [newRequests, setNewRequests] = useState<IFriendRequest[]>();
-  const userId = useSelector((state: RootState) => state.user.id);
 
   useFetchData<IFriendRequest[]>(
-    `user/get-friend-requests/${userId}`,
+    `user/get-friend-requests`,
     setNewRequests,
     newRequests
+  );
+  useFetchDataSearch<IFriendRequest[]>(
+    `user/get-friend-requests`,
+    setNewRequests,
+    newRequests,
+    "name"
   );
 
   return (

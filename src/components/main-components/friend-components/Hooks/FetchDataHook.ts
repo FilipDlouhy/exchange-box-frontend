@@ -14,6 +14,7 @@ export const useFetchData = <T extends unknown[]>(
   additionalData: T | undefined
 ): void => {
   const pagination: PaginationState = useSelector((state) => state.pagination);
+  const searchText = useSelector((state) => state.search.searchText);
   const dispatch = useDispatch();
   const handleShowError = (message: string) => {
     dispatch(showError(message));
@@ -22,12 +23,23 @@ export const useFetchData = <T extends unknown[]>(
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(generateUrl(url), {
-          params: {
-            page: pagination.starting,
-            limit: pagination.max,
-          },
-        });
+        const response =
+          searchText.length > 0
+            ? await axios.get(generateUrl(url), {
+                params: {
+                  page: pagination.starting,
+                  limit: pagination.max,
+                },
+                withCredentials: true,
+              })
+            : await axios.get(generateUrl(url), {
+                params: {
+                  page: pagination.starting,
+                  limit: pagination.max,
+                  search: searchText,
+                },
+                withCredentials: true,
+              });
 
         if (response.data.length === 0) {
           dispatch(hideButton());
@@ -45,5 +57,5 @@ export const useFetchData = <T extends unknown[]>(
     };
 
     fetchData();
-  }, [url, setData, pagination, dispatch]);
+  }, [pagination]);
 };

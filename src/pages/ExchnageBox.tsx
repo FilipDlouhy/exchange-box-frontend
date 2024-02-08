@@ -13,6 +13,7 @@ import {
 } from "./Helpers/ExchangeHelper";
 import { getMainComponentByName } from "../components/main-components/Helpers/Navigations";
 import PopUp from "../components/common-components/PopUp";
+import SearchInput from "../components/common-components/SearchInput";
 
 export default function ExchangeBox() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -189,22 +190,7 @@ export default function ExchangeBox() {
             />
 
             <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-              <div className="relative flex flex-1">
-                <label htmlFor="search-field" className="sr-only">
-                  Search
-                </label>
-                <MagnifyingGlassIcon
-                  className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-blue-400"
-                  aria-hidden="true"
-                />
-                <input
-                  id="search-field"
-                  className="block h-full w-full border-0 py-0 pl-8 pr-0 text-blue-900 placeholder:text-blue-400 focus:ring-0 sm:text-sm"
-                  placeholder="Search..."
-                  type="search"
-                  name="search"
-                />
-              </div>
+              <SearchInput />
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 <button
                   type="button"
