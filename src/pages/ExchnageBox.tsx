@@ -2,10 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import Logo from "../assets/logo.png";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import {
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/20/solid";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import {
   classNames,
   initialNavigation,
@@ -14,11 +11,13 @@ import {
 import { getMainComponentByName } from "../components/main-components/Helpers/Navigations";
 import PopUp from "../components/common-components/PopUp";
 import SearchInput from "../components/common-components/SearchInput";
+import { useNavigate } from "react-router-dom";
 
 export default function ExchangeBox() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [navigation, setNavigation] = useState(initialNavigation);
   const [mainComponent, setMainComponent] = useState<JSX.Element | null>();
+  const navigate = useNavigate();
 
   const updateCurrentToFalse = (nameToUpdate: string) => {
     const updatedNavigation = navigation.map((item) => {
@@ -241,15 +240,33 @@ export default function ExchangeBox() {
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
-                            <a
-                              href={item.href}
+                            <p
+                              onClick={() => {
+                                if (item.name === "Your profile") {
+                                  return;
+                                }
+                                document.cookie
+                                  .split(";")
+                                  .forEach(function (cookie) {
+                                    document.cookie = cookie
+                                      .replace(/^ +/, "")
+                                      .replace(
+                                        /=.*/,
+                                        "=;expires=" +
+                                          new Date().toUTCString() +
+                                          ";path=/"
+                                      );
+                                  });
+
+                                navigate("/");
+                              }}
                               className={classNames(
                                 active ? "bg-blue-50" : "",
                                 "block px-3 py-1 text-sm leading-6 text-blue-900"
                               )}
                             >
                               {item.name}
-                            </a>
+                            </p>
                           )}
                         </Menu.Item>
                       ))}

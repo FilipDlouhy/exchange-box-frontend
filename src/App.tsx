@@ -12,32 +12,13 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "./store/store";
 import { setUser } from "./store/user-state/userSlice";
-
-const isAuthenticated = async (): Promise<boolean> => {
-  const url = generateUrl("auth/check-token");
-  try {
-    const response = await axios.get(url, { withCredentials: true });
-    return response.data;
-  } catch (error) {
-    console.error("Error checking token:", error);
-
-    return false;
-  }
-};
+import { isAuthenticated } from "./components/common-components/Helpers/IsAuthenticated";
+import useCheckAuth from "./components/common-components/Hooks/UseCheckAuth";
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    isAuthenticated().then((authenticated) => {
-      if (!authenticated) {
-        navigate("/");
-        return;
-      }
-    });
-  }, [navigate]);
+  useCheckAuth();
 
   return <>{children}</>;
 };

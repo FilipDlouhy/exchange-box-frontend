@@ -17,8 +17,10 @@ export const initialNavigation = [
 ];
 
 export const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Your profile" },
+  {
+    name: "Sign out",
+  },
 ];
 
 export function classNames(...classes) {
