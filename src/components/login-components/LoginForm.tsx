@@ -10,8 +10,10 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../store/user-state/userSlice";
 export default function LoginForm({
   setIsLoggingIn,
+  setIsChnagingPassword,
 }: {
   setIsLoggingIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsChnagingPassword: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -132,12 +134,14 @@ export default function LoginForm({
 
                   <div className="flex items-center justify-center">
                     <div className="text-sm leading-6">
-                      <a
-                        href="#"
-                        className="font-semibold text-indigo-600 hover:text-indigo-500"
+                      <p
+                        onClick={() => {
+                          setIsChnagingPassword(true);
+                        }}
+                        className="cursor-pointer font-semibold text-indigo-600 hover:text-indigo-500"
                       >
                         Forgot password?
-                      </a>
+                      </p>
                     </div>
                   </div>
 
@@ -155,6 +159,7 @@ export default function LoginForm({
                     <button
                       onClick={() => {
                         setIsLoggingIn(false);
+                        setIsChnagingPassword(true);
                       }}
                       type="submit"
                       className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

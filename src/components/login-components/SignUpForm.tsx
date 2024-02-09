@@ -6,8 +6,10 @@ import { handleInputChange } from "./Helpers/InputHelper";
 
 export default function SingUpForm({
   setIsLoggingIn,
+  setIsChnagingPassword,
 }: {
   setIsLoggingIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsChnagingPassword: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -127,12 +129,15 @@ export default function SingUpForm({
 
                   <div className="flex items-center justify-center">
                     <div className="text-sm leading-6">
-                      <a
-                        href="#"
-                        className="font-semibold text-indigo-600 hover:text-indigo-500"
+                      <p
+                        onClick={() => {
+                          setIsLoggingIn(false);
+                          setIsChnagingPassword(true);
+                        }}
+                        className="cursor-pointer font-semibold text-indigo-600 hover:text-indigo-500"
                       >
                         Forgot password?
-                      </a>
+                      </p>
                     </div>
                   </div>
 
