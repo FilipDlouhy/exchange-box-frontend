@@ -1,7 +1,7 @@
 import React from "react";
 import { UserMinusIcon, UserPlusIcon } from "@heroicons/react/24/outline";
-import { friendStatusEnum } from "../Enums/FriendEnumStatus";
-import { addOrRemoveFriend } from "../Helpers/FriendsHelper";
+import { friendStatusEnum } from "../../main-components/friend-components/Enums/FriendEnumStatus";
+import { addOrRemoveFriend } from "../../main-components/friend-components/Helpers/FriendsHelper";
 
 function UserProfileRemoveAddFriendButton({
   friendStatus,

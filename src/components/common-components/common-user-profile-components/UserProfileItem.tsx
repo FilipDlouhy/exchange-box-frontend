@@ -1,4 +1,4 @@
-import { IUserProfileItem } from "../Interfaces/UserProfileInterface";
+import { IUserProfileItem } from "../../main-components/friend-components/Interfaces/UserProfileInterface";
 
 const UserProfileItem = ({ item }: { item: IUserProfileItem }) => {
   return (

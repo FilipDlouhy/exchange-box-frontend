@@ -13,13 +13,13 @@ import generateUrl from "../../../contants/url";
 import axios from "axios";
 import { ToggleFriendDto } from "../../../Dtos/UserDtos/toggle.friend.dto";
 import { IUserProfile } from "./Interfaces/UserProfileInterface";
-import UserProfileFriend from "./UserProfileComponents/UserProfileFriend";
-import UserProfileItem from "./UserProfileComponents/UserProfileItem";
+import UserProfileFriend from "../../common-components/common-user-profile-components/UserProfileFriend";
+import UserProfileItem from "../../common-components/common-user-profile-components/UserProfileItem";
 import { friendStatusEnum } from "./Enums/FriendEnumStatus";
 import Stat from "./UserProfileComponents/Stat";
 import { IStat } from "./Interfaces/StatInterface";
-import UserProfileData from "./UserProfileComponents/UserProfileData";
-import UserProfileRemoveAddFriendButton from "./UserProfileComponents/UserProfileRemoveAddFriendButton";
+import UserProfileData from "../../common-components/UserProfileData";
+import UserProfileRemoveAddFriendButton from "../../common-components/common-user-profile-components/UserProfileRemoveAddFriendButton";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
 
 const stats: IStat[] = [];
@@ -177,11 +177,6 @@ function UserProfile() {
           ))}
         </ul>
       </div>
-      {profileUserData?.userFriends &&
-        profileUserData?.userFriends.length > 0 && (
-          <LoadMoreButton loadMoreFunction={() => {}} />
-        )}
-
       <div className="w-full mt-10 ">
         <ul
           role="list"
@@ -192,10 +187,6 @@ function UserProfile() {
           ))}
         </ul>
       </div>
-
-      {profileUserData?.userItems && profileUserData?.userItems.length > 0 && (
-        <LoadMoreButton loadMoreFunction={() => {}} />
-      )}
     </div>
   );
 }

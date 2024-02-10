@@ -1,10 +1,10 @@
 import { UserIcon } from "@heroicons/react/24/outline";
-import { setProfileUser } from "../../../../store/user-state/profileUserSlice";
+import { setProfileUser } from "../../../store/user-state/profileUserSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { IUserProfileFriend } from "../Interfaces/UserProfileInterface";
-import { RootState } from "../../../../store/store";
+import { IUserProfileFriend } from "../../main-components/friend-components/Interfaces/UserProfileInterface";
+import { RootState } from "../../../store/store";
 import { useEffect, useState } from "react";
-import { friendStatusEnum } from "../Enums/FriendEnumStatus";
+import { friendStatusEnum } from "../../main-components/friend-components/Enums/FriendEnumStatus";
 import UserProfileRemoveAddFriendButton from "./UserProfileRemoveAddFriendButton";
 
 const UserProfileFriend = ({ friend }: { friend: IUserProfileFriend }) => {
