@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { showError } from "../../../../store/errorSlice";
-import generateUrl from "../../../../contants/url";
-import { PaginationState } from "../../../../contants/PaginationInteface";
-import { hideButton } from "../../../../store/paginationSlice";
+import { showError } from "../../../store/errorSlice";
+import generateUrl from "../../../contants/url";
+import { PaginationState } from "../../../contants/PaginationInteface";
+import { hideButton } from "../../../store/paginationSlice";
 
 type SetData<T> = (data: T) => void;
 
