@@ -243,6 +243,7 @@ export default function ExchangeBox() {
                             <p
                               onClick={() => {
                                 if (item.name === "Your profile") {
+                                  updateCurrentToFalse("User");
                                   return;
                                 }
                                 document.cookie
