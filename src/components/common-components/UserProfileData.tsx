@@ -2,9 +2,12 @@ import React, { useState } from "react";
 
 interface UserProfileDataProps {
   icon: React.ReactNode;
-  text: string;
+  text: string | null | undefined;
   canUpdate?: boolean;
   setWasUpdated?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleChangeFromParrent?: (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => void;
 }
 
 const UserProfileData: React.FC<UserProfileDataProps> = ({
@@ -12,13 +15,17 @@ const UserProfileData: React.FC<UserProfileDataProps> = ({
   text,
   canUpdate = false,
   setWasUpdated,
+  handleChangeFromParrent,
 }) => {
-  const [editableText, setEditableText] = useState(text);
+  const [editableText, setEditableText] = useState<string | null | undefined>(
+    text
+  );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value !== undefined) {
       setEditableText(event.target.value);
       setWasUpdated?.(true);
+      handleChangeFromParrent?.(event);
     }
   };
 
@@ -32,7 +39,7 @@ const UserProfileData: React.FC<UserProfileDataProps> = ({
           {icon}
           <input
             type="text"
-            value={editableText}
+            value={editableText ? editableText : ""}
             onChange={handleChange}
             className="ml-2 outline-none text-gray-900 placeholder-gray-500 focus:ring-0 border-none bg-transparent"
             placeholder="Enter text"

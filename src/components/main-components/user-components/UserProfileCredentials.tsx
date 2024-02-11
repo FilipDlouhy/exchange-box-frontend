@@ -2,11 +2,19 @@ import UserProfileData from "../../common-components/UserProfileData";
 import { HomeIcon, PhoneIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 
 function UserProfileCredentials({
+  adress,
+  phone,
   wasUpdated,
   setWasUpdated,
+  handleAdressChange,
+  handlePhoneChange,
 }: {
+  phone: string | null | undefined;
+  adress: string | null | undefined;
   wasUpdated: boolean;
   setWasUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+  handleAdressChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handlePhoneChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
     <div className="mt-6 mx-auto justify-center flex flex-col h-60 flex-wrap  items-center space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
@@ -17,9 +25,10 @@ function UserProfileCredentials({
             aria-hidden="true"
           />
         }
-        text={"ADRESSS"}
+        text={adress}
         canUpdate={true}
         setWasUpdated={setWasUpdated}
+        handleChangeFromParrent={handleAdressChange}
       />
 
       <UserProfileData
@@ -29,9 +38,10 @@ function UserProfileCredentials({
             aria-hidden="true"
           />
         }
-        text={"PHONE"}
+        text={phone}
         canUpdate={true}
         setWasUpdated={setWasUpdated}
+        handleChangeFromParrent={handlePhoneChange}
       />
 
       {wasUpdated ? (

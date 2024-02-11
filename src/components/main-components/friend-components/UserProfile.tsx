@@ -20,7 +20,6 @@ import Stat from "./UserProfileComponents/Stat";
 import { IStat } from "./Interfaces/StatInterface";
 import UserProfileData from "../../common-components/UserProfileData";
 import UserProfileRemoveAddFriendButton from "../../common-components/common-user-profile-components/UserProfileRemoveAddFriendButton";
-import LoadMoreButton from "../../common-components/LoadMoreButton";
 
 const stats: IStat[] = [];
 
@@ -68,10 +67,11 @@ function UserProfile() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
           <div className="flex">
-            {profileUserData?.imageURL?.length > 0 ? (
+            {profileUserData?.imageURL &&
+            profileUserData.imageURL.length > 0 ? (
               <img
-                className="h-24 w-24 rounded-full ring-4 ring-white  sm:h-32 sm:w-32"
-                src={profileUserData?.imageURL}
+                className="h-24 w-24 rounded-full ring-4 ring-white sm:h-32 sm:w-32"
+                src={profileUserData.imageURL}
                 alt=""
               />
             ) : (

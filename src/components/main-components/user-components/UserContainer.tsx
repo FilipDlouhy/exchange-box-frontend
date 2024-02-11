@@ -1,60 +1,104 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import UserProfileCredentials from "./UserProfileCredentials";
 import UserProfileImages from "./UserProfileImages";
 import UserExchanges from "./UsersExchanges";
-
-const initialProfile = {
-  name: "Ricardo Cooper",
-  email: "ricardo.cooper@example.com",
-  avatar:
-    "https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80",
-  backgroundImage:
-    "https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
-};
+import axios from "axios";
+import generateUrl from "../../../contants/url";
+import { CurrentUser } from "./Interfaces/CurrentUserInterface";
+import Friend from "../friend-components/Friend";
+import { FriendInfo } from "../friend-components/Interfaces/FriendInterface";
 
 function UserContainer() {
-  const [profile, setProfile] = useState(initialProfile);
   const [wasUpdated, setWasUpdated] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | undefined>();
 
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
+  const [curreuntUserFriends, setCurreuntUserFriends] =
+    useState<FriendInfo[]>();
+
+  const handleTextChange =
+    (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      setCurrentUser((currentUser) => {
+        if (!currentUser) return;
+        return { ...currentUser, [field]: value };
+      });
       setWasUpdated(true);
-      const newAvatarUrl = URL.createObjectURL(file);
-      setProfile({ ...profile, avatar: newAvatarUrl });
-    }
-  };
+    };
 
-  const handleBackgroundChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setWasUpdated(true);
-      const newBackgroundUrl = URL.createObjectURL(file);
-      setProfile({ ...profile, backgroundImage: newBackgroundUrl });
-    }
-  };
+  const handleFileChange =
+    (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files ? event.target.files[0] : null;
+      if (file) {
+        const newValue = URL.createObjectURL(file);
+        setCurrentUser((currentUser) => {
+          if (!currentUser) return;
+          return { ...currentUser, [field]: newValue };
+        });
+        setWasUpdated(true);
+      }
+    };
 
-  const [name, setName] = useState(profile.name);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          generateUrl("user/get-current-user-profile"),
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(data);
+        setCurrentUser(data);
+        setCurreuntUserFriends(data.friends);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
+    fetchData();
+  }, []);
 
   return (
     <div>
       <UserProfileImages
-        avatar={profile.avatar}
-        backgroundImage={profile.backgroundImage}
-        handleAvatarChange={handleAvatarChange}
-        handleBackgroundChange={handleBackgroundChange}
-        handleNameChange={handleNameChange}
-        name={profile.name}
+        avatar={currentUser?.imageUrl}
+        backgroundImage={currentUser?.backgroundImageUrl}
+        handleAvatarChange={handleFileChange("imageUrl")}
+        handleBackgroundChange={handleFileChange("backgroundImageUrl")}
+        handleNameChange={handleTextChange("name")}
+        name={currentUser?.name}
       />
-      <UserProfileCredentials
-        setWasUpdated={setWasUpdated}
-        wasUpdated={wasUpdated}
-      />
+
+      {currentUser && (
+        <UserProfileCredentials
+          adress={currentUser?.address}
+          phone={currentUser?.telephone}
+          handleAdressChange={handleTextChange("address")}
+          handlePhoneChange={handleTextChange("telephone")}
+          setWasUpdated={setWasUpdated}
+          wasUpdated={wasUpdated}
+        />
+      )}
+
+      <div className="p-10">
+        <ul
+          role="list"
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {curreuntUserFriends &&
+            curreuntUserFriends?.map((friend) => {
+              return (
+                <Friend
+                  person={friend}
+                  key={friend.id}
+                  isFriend={true}
+                  setNewFriends={setCurreuntUserFriends}
+                />
+              );
+            })}
+        </ul>
+      </div>
 
       <div className="w-full mt-4 flex items-center justify-center flex-wrap mb-10">
         <UserExchanges />

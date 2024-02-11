@@ -14,28 +14,6 @@ const clients = [
       status: "Overdue",
     },
   },
-  {
-    id: 2,
-    name: "SavvyCal",
-    imageUrl: "https://tailwindui.com/img/logos/48x48/savvycal.svg",
-    lastInvoice: {
-      date: "January 22, 2023",
-      dateTime: "2023-01-22",
-      amount: "$14,000.00",
-      status: "Paid",
-    },
-  },
-  {
-    id: 3,
-    name: "Reform",
-    imageUrl: "https://tailwindui.com/img/logos/48x48/reform.svg",
-    lastInvoice: {
-      date: "January 23, 2023",
-      dateTime: "2023-01-23",
-      amount: "$7,600.00",
-      status: "Paid",
-    },
-  },
 ];
 
 function classNames(...classes) {
@@ -129,6 +107,15 @@ export default function UserExchanges() {
                 </time>
               </dd>
             </div>
+            <div className="flex justify-between gap-x-4 py-3">
+              <dt className="text-gray-500">State</dt>
+              <dd className="flex items-start gap-x-2">
+                <div className="font-medium text-gray-900">
+                  {client.lastInvoice.amount}
+                </div>
+              </dd>
+            </div>
+
             <div className="flex justify-between gap-x-4 py-3">
               <dt className="text-gray-500">Items</dt>
               <dd className="flex items-start gap-x-2">

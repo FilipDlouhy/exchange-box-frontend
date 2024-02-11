@@ -1,17 +1,19 @@
+import { defaultBackgroundImage } from "./Helpers/DefaultBackgroundImage";
+
 function UserProfileImages({
   avatar,
   backgroundImage,
   handleAvatarChange,
   handleBackgroundChange,
   handleNameChange,
-  name,
+  name = "",
 }: {
-  handleBackgroundChange: (event: any) => void;
-  backgroundImage: string;
-  handleAvatarChange: (event: any) => void;
-  avatar: string;
-  name: string;
-  handleNameChange: (event: any) => void;
+  handleBackgroundChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  backgroundImage: string | null | undefined;
+  handleAvatarChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  avatar: string | null | undefined;
+  name: string | undefined;
+  handleNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
     <div>
@@ -26,7 +28,7 @@ function UserProfileImages({
         <label htmlFor="background-input">
           <img
             className="h-32 w-full object-cover lg:h-48 cursor-pointer"
-            src={backgroundImage}
+            src={backgroundImage || defaultBackgroundImage}
             alt=""
           />
         </label>
@@ -43,8 +45,8 @@ function UserProfileImages({
             />
             <label htmlFor="avatar-input">
               <img
-                className="h-24 w-24 rounded-full ring-4 ring-white sm:h-32 sm:w-32 cursor-pointer"
-                src={avatar}
+                className="h-24 w-24 rounded-full ring-4 ring-white bg-black sm:h-32 sm:w-32 cursor-pointer"
+                src={avatar || ""}
                 alt=""
               />
             </label>
