@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import UserProfileCredentials from "./UserProfileCredentials";
 import UserProfileImages from "./UserProfileImages";
 import UserExchanges from "./UsersExchanges";
@@ -30,14 +29,60 @@ function UserContainer() {
     (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files ? event.target.files[0] : null;
       if (file) {
-        const newValue = URL.createObjectURL(file);
+        const fileURL = URL.createObjectURL(file);
+        const modifiedFile = new File([file], field + ".jpg", {
+          type: file.type,
+        });
         setCurrentUser((currentUser) => {
           if (!currentUser) return;
-          return { ...currentUser, [field]: newValue };
+
+          return {
+            ...currentUser,
+            [field]: fileURL,
+            [field + "File"]: modifiedFile,
+          };
         });
         setWasUpdated(true);
       }
     };
+
+  const updateUserData = async () => {
+    if (!currentUser) {
+      console.error("No current user data available for update.");
+      return;
+    }
+
+    let formData = new FormData();
+
+    formData.append("id", currentUser.id.toString());
+    formData.append("name", currentUser.name);
+    formData.append("email", currentUser.email);
+
+    const optionalFields = [
+      { key: "images", value: currentUser.imageUrlFile },
+      { key: "images", value: currentUser.backgroundImageUrlFile },
+      { key: "address", value: currentUser.address },
+      { key: "telephone", value: currentUser.telephone },
+      { key: "longitude", value: currentUser.longitude?.toString() },
+      { key: "latitude", value: currentUser.latitude?.toString() },
+    ];
+
+    optionalFields.forEach(({ key, value }) => {
+      if (value) formData.append(key, value);
+    });
+
+    try {
+      await axios.post(generateUrl("user/update-curent-user"), formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setWasUpdated(false);
+    } catch (error) {
+      console.error("Error updating user", error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +116,7 @@ function UserContainer() {
 
       {currentUser && (
         <UserProfileCredentials
+          updateUserData={updateUserData}
           adress={currentUser?.address}
           phone={currentUser?.telephone}
           handleAdressChange={handleTextChange("address")}

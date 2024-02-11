@@ -8,6 +8,7 @@ function UserProfileCredentials({
   setWasUpdated,
   handleAdressChange,
   handlePhoneChange,
+  updateUserData,
 }: {
   phone: string | null | undefined;
   adress: string | null | undefined;
@@ -15,6 +16,7 @@ function UserProfileCredentials({
   setWasUpdated: React.Dispatch<React.SetStateAction<boolean>>;
   handleAdressChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handlePhoneChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  updateUserData: () => Promise<void>;
 }) {
   return (
     <div className="mt-6 mx-auto justify-center flex flex-col h-60 flex-wrap  items-center space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
@@ -46,6 +48,9 @@ function UserProfileCredentials({
 
       {wasUpdated ? (
         <button
+          onClick={() => {
+            updateUserData();
+          }}
           type="button"
           className="flex justify-around rounded-md bg-white w-40 items-center h-9 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
         >
