@@ -48,7 +48,6 @@ function UserContainer() {
             withCredentials: true,
           }
         );
-        console.log(data);
         setCurrentUser(data);
         setCurreuntUserFriends(data.friends);
       } catch (error) {
