@@ -7,6 +7,7 @@ import generateUrl from "../../../contants/url";
 import { CurrentUser } from "./Interfaces/CurrentUserInterface";
 import Friend from "../friend-components/Friend";
 import { FriendInfo } from "../friend-components/Interfaces/FriendInterface";
+import UsersLocationMap from "./UsersLocationMap";
 
 function UserContainer() {
   const [wasUpdated, setWasUpdated] = useState<boolean>(false);
@@ -84,6 +85,15 @@ function UserContainer() {
     }
   };
 
+  const handleCoordinatesChange = (lat: any, lng: any) => {
+    setCurrentUser((currentUser) => {
+      if (!currentUser) return;
+      return { ...currentUser, longitude: lng, latitude: lat };
+    });
+
+    setWasUpdated(true);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -123,6 +133,13 @@ function UserContainer() {
           handlePhoneChange={handleTextChange("telephone")}
           setWasUpdated={setWasUpdated}
           wasUpdated={wasUpdated}
+        />
+      )}
+
+      {currentUser && (
+        <UsersLocationMap
+          position={[currentUser?.latitude, currentUser?.longitude]}
+          handleCoordinatesChange={handleCoordinatesChange}
         />
       )}
 
