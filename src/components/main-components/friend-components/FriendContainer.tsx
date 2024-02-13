@@ -3,7 +3,7 @@ import Menu from "../../common-components/Menu";
 import { friendsMenuItems } from "./Helpers/FriendsHelper";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
-import { setActiveMenu } from "../../../store/friend-state/menuSlice";
+import { setActiveMenu } from "../../../store/friend-state/friendMenuSlice";
 import { DynamicComponentRenderer } from "../../common-components/Helpers/ComonHelpers";
 import UserProfile from "./UserProfile";
 import { resetStarting } from "../../../store/paginationSlice";

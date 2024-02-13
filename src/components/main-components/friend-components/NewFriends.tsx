@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Friend from "./Friend";
+import Friend from "../../common-components/common-user-profile-components/Friend";
 import { FriendInfo } from "./Interfaces/FriendInterface";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
 import { useFetchData } from "../../common-components/Hooks/FetchDataHook";

@@ -25,6 +25,7 @@ export interface IUserProfile {
   address?: string | null;
   id: number;
   imageURL?: string | null;
+  backgroundImageUrl?: string | null;
   friendStatus: number | null;
   userFriends: IUserProfileFriend[];
   userItems: IUserProfileItem[];

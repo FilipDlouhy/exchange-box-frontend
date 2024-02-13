@@ -5,22 +5,25 @@ import {
   UserPlusIcon,
   UserMinusIcon,
 } from "@heroicons/react/24/outline";
-import { FriendInfo } from "./Interfaces/FriendInterface";
-import FriendButton from "./FriendButton";
+import { FriendInfo } from "../../main-components/friend-components/Interfaces/FriendInterface";
+import FriendButton from "../../main-components/friend-components/FriendButton";
 import generateUrl from "../../../contants/url";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import { ToggleFriendDto } from "../../../Dtos/UserDtos/toggle.friend.dto";
 import axios from "axios";
 import { setProfileUser } from "../../../store/user-state/profileUserSlice";
+import { setActiveModuleName } from "../../../store/moduleSlice";
 
 export default function Friend({
   person,
   isFriend,
   setNewFriends,
+  isFromUserProfile,
 }: {
   person: FriendInfo;
   isFriend: boolean;
+  isFromUserProfile?: boolean;
   setNewFriends: React.Dispatch<React.SetStateAction<FriendInfo[] | undefined>>;
 }) {
   const userId = useSelector((state: RootState) => state.user.id);
@@ -54,6 +57,14 @@ export default function Friend({
   };
 
   const goToProfie = async (isFriend: boolean) => {
+    if (isFromUserProfile) {
+      dispatch(setActiveModuleName("Friends"));
+    }
+
+    if (userId === person.id) {
+      dispatch(setActiveModuleName("User"));
+    }
+
     dispatch(
       setProfileUser({ email: person.email, id: person.id, isFriend: isFriend })
     );

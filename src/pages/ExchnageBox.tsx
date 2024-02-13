@@ -12,6 +12,8 @@ import { getMainComponentByName } from "../components/main-components/Helpers/Na
 import PopUp from "../components/common-components/PopUp";
 import SearchInput from "../components/common-components/SearchInput";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveModuleName } from "../store/moduleSlice";
 
 export default function ExchangeBox() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -19,7 +21,17 @@ export default function ExchangeBox() {
   const [mainComponent, setMainComponent] = useState<JSX.Element | null>();
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
+  const activeModuleName = useSelector(
+    (state) => state.activeModule.nameOfActiveModule
+  );
+
   const updateCurrentToFalse = (nameToUpdate: string) => {
+    if (nameToUpdate.length === 0) {
+      return;
+    }
+
     const updatedNavigation = navigation.map((item) => {
       if (item.name === nameToUpdate) {
         return { ...item, current: true };
@@ -36,12 +48,16 @@ export default function ExchangeBox() {
 
   useEffect(() => {
     const menuData = localStorage.getItem("menu_item");
-
+    console.log(menuData);
     if (menuData) {
       const parsedMenuData = JSON.parse(menuData);
       updateCurrentToFalse(parsedMenuData);
     }
   }, []);
+
+  useEffect(() => {
+    updateCurrentToFalse(activeModuleName);
+  }, [activeModuleName]);
 
   return (
     <>
@@ -110,13 +126,13 @@ export default function ExchangeBox() {
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="-mx-2 flex-1 space-y-1">
                         {navigation.map((item) => (
-                          <li onClick={() => {}} key={item.name}>
+                          <li className="cursor-pointer" key={item.name}>
                             <p
                               className={classNames(
                                 item.current
-                                  ? "bg-blue-800 text-white"
-                                  : "text-blue-400 hover:text-white hover:bg-blue-800",
-                                "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                                  ? "bg-blue-800 text-white cursor-pointer "
+                                  : "text-blue-400 hover:text-white hover:bg-blue-800 cursor-pointer",
+                                "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold cursor-pointer"
                               )}
                             >
                               <item.icon
@@ -142,16 +158,18 @@ export default function ExchangeBox() {
             <img className="h-8 w-auto" src={Logo} alt="Your Company" />
           </div>
           <nav className="mt-8">
-            <ul role="list" className="flex flex-col items-center space-y-1">
+            <ul
+              role="list"
+              className="flex flex-col items-center cursor-pointer space-y-1"
+            >
               {navigation.map((item) => (
                 <li
                   onClick={() => {
-                    updateCurrentToFalse(item.name);
+                    dispatch(setActiveModuleName(item.name));
                   }}
                   key={item.name}
                 >
-                  <a
-                    href={item.href}
+                  <p
                     className={classNames(
                       item.current
                         ? "bg-blue-800 text-white"
@@ -164,7 +182,7 @@ export default function ExchangeBox() {
                       aria-hidden="true"
                     />
                     <span className="sr-only">{item.name}</span>
-                  </a>
+                  </p>
                 </li>
               ))}
             </ul>
@@ -243,7 +261,7 @@ export default function ExchangeBox() {
                             <p
                               onClick={() => {
                                 if (item.name === "Your profile") {
-                                  updateCurrentToFalse("User");
+                                  dispatch(setActiveModuleName("User"));
                                   return;
                                 }
                                 document.cookie

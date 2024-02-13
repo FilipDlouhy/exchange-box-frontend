@@ -5,7 +5,7 @@ import UserExchanges from "./UsersExchanges";
 import axios from "axios";
 import generateUrl from "../../../contants/url";
 import { CurrentUser } from "./Interfaces/CurrentUserInterface";
-import Friend from "../friend-components/Friend";
+import Friend from "../../common-components/common-user-profile-components/Friend";
 import { FriendInfo } from "../friend-components/Interfaces/FriendInterface";
 import UsersLocationMap from "./UsersLocationMap";
 
@@ -152,6 +152,7 @@ function UserContainer() {
             curreuntUserFriends?.map((friend) => {
               return (
                 <Friend
+                  isFromUserProfile={true}
                   person={friend}
                   key={friend.id}
                   isFriend={true}

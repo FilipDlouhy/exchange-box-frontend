@@ -1,11 +1,12 @@
 import { UserIcon } from "@heroicons/react/24/outline";
-import { setProfileUser } from "../../../store/user-state/profileUserSlice";
+import { setProfileUser } from "../../../../store/user-state/profileUserSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { IUserProfileFriend } from "../../main-components/friend-components/Interfaces/UserProfileInterface";
-import { RootState } from "../../../store/store";
+import { IUserProfileFriend } from "../Interfaces/UserProfileInterface";
+import { RootState } from "../../../../store/store";
 import { useEffect, useState } from "react";
-import { friendStatusEnum } from "../../main-components/friend-components/Enums/FriendEnumStatus";
-import UserProfileRemoveAddFriendButton from "./UserProfileRemoveAddFriendButton";
+import { friendStatusEnum } from "../Enums/FriendEnumStatus";
+import UserProfileRemoveAddFriendButton from "../../../common-components/common-user-profile-components/UserProfileRemoveAddFriendButton";
+import { setActiveModuleName } from "../../../../store/moduleSlice";
 
 const UserProfileFriend = ({ friend }: { friend: IUserProfileFriend }) => {
   const dispatch = useDispatch();
@@ -14,7 +15,6 @@ const UserProfileFriend = ({ friend }: { friend: IUserProfileFriend }) => {
   const [friendStatus, setFriendStatus] = useState<number | null | undefined>(
     friend.friendStatus
   );
-
   useEffect(() => {
     setButtonText(
       friendStatus === friendStatusEnum.FriendRequestSent
@@ -77,6 +77,11 @@ const UserProfileFriend = ({ friend }: { friend: IUserProfileFriend }) => {
           <div className="-ml-px flex w-0 flex-1">
             <button
               onClick={() => {
+                if (userId.toString() === friend.id.toString()) {
+                  dispatch(setActiveModuleName("User"));
+                  return;
+                }
+
                 dispatch(
                   setProfileUser({
                     email: friend.email,

@@ -13,7 +13,7 @@ import generateUrl from "../../../contants/url";
 import axios from "axios";
 import { ToggleFriendDto } from "../../../Dtos/UserDtos/toggle.friend.dto";
 import { IUserProfile } from "./Interfaces/UserProfileInterface";
-import UserProfileFriend from "../../common-components/common-user-profile-components/UserProfileFriend";
+import UserProfileFriend from "./UserProfileComponents/UserProfileFriend";
 import UserProfileItem from "../../common-components/common-user-profile-components/UserProfileItem";
 import { friendStatusEnum } from "./Enums/FriendEnumStatus";
 import Stat from "./UserProfileComponents/Stat";
@@ -43,6 +43,8 @@ function UserProfile() {
           const response = await axios.post(url, toggleFriendDto);
           setProfileUserData(response.data);
 
+          console.log(response.data);
+
           setFriendStatus(response.data.friendStatus);
         }
       } catch (error) {
@@ -60,7 +62,11 @@ function UserProfile() {
       <div>
         <img
           className="h-32 w-full object-cover lg:h-48"
-          src="https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+          src={
+            profileUserData?.backgroundImageUrl
+              ? profileUserData?.backgroundImageUrl
+              : "https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+          }
           alt=""
         />
       </div>
