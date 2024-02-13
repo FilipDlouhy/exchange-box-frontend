@@ -14,13 +14,14 @@ import SearchInput from "../components/common-components/SearchInput";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveModuleName } from "../store/moduleSlice";
+import { RootState } from "../store/store";
 
 export default function ExchangeBox() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [navigation, setNavigation] = useState(initialNavigation);
   const [mainComponent, setMainComponent] = useState<JSX.Element | null>();
   const navigate = useNavigate();
-
+  const userImage = useSelector((state: RootState) => state.user.imageUrl);
   const dispatch = useDispatch();
 
   const activeModuleName = useSelector(
@@ -229,7 +230,7 @@ export default function ExchangeBox() {
                     <span className="sr-only">Open user menu</span>
                     <img
                       className="h-8 w-8 rounded-full bg-blue-50"
-                      src={Logo}
+                      src={userImage ? userImage : Logo}
                       alt=""
                     />
                     <span className="hidden lg:flex lg:items-center">
