@@ -1,5 +1,10 @@
 import UserProfileData from "../../common-components/UserProfileData";
-import { HomeIcon, PhoneIcon, UserPlusIcon } from "@heroicons/react/24/outline";
+import {
+  HomeIcon,
+  PhoneIcon,
+  UserPlusIcon,
+  WrenchIcon,
+} from "@heroicons/react/24/outline";
 
 function UserProfileCredentials({
   adress,
@@ -8,12 +13,14 @@ function UserProfileCredentials({
   setWasUpdated,
   handleAdressChange,
   handlePhoneChange,
+  setOpen,
   updateUserData,
 }: {
   phone: string | null | undefined;
   adress: string | null | undefined;
   wasUpdated: boolean;
   setWasUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleAdressChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handlePhoneChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   updateUserData: () => Promise<void>;
@@ -45,6 +52,20 @@ function UserProfileCredentials({
         setWasUpdated={setWasUpdated}
         handleChangeFromParrent={handlePhoneChange}
       />
+
+      <button
+        onClick={() => {
+          setOpen(true);
+        }}
+        type="button"
+        className="flex justify-around rounded-md bg-white w-40 items-center h-9 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+      >
+        <WrenchIcon
+          className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
+          aria-hidden="true"
+        />
+        <span>Update password</span>
+      </button>
 
       {wasUpdated ? (
         <button

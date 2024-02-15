@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { ChangePasswordDto } from "../../Dtos/UserDtos/change.password.dto";
-import generateUrl from "../../contants/url";
-import axios from "axios";
+import { handleChangePasswordHelper } from "./Helpers/ChangePasswordHelper";
 
 export default function ChangePassword({
   setIsLoggingIn,
@@ -16,25 +14,18 @@ export default function ChangePassword({
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleChangePassword = async (e) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      return;
-    }
-
-    const changePasswordDto = new ChangePasswordDto(
-      newPassword,
-      email,
-      prevPassword
-    );
-
-    const url = generateUrl("/user/change-password");
-
     try {
-      await axios.post(url, changePasswordDto);
+      e.preventDefault();
+      await handleChangePasswordHelper({
+        email: email,
+        prevPassword: prevPassword,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword,
+      });
 
       setIsLoggingIn(true);
     } catch (error) {
-      console.error(error);
+      console.error("Error occurred during password change:", error);
     }
   };
 

@@ -8,11 +8,12 @@ import { CurrentUser } from "./Interfaces/CurrentUserInterface";
 import Friend from "../../common-components/common-user-profile-components/Friend";
 import { FriendInfo } from "../friend-components/Interfaces/FriendInterface";
 import UsersLocationMap from "./UsersLocationMap";
+import ChangePassword from "./ChangePassword";
 
 function UserContainer() {
   const [wasUpdated, setWasUpdated] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<CurrentUser | undefined>();
-
+  const [open, setOpen] = useState(true);
   const [curreuntUserFriends, setCurreuntUserFriends] =
     useState<FriendInfo[]>();
 
@@ -126,6 +127,7 @@ function UserContainer() {
 
       {currentUser && (
         <UserProfileCredentials
+          setOpen={setOpen}
           updateUserData={updateUserData}
           adress={currentUser?.address}
           phone={currentUser?.telephone}
@@ -166,6 +168,8 @@ function UserContainer() {
       <div className="w-full mt-4 flex items-center justify-center flex-wrap mb-10">
         <UserExchanges />
       </div>
+
+      <ChangePassword open={open} setOpen={setOpen} />
     </div>
   );
 }
