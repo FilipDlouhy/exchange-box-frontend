@@ -35,9 +35,7 @@ export const addOrRemoveFriend = async (
       ? generateUrl(`user/create-friend-request`)
       : generateUrl(`user/remove-friend`);
 
-    const toggleFriendDto = isAdding
-      ? new ToggleFriendDto(friendId, userId)
-      : new ToggleFriendDto(userId, friendId);
+    const toggleFriendDto = new ToggleFriendDto(userId, friendId);
 
     await axios.post(url, toggleFriendDto);
 

@@ -7,13 +7,11 @@ import {
 } from "@heroicons/react/24/outline";
 import { FriendInfo } from "../../main-components/friend-components/Interfaces/FriendInterface";
 import FriendButton from "../../main-components/friend-components/FriendButton";
-import generateUrl from "../../../contants/url";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
-import { ToggleFriendDto } from "../../../Dtos/UserDtos/toggle.friend.dto";
-import axios from "axios";
 import { setProfileUser } from "../../../store/user-state/profileUserSlice";
 import { setActiveModuleName } from "../../../store/moduleSlice";
+import { addOrRemoveFriend } from "../../main-components/friend-components/Helpers/FriendsHelper";
 
 export default function Friend({
   person,
@@ -34,26 +32,6 @@ export default function Friend({
     setNewFriends((prevFriends) =>
       prevFriends ? prevFriends.filter((friend) => friend.id !== friendId) : []
     );
-  };
-
-  const addOrRemoveFriend = async (isAdding: boolean) => {
-    try {
-      const url = isAdding
-        ? generateUrl(`user/create-friend-request`)
-        : generateUrl(`user/remove-friend`);
-
-      const toggleFriendDto = isAdding
-        ? new ToggleFriendDto(parseInt(person.id), parseInt(userId))
-        : new ToggleFriendDto(parseInt(userId), parseInt(person.id));
-
-      await axios.post(url, toggleFriendDto);
-
-      filterFriend(person.id);
-    } catch (error) {
-      console.error("Error while adding friend:", error);
-
-      throw error;
-    }
   };
 
   const goToProfie = async (isFriend: boolean) => {
@@ -153,7 +131,12 @@ export default function Friend({
                 }
                 text="Remove friend"
                 onClick={() => {
-                  addOrRemoveFriend(false);
+                  addOrRemoveFriend(
+                    false,
+                    parseInt(userId),
+                    parseInt(person.id),
+                    filterFriend
+                  );
                 }}
               />
             </div>
@@ -171,7 +154,12 @@ export default function Friend({
               }
               text="Add as a friend"
               onClick={() => {
-                addOrRemoveFriend(true);
+                addOrRemoveFriend(
+                  true,
+                  parseInt(userId),
+                  parseInt(person.id),
+                  filterFriend
+                );
               }}
             />
             <FriendButton
