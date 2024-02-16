@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { handleChangePasswordHelper } from "./Helpers/ChangePasswordHelper";
+import { FormProps } from "./Props/FormProps";
 
 export default function ChangePassword({
   setIsLoggingIn,
   setIsChnagingPassword,
-}: {
-  setIsLoggingIn: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsChnagingPassword: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+}: FormProps) {
   const [prevPassword, setPrevPassword] = useState("");
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");

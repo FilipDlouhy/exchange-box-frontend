@@ -8,13 +8,12 @@ import { useNavigate } from "react-router-dom";
 import { AppDispatch } from "../../store/store";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/user-state/userSlice";
+import { FormProps } from "./Props/FormProps";
+
 export default function LoginForm({
   setIsLoggingIn,
   setIsChnagingPassword,
-}: {
-  setIsLoggingIn: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsChnagingPassword: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+}: FormProps) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [errorText, setErrorText] = useState<string>();

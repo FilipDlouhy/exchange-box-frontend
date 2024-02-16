@@ -3,14 +3,12 @@ import generateUrl from "../../contants/url";
 import axios from "axios";
 import { CreateUserDto } from "../../Dtos/UserDtos/create.user.dto";
 import { handleInputChange } from "./Helpers/InputHelper";
+import { FormProps } from "./Props/FormProps";
 
 export default function SingUpForm({
   setIsLoggingIn,
   setIsChnagingPassword,
-}: {
-  setIsLoggingIn: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsChnagingPassword: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+}: FormProps) {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");

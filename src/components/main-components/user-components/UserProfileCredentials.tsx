@@ -5,6 +5,7 @@ import {
   UserPlusIcon,
   WrenchIcon,
 } from "@heroicons/react/24/outline";
+import { UserCredentialsProps } from "./ComponentProps/UserCredentialsProps";
 
 function UserProfileCredentials({
   adress,
@@ -15,16 +16,7 @@ function UserProfileCredentials({
   handlePhoneChange,
   setOpen,
   updateUserData,
-}: {
-  phone: string | null | undefined;
-  adress: string | null | undefined;
-  wasUpdated: boolean;
-  setWasUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  handleAdressChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handlePhoneChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  updateUserData: () => Promise<void>;
-}) {
+}: UserCredentialsProps) {
   return (
     <div className="mt-6 mx-auto justify-center flex flex-col h-60 flex-wrap  items-center space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
       <UserProfileData

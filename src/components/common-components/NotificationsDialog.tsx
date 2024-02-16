@@ -1,11 +1,7 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { BellAlertIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { BellAlertIcon } from "@heroicons/react/24/outline";
 import Notification from "./Notification";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function NotificationsDialog({
   openNotifications,
@@ -60,7 +56,6 @@ export default function NotificationsDialog({
 
                 <div className="w-full h-56">
                   <div className="max-h-56 overflow-y-auto">
-                    <Notification />
                     <Notification />
                   </div>
                 </div>

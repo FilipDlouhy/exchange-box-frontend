@@ -3,22 +3,14 @@ import {
   UserMinusIcon,
   UserPlusIcon,
 } from "@heroicons/react/24/outline";
-import { IFriendRequest } from "./Interfaces/FriendRequestInterFace";
 import generateUrl from "../../../contants/url";
 import { ToggleFriendDto } from "../../../Dtos/UserDtos/toggle.friend.dto";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { showError } from "../../../store/errorSlice";
+import { FriendRequestProps } from "./ComponentProps/FriendRequestProps";
 
-function FriendRequest({
-  friendReqeust,
-  setNewRequests,
-}: {
-  friendReqeust: IFriendRequest;
-  setNewRequests: React.Dispatch<
-    React.SetStateAction<IFriendRequest[] | undefined>
-  >;
-}) {
+function FriendRequest({ friendReqeust, setNewRequests }: FriendRequestProps) {
   const dispatch = useDispatch();
 
   const handleShowError = (message: string) => {

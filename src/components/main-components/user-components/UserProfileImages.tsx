@@ -1,3 +1,4 @@
+import { UserProfileImageProps } from "./ComponentProps/UserProfileImageProps";
 import { defaultBackgroundImage } from "./Helpers/DefaultBackgroundImage";
 
 function UserProfileImages({
@@ -7,14 +8,7 @@ function UserProfileImages({
   handleBackgroundChange,
   handleNameChange,
   name = "",
-}: {
-  handleBackgroundChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  backgroundImage: string | null | undefined;
-  handleAvatarChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  avatar: string | null | undefined;
-  name: string | undefined;
-  handleNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}) {
+}: UserProfileImageProps) {
   return (
     <div>
       <div>
