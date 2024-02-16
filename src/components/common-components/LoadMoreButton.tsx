@@ -24,7 +24,7 @@ const LoadMoreButton = ({
           dispatch(incrementStarting());
         }}
       >
-        Load Moredddd
+        Load More
       </button>
     ) : (
       <div className="w-full h-12 flex items-center justify-center mt-3 mb-4">
