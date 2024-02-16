@@ -51,7 +51,6 @@ export default function ExchangeBox() {
 
   useEffect(() => {
     const menuData = localStorage.getItem("menu_item");
-    console.log(menuData);
     if (menuData) {
       const parsedMenuData = JSON.parse(menuData);
       updateCurrentToFalse(parsedMenuData);

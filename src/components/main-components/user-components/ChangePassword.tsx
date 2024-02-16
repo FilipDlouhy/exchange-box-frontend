@@ -37,6 +37,13 @@ export default function ChangePassword({
         confirmPassword: formData.confirmPassword,
       });
 
+      setFormData({
+        email: "",
+        prevPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+
       setOpen(false);
     } catch (error) {
       console.error("Error occurred during password change:", error);
@@ -45,7 +52,19 @@ export default function ChangePassword({
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        onClose={() => {
+          setOpen(false);
+          setFormData({
+            email: "",
+            prevPassword: "",
+            newPassword: "",
+            confirmPassword: "",
+          });
+        }}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

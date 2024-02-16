@@ -21,6 +21,10 @@ export default function ChangePassword({
         confirmPassword: confirmPassword,
       });
 
+      setPrevPassword("");
+      setEmail("");
+      setNewPassword("");
+      setConfirmPassword("");
       setIsLoggingIn(true);
     } catch (error) {
       console.error("Error occurred during password change:", error);
@@ -55,6 +59,7 @@ export default function ChangePassword({
                   id="email"
                   name="email"
                   type="email"
+                  value={email}
                   required
                   onChange={(e) => setEmail(e.target.value)}
                   className="h-8 shadow-lg block w-full rounded-md border-gray-300  focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -71,6 +76,7 @@ export default function ChangePassword({
                 <input
                   id="prevPassword"
                   name="prevPassword"
+                  value={prevPassword}
                   type="password"
                   required
                   onChange={(e) => setPrevPassword(e.target.value)}
@@ -89,6 +95,7 @@ export default function ChangePassword({
                   id="newPassword"
                   name="newPassword"
                   type="password"
+                  value={newPassword}
                   required
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="h-8 block w-full rounded-md border-gray-300 shadow-lg focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -106,6 +113,7 @@ export default function ChangePassword({
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
+                  value={confirmPassword}
                   required
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className=" h-8 block w-full rounded-md border-gray-300 shadow-lg focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
