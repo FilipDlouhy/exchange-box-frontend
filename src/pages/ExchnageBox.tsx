@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveModuleName } from "../store/moduleSlice";
 import { RootState } from "../store/store";
+import NotificationsDialog from "../components/common-components/NotificationsDialog";
 
 export default function ExchangeBox() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -23,6 +24,7 @@ export default function ExchangeBox() {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
+  const [openNotifications, setOpenNotifications] = useState(false);
 
   const activeModuleName = useSelector(
     (state) => state.activeModule.nameOfActiveModule
@@ -211,6 +213,9 @@ export default function ExchangeBox() {
               <SearchInput />
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 <button
+                  onClick={() => {
+                    setOpenNotifications(true);
+                  }}
                   type="button"
                   className="-m-2.5 p-2.5 text-blue-400 hover:text-blue-500"
                 >
@@ -304,6 +309,10 @@ export default function ExchangeBox() {
       </div>
 
       <PopUp />
+      <NotificationsDialog
+        openNotifications={openNotifications}
+        setOpenNotifications={setOpenNotifications}
+      />
     </>
   );
 }
