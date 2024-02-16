@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveModuleName } from "../store/moduleSlice";
 import { RootState } from "../store/store";
-import NotificationsDialog from "../components/common-components/NotificationsDialog";
+import NotificationsDialog from "../components/common-components/Notifications/NotificationsDialog";
 
 export default function ExchangeBox() {
   const [sidebarOpen, setSidebarOpen] = useState(false);

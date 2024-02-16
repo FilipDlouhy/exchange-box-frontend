@@ -1,10 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { showError } from "../../../store/errorSlice";
-import generateUrl from "../../../contants/url";
-import { PaginationState } from "../../../contants/PaginationInteface";
 import { hideButton } from "../../../store/paginationSlice";
+import { PaginationState } from "../../../contants/PaginationInteface";
+import generateUrl from "../../../contants/url";
 
 type SetData<T> = (data: T) => void;
 
@@ -16,30 +16,32 @@ export const useFetchData = <T extends unknown[]>(
   const pagination: PaginationState = useSelector((state) => state.pagination);
   const searchText = useSelector((state) => state.search.searchText);
   const dispatch = useDispatch();
-  const handleShowError = (message: string) => {
-    dispatch(showError(message));
-  };
+
+  const paginationRef = useRef(pagination);
+  const searchTextRef = useRef(searchText);
+
+  useEffect(() => {
+    if (paginationRef.current !== pagination) {
+      paginationRef.current = pagination;
+    }
+    if (searchTextRef.current !== searchText) {
+      searchTextRef.current = searchText;
+    }
+  }, [pagination, searchText]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response =
-          searchText.length > 0
-            ? await axios.get(generateUrl(url), {
-                params: {
-                  page: pagination.starting,
-                  limit: pagination.max,
-                },
-                withCredentials: true,
-              })
-            : await axios.get(generateUrl(url), {
-                params: {
-                  page: pagination.starting,
-                  limit: pagination.max,
-                  search: searchText,
-                },
-                withCredentials: true,
-              });
+        const response = await axios.get(generateUrl(url), {
+          params: {
+            page: paginationRef.current.starting,
+            limit: paginationRef.current.max,
+            ...(searchTextRef.current.length > 0 && {
+              search: searchTextRef.current,
+            }),
+          },
+          withCredentials: true,
+        });
 
         if (response.data.length === 0) {
           dispatch(hideButton());
@@ -57,5 +59,9 @@ export const useFetchData = <T extends unknown[]>(
     };
 
     fetchData();
-  }, [pagination]);
+  }, [pagination.starting, pagination.max]);
+
+  const handleShowError = (message: string) => {
+    dispatch(showError(message));
+  };
 };

@@ -43,8 +43,6 @@ function UserProfile() {
           const response = await axios.post(url, toggleFriendDto);
           setProfileUserData(response.data);
 
-          console.log(response.data);
-
           setFriendStatus(response.data.friendStatus);
         }
       } catch (error) {

@@ -1,7 +1,10 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { BellAlertIcon } from "@heroicons/react/24/outline";
 import Notification from "./Notification";
+import { useFetchData } from "../Hooks/FetchDataHook";
+import { INotification } from "./Interfaces/NotificationInterface";
+import LoadMoreButton from "../LoadMoreButton";
 
 export default function NotificationsDialog({
   openNotifications,
@@ -10,6 +13,13 @@ export default function NotificationsDialog({
   openNotifications: boolean;
   setOpenNotifications: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const [notifications, setNotifications] = useState<INotification[]>();
+
+  useFetchData<INotification[]>(
+    `notification/get-notifications`,
+    setNotifications,
+    notifications
+  );
   return (
     <Transition.Root show={openNotifications} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpenNotifications}>
@@ -56,17 +66,29 @@ export default function NotificationsDialog({
 
                 <div className="w-full h-56">
                   <div className="max-h-56 overflow-y-auto">
-                    <Notification />
+                    {notifications &&
+                      notifications.map((notification) => {
+                        return (
+                          <Notification
+                            notification={notification}
+                            notifications={notifications}
+                            key={notification.id}
+                            setNotifications={setNotifications}
+                          />
+                        );
+                      })}
                   </div>
                 </div>
-                <div className="mt-5 sm:mt-6">
+                <div className="mt-5 sm:mt-6 flex items-center justify-between">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="w-36 h-8 flex items-center justify-center rounded-md bg-indigo-600 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     onClick={() => setOpenNotifications(false)}
                   >
-                    Go back to dashboard
+                    Go back
                   </button>
+
+                  <LoadMoreButton styles={"w-36 h-8"} notInDiv={true} />
                 </div>
               </Dialog.Panel>
             </Transition.Child>
