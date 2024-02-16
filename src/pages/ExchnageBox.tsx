@@ -21,7 +21,7 @@ export default function ExchangeBox() {
   const [navigation, setNavigation] = useState(initialNavigation);
   const [mainComponent, setMainComponent] = useState<JSX.Element | null>();
   const navigate = useNavigate();
-  const userImage = useSelector((state: RootState) => state.user.imageUrl);
+  const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
   const activeModuleName = useSelector(
@@ -230,7 +230,7 @@ export default function ExchangeBox() {
                     <span className="sr-only">Open user menu</span>
                     <img
                       className="h-8 w-8 rounded-full bg-blue-50"
-                      src={userImage ? userImage : Logo}
+                      src={user.imageUrl ? user.imageUrl : Logo}
                       alt=""
                     />
                     <span className="hidden lg:flex lg:items-center">
@@ -238,7 +238,7 @@ export default function ExchangeBox() {
                         className="ml-4 text-sm font-semibold leading-6 text-blue-900"
                         aria-hidden="true"
                       >
-                        Tom Cook
+                        {user.name}
                       </span>
                       <ChevronDownIcon
                         className="ml-2 h-5 w-5 text-blue-400"

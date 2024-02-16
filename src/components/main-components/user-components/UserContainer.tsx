@@ -13,7 +13,7 @@ import ChangePassword from "./ChangePassword";
 function UserContainer() {
   const [wasUpdated, setWasUpdated] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<CurrentUser | undefined>();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [curreuntUserFriends, setCurreuntUserFriends] =
     useState<FriendInfo[]>();
 
