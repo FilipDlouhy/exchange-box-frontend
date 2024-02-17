@@ -134,9 +134,9 @@ export default function Friend({
                   addOrRemoveFriend(
                     false,
                     parseInt(userId),
-                    parseInt(person.id),
-                    filterFriend
+                    parseInt(person.id)
                   );
+                  filterFriend(person.id);
                 }}
               />
             </div>
@@ -154,12 +154,8 @@ export default function Friend({
               }
               text="Add as a friend"
               onClick={() => {
-                addOrRemoveFriend(
-                  true,
-                  parseInt(userId),
-                  parseInt(person.id),
-                  filterFriend
-                );
+                addOrRemoveFriend(true, parseInt(userId), parseInt(person.id));
+                filterFriend(person.id);
               }}
             />
             <FriendButton

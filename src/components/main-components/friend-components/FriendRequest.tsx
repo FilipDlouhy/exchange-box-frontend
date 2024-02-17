@@ -54,7 +54,7 @@ function FriendRequest({ friendReqeust, setNewRequests }: FriendRequestProps) {
           <UserIcon className="mx-auto h-32 w-32 flex-shrink-0 rounded-full" />
         )}
         <h3 className="mt-6 text-lg font-medium text-gray-900">
-          Name: {friendReqeust.name}
+          Name: {friendReqeust.friendName}
         </h3>
       </div>
       <div>

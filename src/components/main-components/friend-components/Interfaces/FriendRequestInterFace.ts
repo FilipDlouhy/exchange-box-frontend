@@ -9,5 +9,5 @@ export interface IFriendRequest {
 
   friendImageUrl: string;
 
-  name: string;
+  friendName: string;
 }
