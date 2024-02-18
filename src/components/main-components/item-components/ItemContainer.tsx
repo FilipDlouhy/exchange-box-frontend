@@ -20,8 +20,6 @@ function ItemContainer() {
 
   useEffect(() => {
     const itemsActiveMenu = localStorage.getItem("itemsActiveMenu");
-    console.log("AFASF");
-    console.log(itemsActiveMenu);
     if (typeof itemsActiveMenu === "string") {
       handleMenuButtonClick(itemsActiveMenu);
     }
