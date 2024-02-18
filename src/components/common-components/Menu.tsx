@@ -6,9 +6,11 @@ import "./style.css";
 export default function Menu({
   menu,
   clickFunction,
+  currentMenu,
 }: {
   menu: MenuItem[];
   clickFunction: (name: string) => void;
+  currentMenu: string;
 }) {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [menuAnimation, setMenuAnimation] = useState<string>("");
@@ -42,6 +44,7 @@ export default function Menu({
         {menu.map((menuItem) => {
           return (
             <MenuButton
+              currentMenu={currentMenu}
               buttonData={menuItem}
               key={menuItem.name}
               clickFunction={clickFunction}

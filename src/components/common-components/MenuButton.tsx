@@ -6,11 +6,16 @@ import { resetProfileUser } from "../../store/user-state/profileUserSlice";
 function MenuButton({
   buttonData,
   clickFunction,
+  currentMenu,
 }: {
   buttonData: MenuItem;
   clickFunction: (name: string) => void;
+  currentMenu: string;
 }) {
-  const activeMenu = useSelector((state: RootState) => state.friendsMenu.value);
+  const activeMenu = useSelector((state: RootState) =>
+    currentMenu === "friends" ? state.friendsMenu.value : state.itemsMenu.value
+  );
+
   const dispatch = useDispatch<AppDispatch>();
 
   return (

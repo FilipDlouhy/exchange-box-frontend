@@ -30,7 +30,11 @@ function FriendContainer() {
 
   return (
     <div>
-      <Menu menu={friendsMenuItems} clickFunction={handleMenuButtonClick} />
+      <Menu
+        currentMenu={"friends"}
+        menu={friendsMenuItems}
+        clickFunction={handleMenuButtonClick}
+      />
       {!profileUser.email && !profileUser.id ? (
         DynamicComponentRenderer(activeMenu, friendsMenuItems)
       ) : (
