@@ -6,6 +6,7 @@ import profileUserReducer from "./user-state/profileUserSlice";
 import paginationSliceReducer from "./paginationSlice";
 import searchSlice from "./searchSlice";
 import activeModuleReduced from "./moduleSlice";
+import itemMenuReducer from "./item-state/itemMenuSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     pagination: paginationSliceReducer,
     search: searchSlice,
     activeModule: activeModuleReduced,
+    itemsMenu: itemMenuReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
