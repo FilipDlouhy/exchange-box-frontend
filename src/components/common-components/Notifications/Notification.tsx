@@ -8,12 +8,14 @@ function Notification({
   notification,
   notifications,
   setNotifications,
+  numberOfNotifications,
+  setNumberOfNotifications,
 }: NotificationProps) {
   const [wasSeen, setWasSeen] = useState<boolean>(notification.seen);
 
   const changeNotificationToSeenOrDelete = async (isDeleteing: boolean) => {
     try {
-      if (wasSeen) {
+      if (wasSeen && !isDeleteing) {
         return;
       }
 
@@ -37,6 +39,10 @@ function Notification({
       } else {
         setWasSeen(true);
       }
+
+      setNumberOfNotifications(
+        numberOfNotifications === 0 ? 0 : numberOfNotifications - 1
+      );
     } catch (error) {
       console.error(
         "An error occurred while changing notification state:",

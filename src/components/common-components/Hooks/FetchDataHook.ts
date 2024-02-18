@@ -11,7 +11,8 @@ type SetData<T> = (data: T) => void;
 export const useFetchData = <T extends unknown[]>(
   url: string,
   setData: SetData<T>,
-  additionalData: T | undefined
+  additionalData: T | undefined,
+  reTrigger?: any
 ): void => {
   const pagination: PaginationState = useSelector((state) => state.pagination);
   const searchText = useSelector((state) => state.search.searchText);
@@ -28,38 +29,40 @@ export const useFetchData = <T extends unknown[]>(
       searchTextRef.current = searchText;
     }
   }, [pagination, searchText]);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(generateUrl(url), {
+        params: {
+          page: paginationRef.current.starting,
+          limit: paginationRef.current.max,
+          ...(searchTextRef.current.length > 0 && {
+            search: searchTextRef.current,
+          }),
+        },
+        withCredentials: true,
+      });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(generateUrl(url), {
-          params: {
-            page: paginationRef.current.starting,
-            limit: paginationRef.current.max,
-            ...(searchTextRef.current.length > 0 && {
-              search: searchTextRef.current,
-            }),
-          },
-          withCredentials: true,
-        });
-
-        if (response.data.length === 0) {
-          dispatch(hideButton());
-        }
-
-        const mergedData = additionalData
-          ? [...additionalData, ...response.data]
-          : [...response.data];
-
-        setData(mergedData as T);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        handleShowError(error.message);
+      if (response.data.length === 0) {
+        dispatch(hideButton());
       }
-    };
 
+      const mergedData = additionalData
+        ? [...additionalData, ...response.data]
+        : [...response.data];
+
+      setData(mergedData as T);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      handleShowError(error.message);
+    }
+  };
+  useEffect(() => {
     fetchData();
   }, [pagination.starting, pagination.max]);
+
+  useEffect(() => {
+    fetchData();
+  }, [reTrigger]);
 
   const handleShowError = (message: string) => {
     dispatch(showError(message));

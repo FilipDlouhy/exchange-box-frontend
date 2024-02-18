@@ -16,6 +16,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setActiveModuleName } from "../store/moduleSlice";
 import { RootState } from "../store/store";
 import NotificationsDialog from "../components/common-components/Notifications/NotificationsDialog";
+import io from "socket.io-client";
+import axios from "axios";
+import generateUrl from "../contants/url";
+import { NotificationEvent } from "../components/common-components/Notifications/Interfaces/NotificationEventInterface";
 
 export default function ExchangeBox() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,6 +29,7 @@ export default function ExchangeBox() {
   const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   const [openNotifications, setOpenNotifications] = useState(false);
+  const [numberOfNotifications, setNumberOfNotifications] = useState<number>(0);
 
   const activeModuleName = useSelector(
     (state) => state.activeModule.nameOfActiveModule
@@ -49,12 +54,28 @@ export default function ExchangeBox() {
     setMainComponent(getMainComponentByName(nameToUpdate));
   };
 
+  const getNumberOfNotifications = async () => {
+    const response = await axios.get(
+      generateUrl("notification/get-number-of-notifications"),
+      { withCredentials: true }
+    );
+
+    setNumberOfNotifications(response.data);
+  };
+
   useEffect(() => {
     const menuData = localStorage.getItem("menu_item");
     if (menuData) {
       const parsedMenuData = JSON.parse(menuData);
       updateCurrentToFalse(parsedMenuData);
     }
+
+    const socket = io("http://localhost:3000");
+    socket.on("notification", (data: NotificationEvent) => {
+      setNumberOfNotifications(data.notificationCount);
+    });
+    getNumberOfNotifications();
+    return () => socket.off("notification");
   }, []);
 
   useEffect(() => {
@@ -208,7 +229,7 @@ export default function ExchangeBox() {
               aria-hidden="true"
             />
 
-            <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+            <div className="relative flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
               <SearchInput />
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 <button
@@ -220,6 +241,10 @@ export default function ExchangeBox() {
                 >
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
+
+                  <div className="absolute w-6 h-6 top-3 flex justify-center items-center text-white ml-3 text-xs font-semibold bg-blue-600 rounded-full">
+                    {numberOfNotifications}
+                  </div>
                 </button>
 
                 {/* Separator */}
@@ -309,6 +334,8 @@ export default function ExchangeBox() {
 
       <PopUp />
       <NotificationsDialog
+        numberOfNotifications={numberOfNotifications}
+        setNumberOfNotifications={setNumberOfNotifications}
         openNotifications={openNotifications}
         setOpenNotifications={setOpenNotifications}
       />

@@ -7,4 +7,6 @@ export interface NotificationProps {
   setNotifications: React.Dispatch<
     React.SetStateAction<INotification[] | undefined>
   >;
+  numberOfNotifications: number;
+  setNumberOfNotifications: React.Dispatch<React.SetStateAction<number>>;
 }

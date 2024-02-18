@@ -5,21 +5,23 @@ import Notification from "./Notification";
 import { useFetchData } from "../Hooks/FetchDataHook";
 import { INotification } from "./Interfaces/NotificationInterface";
 import LoadMoreButton from "../LoadMoreButton";
+import { NotificationDialogProps } from "./Props/NotificationDialogProps";
 
 export default function NotificationsDialog({
   openNotifications,
   setOpenNotifications,
-}: {
-  openNotifications: boolean;
-  setOpenNotifications: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+  numberOfNotifications,
+  setNumberOfNotifications,
+}: NotificationDialogProps) {
   const [notifications, setNotifications] = useState<INotification[]>();
 
   useFetchData<INotification[]>(
     `notification/get-notifications`,
     setNotifications,
-    notifications
+    notifications,
+    numberOfNotifications
   );
+
   return (
     <Transition.Root show={openNotifications} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpenNotifications}>
@@ -70,6 +72,8 @@ export default function NotificationsDialog({
                       notifications.map((notification) => {
                         return (
                           <Notification
+                            numberOfNotifications={numberOfNotifications}
+                            setNumberOfNotifications={setNumberOfNotifications}
                             notification={notification}
                             notifications={notifications}
                             key={notification.id}
