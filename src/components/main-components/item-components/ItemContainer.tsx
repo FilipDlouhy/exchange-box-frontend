@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { resetStarting } from "../../../store/paginationSlice";
 import { clearSearchText } from "../../../store/searchSlice";
 import { DynamicComponentRenderer } from "../../common-components/Helpers/ComonHelpers";
@@ -32,6 +32,7 @@ function ItemContainer() {
         menu={itemMenuItems}
         clickFunction={handleMenuButtonClick}
       />
+
       {DynamicComponentRenderer(activeMenu, itemMenuItems)}
     </div>
   );
