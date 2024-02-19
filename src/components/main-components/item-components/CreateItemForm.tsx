@@ -1,5 +1,10 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { UserIcon } from "@heroicons/react/24/outline";
+import { FormUser } from "./Interfaces/FormUser";
+import { useFetchDataSimple } from "../../common-components/Hooks/FetchDataHookSimple";
+import axios from "axios";
+import generateUrl from "../../../contants/url";
 
 export default function CreateItemForm({
   open,
@@ -8,38 +13,72 @@ export default function CreateItemForm({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
 }) {
-  const [name, setName] = useState<string>("");
-  const [length, setLength] = useState<string>("");
-  const [width, setWidth] = useState<string>("");
-  const [height, setHeight] = useState<string>("");
-  const [weight, setWeight] = useState<string>("");
+  const [formItemData, setformItemData] = useState({
+    name: "",
+    length: "",
+    width: "",
+    height: "",
+    weight: "",
+  });
+  const [friends, setFriends] = useState<FormUser[]>([]);
   const [selectedName, setSelectedName] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
-  const names = [
-    { name: "Alice", imageUrl: "/path/to/alice.jpg" },
-    { name: "Bob", imageUrl: "/path/to/bob.jpg" },
-  ];
 
-  const handleFileChange =
-    () => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files ? event.target.files[0] : null;
-      if (file) {
-        const fileURL = URL.createObjectURL(file);
-        const modifiedFile = new File([file], field + ".jpg", {
-          type: file.type,
-        });
+  useFetchDataSimple<FormUser[]>(
+    "user/get-friends-for-item-creation",
+    setFriends
+  );
 
-        setFile(modifiedFile);
-      }
-    };
+  const handleInputChange = (e) => {
+    console.log("ASFASF");
+    console.log(e.target.value);
+    const { name, value } = e.target;
+    setformItemData((prevformItemData) => ({
+      ...prevformItemData,
+      [name]: value,
+    }));
+  };
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (file) {
+      const modifiedFile = new File([file], "imageUrl" + ".jpg", {
+        type: file.type,
+      });
+
+      setFile(modifiedFile);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let formData = new FormData();
+
+    formData.append("name", formItemData.name);
+    formData.append("length", formItemData.length);
+    formData.append("width", formItemData.width);
+    formData.append("height", formItemData.height);
+    formData.append("weight", formItemData.weight);
+
+    if (file) {
+      formData.append("images", file);
+    }
+
+    console.log(formData);
+
+    await axios.post(generateUrl("item/create-item"), formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     setOpen(false);
   };
 
-  const selectedNameObject = names.find((name) => name.name === selectedName);
+  const selectedNameObject = friends.find(
+    (friend) => friend.name === selectedName
+  );
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -68,50 +107,57 @@ export default function CreateItemForm({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden w-96 rounded-lg bg-white h-96  text-left shadow-xl transition-all  ">
-                <form onSubmit={handleSubmit}>
+                <form>
                   <p className="text-center text-2xl pt-1 font-semibold">
                     Create item
                   </p>
                   <div className=" h-72 flex flex-col items-center justify-around">
                     <input
                       type="text"
+                      name="name"
                       placeholder="Item Name"
                       className="w-5/6  rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      value={formItemData.name}
+                      onChange={handleInputChange}
                     />
                     <input
                       type="number"
+                      name="length"
                       placeholder="Length"
                       className="w-5/6  rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                      value={length}
-                      onChange={(e) => setLength(e.target.value)}
+                      value={formItemData.length}
+                      onChange={handleInputChange}
                     />
                     <input
                       type="number"
                       placeholder="Width"
+                      name="width"
                       className="w-5/6  rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                      value={width}
-                      onChange={(e) => setWidth(e.target.value)}
+                      value={formItemData.width}
+                      onChange={handleInputChange}
                     />
                     <input
                       type="number"
                       placeholder="Height"
+                      name="height"
                       className="w-5/6  rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                      value={height}
-                      onChange={(e) => setHeight(e.target.value)}
+                      value={formItemData.height}
+                      onChange={handleInputChange}
                     />
 
                     <input
                       type="number"
                       placeholder="Weight"
+                      name="weight"
                       className="w-5/6  rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                      value={weight}
-                      onChange={(e) => setWeight(e.target.value)}
+                      value={formItemData.weight}
+                      onChange={handleInputChange}
                     />
 
                     <input
                       type="file"
+                      accept="image/*"
+                      id="background-input"
                       onChange={handleFileChange}
                       className="block w-full text-sm text-gray-500
                         file:mr-4 file:py-2 file:px-4
@@ -126,7 +172,7 @@ export default function CreateItemForm({
                       className="w-5/6 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     >
                       <option value="">Select a name</option>
-                      {names.map((name, index) => (
+                      {friends.map((name, index) => (
                         <option key={index} value={name.name}>
                           {name.name}
                         </option>
@@ -134,25 +180,34 @@ export default function CreateItemForm({
                     </select>
                     {selectedName && (
                       <div className="mt-4 flex items-center">
-                        <img
-                          src={selectedNameObject?.imageUrl}
-                          alt={selectedName}
-                          style={{ width: 50, marginRight: 10 }}
-                        />
+                        {selectedNameObject?.imageUrl ? (
+                          <img
+                            src={selectedNameObject?.imageUrl}
+                            alt={selectedName}
+                            style={{ width: 50, marginRight: 10 }}
+                          />
+                        ) : (
+                          <UserIcon style={{ width: 50, marginRight: 10 }} />
+                        )}
                         <span>{selectedName}</span>
                       </div>
                     )}
                   </div>
                   <div className="h-16 flex items-center justify-center">
                     <button
-                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setOpen(false);
+                      }}
                       className="w-40 mx-auto rounded-md flex items-center justify-center bg-indigo-600 h-9 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                       Go back
                     </button>
 
                     <button
-                      type="submit"
+                      onClick={(e) => {
+                        handleSubmit(e);
+                      }}
                       className="w-40 mx-auto rounded-md flex items-center justify-center bg-indigo-600 h-9 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                       Create Item
