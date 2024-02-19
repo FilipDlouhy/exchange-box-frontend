@@ -5,17 +5,31 @@ import { RootState } from "../../../store/store";
 import { useEffect, useState } from "react";
 import { itemMenuItems } from "./Helpers/ItemHelper";
 import CreateItemForm from "./CreateItemForm";
+import { ItemInterface } from "./Interfaces/ItemInterface";
+import axios from "axios";
+import generateUrl from "../../../contants/url";
 
 function Items() {
   const activeMenu = useSelector((state: RootState) => state.itemsMenu.value);
   const [showYourItems, setShowYourItems] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
-
+  const [items, setItems] = useState<ItemInterface[]>();
   const [hadForgoten, setHadForgoten] = useState(false);
+
+  const fetchData = async () => {
+    const result = await axios.get(
+      !hadForgoten
+        ? generateUrl("item/get-user-items")
+        : generateUrl("item/get-user-forgoten-items"),
+      { withCredentials: true }
+    );
+    setItems(result.data);
+  };
 
   useEffect(() => {
     setShowYourItems(activeMenu === itemMenuItems[0].name ? true : false);
     setHadForgoten(activeMenu === itemMenuItems[0].name ? false : true);
+    fetchData();
   }, [activeMenu]);
 
   return (
@@ -36,7 +50,12 @@ function Items() {
       </div>
 
       <div className="w-full flex items-center justify-center h-96 overflow-y-auto flex-wrap">
-        <Item showYourItems={showYourItems} />
+        {items &&
+          items.map((item) => {
+            return (
+              <Item item={item} showYourItems={showYourItems} key={item.id} />
+            );
+          })}
       </div>
 
       <CreateItemForm hadForgoten={hadForgoten} open={open} setOpen={setOpen} />

@@ -1,38 +1,48 @@
-function Item({ showYourItems }: { showYourItems: boolean }) {
+import { ItemInterface } from "./Interfaces/ItemInterface";
+
+function Item({
+  item,
+  showYourItems,
+}: {
+  item: ItemInterface;
+  showYourItems: boolean;
+}) {
   return (
-    <div className=" w-96 h-80 shadow-xl rounded-sm  group relative">
+    <div className=" w-96 h-80 shadow-xl mx-5 rounded-sm  group relative">
       <div className="w-full h-1/2">
-        <img className="h-full w-full" />
+        <img className="h-full w-full" src={item.imageURL} />
       </div>
       <div className="w-full h-1/2 justify-between">
         <div className="w-full h-1/3 flex">
           <div className="w-1/2 h-full flex justify-start pl-1 items-center">
             <p className="text-lg font-semibold">
-              Name: <span className="text-blue-700 font-bold"></span>
+              Name:<span className="text-blue-700 font-bold">{item.name} </span>
             </p>
           </div>
           <div className="w-1/2 h-full flex justify-start pl-1 items-center">
             <p className="text-lg font-semibold">
-              Owner: <span className="text-blue-700 font-bold"></span>
+              Owner:{" "}
+              <span className="text-blue-700 font-bold">{item.ownerName}</span>
             </p>
           </div>
         </div>
         <div className="w-full  h-1/3">
           <div className="w-full h-1/2 justify-between items-center px-10 flex">
             <p className="text-sm text-gray-700">
-              Length: <span className="font-medium">{"100"} cm</span>
+              Length: <span className="font-medium">{item.length} cm</span>
             </p>
             <p className="text-sm text-gray-700">
-              Width: <span className="font-medium">{"100"} cm</span>
+              Width: <span className="font-medium">{item.length} cm</span>
             </p>
           </div>
 
           <div className="w-full h-1/2 justify-between items-center px-10 flex">
             <p className="text-sm text-gray-700">
-              Height: <span className="font-medium">{"195"} cm</span>
+              Height: <span className="font-medium">{item.height} cm</span>
             </p>
             <p className="text-sm text-gray-700">
-              Weight: <span className="font-medium">{"20000"} g</span>
+              Weight:{" "}
+              <span className="font-medium">{item.weightInGrams} g</span>
             </p>
           </div>
         </div>
