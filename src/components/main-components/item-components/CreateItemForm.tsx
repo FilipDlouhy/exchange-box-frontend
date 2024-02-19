@@ -1,10 +1,12 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { FormUser } from "./Interfaces/FormUser";
 import { useFetchDataSimple } from "../../common-components/Hooks/FetchDataHookSimple";
 import axios from "axios";
 import generateUrl from "../../../contants/url";
+import { RootState } from "../../../store/store";
+import { useSelector } from "react-redux";
 
 export default function CreateItemForm({
   open,
@@ -22,7 +24,35 @@ export default function CreateItemForm({
   });
   const [friends, setFriends] = useState<FormUser[]>([]);
   const [selectedName, setSelectedName] = useState<string>("");
+  const [selectedFriend, setSelectedFriend] = useState<FormUser>();
   const [file, setFile] = useState<File | null>(null);
+  const [errorText, setErrorText] = useState<string>("");
+  const userId = useSelector((state: RootState) => state.user.id);
+
+  useEffect(() => {
+    setErrorText("Create item");
+  }, [open]);
+
+  const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedName(e.target.value);
+
+    const foundFriend = friends.find(
+      (friend) => friend.name === e.target.value
+    );
+
+    setSelectedFriend(foundFriend);
+  };
+
+  const areAllFieldsFilled = (): boolean => {
+    const { name, length, width, height, weight } = formItemData;
+    return (
+      name !== "" &&
+      length !== "" &&
+      width !== "" &&
+      height !== "" &&
+      weight !== ""
+    );
+  };
 
   useFetchDataSimple<FormUser[]>(
     "user/get-friends-for-item-creation",
@@ -30,8 +60,6 @@ export default function CreateItemForm({
   );
 
   const handleInputChange = (e) => {
-    console.log("ASFASF");
-    console.log(e.target.value);
     const { name, value } = e.target;
     setformItemData((prevformItemData) => ({
       ...prevformItemData,
@@ -53,6 +81,16 @@ export default function CreateItemForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!areAllFieldsFilled()) {
+      setErrorText("Fill all fields");
+      return;
+    }
+
+    if (!selectedFriend) {
+      setErrorText("Select user");
+      return;
+    }
+
     let formData = new FormData();
 
     formData.append("name", formItemData.name);
@@ -60,12 +98,12 @@ export default function CreateItemForm({
     formData.append("width", formItemData.width);
     formData.append("height", formItemData.height);
     formData.append("weight", formItemData.weight);
+    formData.append("friendId", String(selectedFriend?.id));
+    formData.append("userId", userId);
 
     if (file) {
       formData.append("images", file);
     }
-
-    console.log(formData);
 
     await axios.post(generateUrl("item/create-item"), formData, {
       headers: {
@@ -109,7 +147,7 @@ export default function CreateItemForm({
               <Dialog.Panel className="relative transform overflow-hidden w-96 rounded-lg bg-white h-96  text-left shadow-xl transition-all  ">
                 <form>
                   <p className="text-center text-2xl pt-1 font-semibold">
-                    Create item
+                    {errorText}
                   </p>
                   <div className=" h-72 flex flex-col items-center justify-around">
                     <input
@@ -168,7 +206,9 @@ export default function CreateItemForm({
                     />
                     <select
                       value={selectedName}
-                      onChange={(e) => setSelectedName(e.target.value)}
+                      onChange={(e) => {
+                        handleUserChange(e);
+                      }}
                       className="w-5/6 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     >
                       <option value="">Select a name</option>

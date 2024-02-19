@@ -15,8 +15,6 @@ export const useFetchDataSimple = <T extends unknown[]>(
         withCredentials: true,
       });
 
-      console.log(response);
-
       setData(response.data as T);
     } catch (error) {
       console.error("Error fetching data:", error);
