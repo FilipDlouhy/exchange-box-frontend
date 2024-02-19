@@ -11,8 +11,11 @@ function Items() {
   const [showYourItems, setShowYourItems] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
 
+  const [hadForgoten, setHadForgoten] = useState(false);
+
   useEffect(() => {
     setShowYourItems(activeMenu === itemMenuItems[0].name ? true : false);
+    setHadForgoten(activeMenu === itemMenuItems[0].name ? false : true);
   }, [activeMenu]);
 
   return (
@@ -36,7 +39,7 @@ function Items() {
         <Item showYourItems={showYourItems} />
       </div>
 
-      <CreateItemForm open={open} setOpen={setOpen} />
+      <CreateItemForm hadForgoten={hadForgoten} open={open} setOpen={setOpen} />
     </div>
   );
 }

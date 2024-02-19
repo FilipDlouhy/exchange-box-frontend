@@ -9,11 +9,13 @@ import { RootState } from "../../../store/store";
 import { useSelector } from "react-redux";
 
 export default function CreateItemForm({
+  hadForgoten,
   open,
   setOpen,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
+  hadForgoten: boolean;
 }) {
   const [formItemData, setformItemData] = useState({
     name: "",
@@ -98,8 +100,14 @@ export default function CreateItemForm({
     formData.append("width", formItemData.width);
     formData.append("height", formItemData.height);
     formData.append("weight", formItemData.weight);
-    formData.append("friendId", String(selectedFriend?.id));
-    formData.append("userId", userId);
+    formData.append(
+      "friendId",
+      !hadForgoten ? String(selectedFriend?.id) : userId
+    );
+    formData.append(
+      "userId",
+      !hadForgoten ? userId : String(selectedFriend?.id)
+    );
 
     if (file) {
       formData.append("images", file);
