@@ -8,6 +8,8 @@ import CreateItemForm from "./CreateItemForm";
 import { ItemInterface } from "./Interfaces/ItemInterface";
 import axios from "axios";
 import generateUrl from "../../../contants/url";
+import { useFetchData } from "../../common-components/Hooks/FetchDataHook";
+import { useFetchDataSearch } from "../../common-components/Hooks/FetchSearchDataHook";
 
 function Items() {
   const activeMenu = useSelector((state: RootState) => state.itemsMenu.value);
@@ -16,20 +18,21 @@ function Items() {
   const [items, setItems] = useState<ItemInterface[]>();
   const [hadForgoten, setHadForgoten] = useState(false);
 
-  const fetchData = async () => {
-    const result = await axios.get(
-      !hadForgoten
-        ? generateUrl("item/get-user-items")
-        : generateUrl("item/get-user-forgoten-items"),
-      { withCredentials: true }
-    );
-    setItems(result.data);
-  };
+  useFetchData<ItemInterface[]>(
+    !hadForgoten ? "item/get-user-items" : "item/get-user-forgoten-items",
+    setItems,
+    items
+  );
+  useFetchDataSearch<ItemInterface[]>(
+    !hadForgoten ? "item/get-user-items" : "item/get-user-forgoten-items",
+    setItems,
+    items,
+    "name"
+  );
 
   useEffect(() => {
     setShowYourItems(activeMenu === itemMenuItems[0].name ? true : false);
     setHadForgoten(activeMenu === itemMenuItems[0].name ? false : true);
-    fetchData();
   }, [activeMenu]);
 
   return (
