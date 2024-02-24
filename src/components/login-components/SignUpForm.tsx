@@ -24,12 +24,8 @@ export default function SingUpForm({
     const url = generateUrl("/user/create-user");
 
     try {
-      const response = await axios.post(url, userData);
-      if (response.data) {
-        setIsLoggingIn(true);
-      } else {
-        console.error("Error creating user: Server response indicates failure");
-      }
+      await axios.post(url, userData);
+      setIsLoggingIn(true);
     } catch (error) {
       console.error(error);
       setErrorText(error.response.data.message);
