@@ -7,6 +7,7 @@ import { useState } from "react";
 import CreateItemForm from "./CreateItemForm";
 import { ItemInterface } from "./Interfaces/ItemInterface";
 import { useFetchDataSearch } from "../../common-components/Hooks/FetchSearchDataHook";
+import LoadMoreButton from "../../common-components/LoadMoreButton";
 
 function UserItems() {
   const activeMenu = useSelector((state: RootState) => state.itemsMenu.value);
@@ -36,7 +37,7 @@ function UserItems() {
         </button>
       </div>
 
-      <div className="w-full flex items-center justify-center h-96 overflow-y-auto flex-wrap">
+      <div className="w-full flex items-center justify-center h-full overflow-y-auto flex-wrap">
         {items &&
           items.map((item) => {
             return (
@@ -48,6 +49,7 @@ function UserItems() {
               />
             );
           })}
+        <LoadMoreButton />
       </div>
 
       <CreateItemForm
