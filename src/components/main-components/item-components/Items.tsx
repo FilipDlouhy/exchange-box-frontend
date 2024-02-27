@@ -6,9 +6,6 @@ import { useEffect, useState } from "react";
 import { itemMenuItems } from "./Helpers/ItemHelper";
 import CreateItemForm from "./CreateItemForm";
 import { ItemInterface } from "./Interfaces/ItemInterface";
-import axios from "axios";
-import generateUrl from "../../../contants/url";
-import { useFetchData } from "../../common-components/Hooks/FetchDataHook";
 import { useFetchDataSearch } from "../../common-components/Hooks/FetchSearchDataHook";
 
 function Items() {
@@ -18,11 +15,6 @@ function Items() {
   const [items, setItems] = useState<ItemInterface[]>();
   const [hadForgoten, setHadForgoten] = useState(false);
 
-  useFetchData<ItemInterface[]>(
-    !hadForgoten ? "item/get-user-items" : "item/get-user-forgoten-items",
-    setItems,
-    items
-  );
   useFetchDataSearch<ItemInterface[]>(
     !hadForgoten ? "item/get-user-items" : "item/get-user-forgoten-items",
     setItems,
@@ -31,6 +23,7 @@ function Items() {
   );
 
   useEffect(() => {
+    console.log(activeMenu === itemMenuItems[0].name ? false : true);
     setShowYourItems(activeMenu === itemMenuItems[0].name ? true : false);
     setHadForgoten(activeMenu === itemMenuItems[0].name ? false : true);
   }, [activeMenu]);

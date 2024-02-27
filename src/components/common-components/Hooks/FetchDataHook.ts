@@ -10,10 +10,11 @@ type SetData<T> = (data: T) => void;
 
 export const useFetchData = <T extends unknown[]>(
   url: string,
-  setData: SetData<T>,
+  setData: SetData<T | undefined>,
   additionalData: T | undefined,
   reTrigger?: any
 ): void => {
+  console.log(url);
   const pagination: PaginationState = useSelector((state) => state.pagination);
   const searchText = useSelector((state) => state.search.searchText);
   const dispatch = useDispatch();
@@ -61,6 +62,7 @@ export const useFetchData = <T extends unknown[]>(
   }, [pagination.starting, pagination.max]);
 
   useEffect(() => {
+    setData(undefined);
     fetchData();
   }, [reTrigger]);
 

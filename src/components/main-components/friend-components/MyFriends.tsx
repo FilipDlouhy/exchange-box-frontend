@@ -2,13 +2,11 @@ import { useState } from "react";
 import Friend from "../../common-components/common-user-profile-components/Friend";
 import { FriendInfo } from "./Interfaces/FriendInterface";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
-import { useFetchData } from "../../common-components/Hooks/FetchDataHook";
 import { useFetchDataSearch } from "../../common-components/Hooks/FetchSearchDataHook";
 
 function MyFriends() {
   const [yourFriends, setYourFriends] = useState<FriendInfo[]>();
 
-  useFetchData<FriendInfo[]>(`user/get-friends`, setYourFriends, yourFriends);
   useFetchDataSearch<FriendInfo[]>(
     `user/get-friends`,
     setYourFriends,

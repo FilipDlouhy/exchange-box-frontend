@@ -1,18 +1,12 @@
 import { useState } from "react";
 import FriendRequest from "./FriendRequest";
 import { IFriendRequest } from "./Interfaces/FriendRequestInterFace";
-import { useFetchData } from "../../common-components/Hooks/FetchDataHook";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
 import { useFetchDataSearch } from "../../common-components/Hooks/FetchSearchDataHook";
 
 function FriendRequests() {
   const [newRequests, setNewRequests] = useState<IFriendRequest[]>();
 
-  useFetchData<IFriendRequest[]>(
-    `user/get-friend-requests`,
-    setNewRequests,
-    newRequests
-  );
   useFetchDataSearch<IFriendRequest[]>(
     `user/get-friend-requests`,
     setNewRequests,
