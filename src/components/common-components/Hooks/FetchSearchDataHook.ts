@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { showError } from "../../../store/errorSlice";
-import generateUrl from "../../../contants/url"; // Ensure this path matches your project structure
+import generateUrl from "../../../contants/url";
 import { PaginationState } from "../../../contants/PaginationInteface";
 import { hideButton, showButton } from "../../../store/paginationSlice";
 
@@ -31,9 +31,10 @@ const debounce = <F extends (...args: any[]) => void>(
 
 export const useFetchDataSearch = <T extends { [key: string]: any }>(
   url: string,
-  setData: SetData<T>,
+  setData: SetData<T | undefined>,
   additionalData: T | undefined,
-  filterAttribute: string
+  filterAttribute: string,
+  rerender?: any
 ): void => {
   const [lastFetchLength, setLastFetchLength] = useState(0);
   const dispatch = useDispatch();
@@ -68,6 +69,8 @@ export const useFetchDataSearch = <T extends { [key: string]: any }>(
   );
 
   useEffect(() => {
+    setData(undefined);
+
     if (
       searchText.length > 4 &&
       searchText.length > lastFetchLength &&
@@ -88,5 +91,5 @@ export const useFetchDataSearch = <T extends { [key: string]: any }>(
     return () => {
       fetchData.cancel();
     };
-  }, [searchText]);
+  }, [searchText, rerender]);
 };

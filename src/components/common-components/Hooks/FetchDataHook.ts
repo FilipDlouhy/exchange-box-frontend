@@ -14,7 +14,6 @@ export const useFetchData = <T extends unknown[]>(
   additionalData: T | undefined,
   reTrigger?: any
 ): void => {
-  console.log(url);
   const pagination: PaginationState = useSelector((state) => state.pagination);
   const searchText = useSelector((state) => state.search.searchText);
   const dispatch = useDispatch();

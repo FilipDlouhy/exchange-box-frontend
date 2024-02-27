@@ -1,15 +1,16 @@
 import { MenuItem } from "../../../common-components/Helpers/ComonInterfaces";
-import Items from "../Items";
+import ForgotenItems from "../ForgotenItems";
+import UserItems from "../UserItems";
 
 export const itemMenuItems: MenuItem[] = [
   {
     name: "yourItems",
     displayName: "Your items",
-    component: Items,
+    component: UserItems,
   },
   {
     name: "itemsYouForgot",
     displayName: "Items you forgot",
-    component: Items,
+    component: ForgotenItems,
   },
 ];
