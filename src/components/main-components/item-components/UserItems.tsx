@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import Item from "./Item";
 import ItemHeading from "./ItemHeadings";
 import { RootState } from "../../../store/store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import CreateItemForm from "./CreateItemForm";
 import { ItemInterface } from "./Interfaces/ItemInterface";
@@ -39,7 +39,14 @@ function UserItems() {
       <div className="w-full flex items-center justify-center h-96 overflow-y-auto flex-wrap">
         {items &&
           items.map((item) => {
-            return <Item item={item} showYourItems={true} key={item.id} />;
+            return (
+              <Item
+                setItems={setItems}
+                item={item}
+                showYourItems={true}
+                key={item.id}
+              />
+            );
           })}
       </div>
 

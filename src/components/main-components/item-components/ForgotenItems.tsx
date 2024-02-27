@@ -38,7 +38,14 @@ function ForgotenItems() {
       <div className="w-full flex items-center justify-center h-96 overflow-y-auto flex-wrap">
         {items &&
           items.map((item) => {
-            return <Item item={item} showYourItems={false} key={item.id} />;
+            return (
+              <Item
+                setItems={setItems}
+                item={item}
+                showYourItems={false}
+                key={item.id}
+              />
+            );
           })}
       </div>
 
