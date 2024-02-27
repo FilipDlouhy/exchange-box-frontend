@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import Item from "./Item";
 import ItemHeading from "./ItemHeadings";
 import { RootState } from "../../../store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CreateItemForm from "./CreateItemForm";
 import { ItemInterface } from "./Interfaces/ItemInterface";
@@ -43,7 +43,12 @@ function UserItems() {
           })}
       </div>
 
-      <CreateItemForm hadForgoten={false} open={open} setOpen={setOpen} />
+      <CreateItemForm
+        setItems={setItems}
+        hadForgoten={false}
+        open={open}
+        setOpen={setOpen}
+      />
     </div>
   );
 }

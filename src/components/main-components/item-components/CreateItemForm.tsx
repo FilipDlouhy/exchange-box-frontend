@@ -7,15 +7,18 @@ import axios from "axios";
 import generateUrl from "../../../contants/url";
 import { RootState } from "../../../store/store";
 import { useSelector } from "react-redux";
+import { ItemInterface } from "./Interfaces/ItemInterface";
 
 export default function CreateItemForm({
   hadForgoten,
   open,
   setOpen,
+  setItems,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
   hadForgoten: boolean;
+  setItems: React.Dispatch<React.SetStateAction<ItemInterface[] | undefined>>;
 }) {
   const [formItemData, setformItemData] = useState({
     name: "",
@@ -61,7 +64,7 @@ export default function CreateItemForm({
     setFriends
   );
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setformItemData((prevformItemData) => ({
       ...prevformItemData,
@@ -80,7 +83,9 @@ export default function CreateItemForm({
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
 
     if (!areAllFieldsFilled()) {
@@ -93,7 +98,7 @@ export default function CreateItemForm({
       return;
     }
 
-    let formData = new FormData();
+    const formData = new FormData();
 
     formData.append("name", formItemData.name);
     formData.append("length", formItemData.length);
@@ -113,11 +118,21 @@ export default function CreateItemForm({
       formData.append("images", file);
     }
 
-    await axios.post(generateUrl("item/create-item"), formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    const { data } = await axios.post(
+      generateUrl("item/create-item"),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    const itemResponse = await axios.get(generateUrl(`item/get-item/${data}`), {
+      withCredentials: true,
     });
+
+    setItems((prevItems) => [...(prevItems || []), itemResponse.data]);
 
     setOpen(false);
   };

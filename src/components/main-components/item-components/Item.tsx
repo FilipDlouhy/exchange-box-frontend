@@ -8,7 +8,7 @@ function Item({
   showYourItems: boolean;
 }) {
   return (
-    <div className=" w-96 h-80 shadow-xl mx-5 rounded-sm  group relative">
+    <div className=" w-96 h-80 shadow-xl m-5 rounded-sm  group relative">
       <div className="w-full h-1/2">
         <img className="h-full w-full" src={item.imageURL} />
       </div>

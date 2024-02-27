@@ -42,7 +42,12 @@ function ForgotenItems() {
           })}
       </div>
 
-      <CreateItemForm hadForgoten={true} open={open} setOpen={setOpen} />
+      <CreateItemForm
+        setItems={setItems}
+        hadForgoten={true}
+        open={open}
+        setOpen={setOpen}
+      />
     </div>
   );
 }
