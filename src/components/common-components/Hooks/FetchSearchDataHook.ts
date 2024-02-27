@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
+import { useCallback, useEffect, useRef, useState } from "react";
+import axios, { AxiosResponse } from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { showError } from "../../../store/errorSlice";
 import generateUrl from "../../../contants/url";
@@ -23,13 +23,14 @@ const debounce = <F extends (...args: any[]) => void>(
   debouncedFunction.cancel = () => {
     if (timerId) {
       clearTimeout(timerId);
+      timerId = null;
     }
   };
 
   return debouncedFunction;
 };
 
-export const useFetchDataSearch = <T extends { [key: string]: any }>(
+export const useFetchDataSearch = <T extends unknown[]>(
   url: string,
   setData: SetData<T | undefined>,
   additionalData: T | undefined,
@@ -41,6 +42,18 @@ export const useFetchDataSearch = <T extends { [key: string]: any }>(
   const searchText = useSelector((state) => state.search.searchText);
   const pagination: PaginationState = useSelector((state) => state.pagination);
 
+  const paginationRef = useRef(pagination);
+  const searchTextRef = useRef(searchText);
+
+  useEffect(() => {
+    if (paginationRef.current !== pagination) {
+      paginationRef.current = pagination;
+    }
+    if (searchTextRef.current !== searchText) {
+      searchTextRef.current = searchText;
+    }
+  }, [pagination, searchText]);
+
   const handleShowError = (message: string) => {
     dispatch(showError(message));
   };
@@ -48,15 +61,24 @@ export const useFetchDataSearch = <T extends { [key: string]: any }>(
   const fetchData = useCallback(
     debounce(async (search: string) => {
       try {
-        setLastFetchLength(search.length);
-        const response = await axios.get<T>(generateUrl(url), {
-          params: { search, page: pagination.starting, limit: pagination.max },
-          withCredentials: true,
-        });
+        const response: AxiosResponse<T, any> = await axios.get<T>(
+          generateUrl(url),
+          {
+            params: {
+              search,
+              page: paginationRef.current.starting,
+              limit: paginationRef.current.max,
+            },
+            withCredentials: true,
+          }
+        );
 
-        setData(response.data);
-        setLastFetchLength(search.length);
+        const mergedData: any = additionalData
+          ? [...additionalData, ...response.data]
+          : response.data;
 
+        setData(mergedData);
+        setLastFetchLength(search.length);
         response.data.length > 0
           ? dispatch(showButton())
           : dispatch(hideButton());
@@ -65,31 +87,47 @@ export const useFetchDataSearch = <T extends { [key: string]: any }>(
         handleShowError(error.message);
       }
     }, 500),
-    [setData]
+    [
+      setData,
+      dispatch,
+      paginationRef.current.starting,
+      paginationRef.current.max,
+    ] // Ensure all dependencies are included
   );
 
   useEffect(() => {
-    setData(undefined);
-
     if (
-      searchText.length > 4 &&
-      searchText.length > lastFetchLength &&
+      searchTextRef.current.length > 4 &&
+      searchTextRef.current.length > lastFetchLength &&
       additionalData
     ) {
       const filteredItems = additionalData.filter(
         (item) =>
           item &&
           typeof item[filterAttribute] === "string" &&
-          item[filterAttribute].toLowerCase().includes(searchText.toLowerCase())
+          item[filterAttribute]
+            .toLowerCase()
+            .includes(searchTextRef.current.toLowerCase())
       );
-      setLastFetchLength(searchText.length);
-      setData(filteredItems as T);
+      setLastFetchLength(searchTextRef.current.length);
+      setData(filteredItems);
     } else {
-      fetchData(searchText);
+      fetchData(searchTextRef.current);
     }
 
     return () => {
       fetchData.cancel();
     };
-  }, [searchText, rerender]);
+  }, [
+    searchTextRef.current,
+    paginationRef.current.starting,
+    paginationRef.current.max,
+  ]);
+
+  useEffect(() => {
+    fetchData(searchTextRef.current);
+    return () => {
+      fetchData.cancel();
+    };
+  }, [rerender, fetchData]);
 };
