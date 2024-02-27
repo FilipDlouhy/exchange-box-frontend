@@ -36,6 +36,7 @@ export default function CreateItemForm({
 
   useEffect(() => {
     setErrorText("Create item");
+    emptyForm();
   }, [open]);
 
   const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -116,6 +117,8 @@ export default function CreateItemForm({
 
     if (file) {
       formData.append("images", file);
+    } else {
+      setErrorText("Add image");
     }
 
     const { data } = await axios.post(
@@ -135,6 +138,20 @@ export default function CreateItemForm({
     setItems((prevItems) => [...(prevItems || []), itemResponse.data]);
 
     setOpen(false);
+
+    emptyForm();
+  };
+
+  const emptyForm = () => {
+    setformItemData({
+      name: "",
+      length: "",
+      width: "",
+      height: "",
+      weight: "",
+    });
+
+    setFile(null);
   };
 
   const selectedNameObject = friends.find(
