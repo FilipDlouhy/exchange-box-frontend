@@ -7,6 +7,7 @@ import paginationSliceReducer from "./paginationSlice";
 import searchSlice from "./searchSlice";
 import activeModuleReduced from "./moduleSlice";
 import itemMenuReducer from "./item-state/itemMenuSlice";
+import ItemToEditReducer from "./item-state/itemToEditSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     search: searchSlice,
     activeModule: activeModuleReduced,
     itemsMenu: itemMenuReducer,
+    itemToEdit: ItemToEditReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

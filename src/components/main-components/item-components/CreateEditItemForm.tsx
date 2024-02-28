@@ -6,10 +6,11 @@ import { useFetchDataSimple } from "../../common-components/Hooks/FetchDataHookS
 import axios from "axios";
 import generateUrl from "../../../contants/url";
 import { RootState } from "../../../store/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ItemInterface } from "./Interfaces/ItemInterface";
+import { resetItemToEdit } from "../../../store/item-state/itemToEditSlice";
 
-export default function CreateItemForm({
+export default function CreateEditItemForm({
   hadForgoten,
   open,
   setOpen,
@@ -32,12 +33,40 @@ export default function CreateItemForm({
   const [selectedFriend, setSelectedFriend] = useState<FormUser>();
   const [file, setFile] = useState<File | null>(null);
   const [errorText, setErrorText] = useState<string>("");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const userId = useSelector((state: RootState) => state.user.id);
+  const itemToEdit: ItemInterface = useSelector(
+    (state) => state.itemToEdit.item
+  );
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setErrorText("Create item");
-    emptyForm();
-  }, [open]);
+    setErrorText(isEditing ? "Edit item" : "Create item");
+    if (itemToEdit != null) {
+      setIsEditing(true);
+      setformItemData({
+        name: itemToEdit.name,
+        length: itemToEdit.length.toString(),
+        width: itemToEdit.width.toString(),
+        height: itemToEdit.height.toString(),
+        weight: itemToEdit.weightInGrams.toString(),
+      });
+
+      const foundFriend = friends.find(
+        (friend) => friend.id === itemToEdit.friendId
+      );
+
+      if (foundFriend) {
+        setSelectedName(foundFriend?.name);
+
+        setSelectedFriend(foundFriend);
+      }
+    } else {
+      setIsEditing(false);
+      emptyForm();
+    }
+  }, [open, itemToEdit]);
 
   const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedName(e.target.value);
@@ -115,14 +144,21 @@ export default function CreateItemForm({
       !hadForgoten ? userId : String(selectedFriend?.id)
     );
 
+    if (!isEditing && !file) {
+      setErrorText("Add image");
+      return;
+    }
+
+    if (isEditing) {
+      formData.append("id", itemToEdit.id.toString());
+    }
+
     if (file) {
       formData.append("images", file);
-    } else {
-      setErrorText("Add image");
     }
 
     const { data } = await axios.post(
-      generateUrl("item/create-item"),
+      generateUrl(isEditing ? "item/update-item" : "item/create-item"),
       formData,
       {
         headers: {
@@ -131,11 +167,21 @@ export default function CreateItemForm({
       }
     );
 
-    const itemResponse = await axios.get(generateUrl(`item/get-item/${data}`), {
-      withCredentials: true,
-    });
-
-    setItems((prevItems) => [...(prevItems || []), itemResponse.data]);
+    if (isEditing) {
+      setItems((prevItems) => {
+        const index = (prevItems || []).findIndex(
+          (item) => item.id === data.id
+        );
+        if (index !== -1) {
+          const updatedItems = [...(prevItems || [])];
+          updatedItems.splice(index, 1, data);
+          return updatedItems;
+        }
+        return prevItems;
+      });
+    } else {
+      setItems((prevItems) => [...(prevItems || []), data]);
+    }
 
     setOpen(false);
 
@@ -160,7 +206,14 @@ export default function CreateItemForm({
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        onClose={() => {
+          setOpen(false);
+          dispatch(resetItemToEdit());
+        }}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -290,7 +343,7 @@ export default function CreateItemForm({
                       }}
                       className="w-40 mx-auto rounded-md flex items-center justify-center bg-indigo-600 h-9 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                      Create Item
+                      {isEditing ? "Edit item" : "Create item"}
                     </button>
                   </div>
                 </form>

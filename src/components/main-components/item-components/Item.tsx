@@ -1,16 +1,23 @@
 import axios from "axios";
 import { ItemInterface } from "./Interfaces/ItemInterface";
 import generateUrl from "../../../contants/url";
+import { setItemToEdit } from "../../../store/item-state/itemToEditSlice";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 function Item({
   item,
   showYourItems,
   setItems,
+  setOpen,
 }: {
   item: ItemInterface;
   showYourItems: boolean;
   setItems: React.Dispatch<React.SetStateAction<ItemInterface[] | undefined>>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const dispatch = useDispatch();
+
   const formatName = (name: string) => {
     return name.length > 9 ? `${name.substring(0, 9)}..` : name;
   };
@@ -79,6 +86,10 @@ function Item({
         {showYourItems ? (
           <div className="w-full h-1/3 flex items-center justify-around ">
             <button
+              onClick={() => {
+                setOpen(true);
+                dispatch(setItemToEdit(item));
+              }}
               type="button"
               className="rounded-md bg-indigo-600 w-28  h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >

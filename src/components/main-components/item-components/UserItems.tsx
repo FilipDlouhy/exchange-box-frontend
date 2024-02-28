@@ -3,11 +3,10 @@ import Item from "./Item";
 import ItemHeading from "./ItemHeadings";
 import { RootState } from "../../../store/store";
 import { useState } from "react";
-
-import CreateItemForm from "./CreateItemForm";
 import { ItemInterface } from "./Interfaces/ItemInterface";
 import { useFetchDataSearch } from "../../common-components/Hooks/FetchSearchDataHook";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
+import CreateEditItemForm from "./CreateEditItemForm";
 
 function UserItems() {
   const activeMenu = useSelector((state: RootState) => state.itemsMenu.value);
@@ -42,6 +41,7 @@ function UserItems() {
           items.map((item) => {
             return (
               <Item
+                setOpen={setOpen}
                 setItems={setItems}
                 item={item}
                 showYourItems={true}
@@ -52,7 +52,7 @@ function UserItems() {
         <LoadMoreButton />
       </div>
 
-      <CreateItemForm
+      <CreateEditItemForm
         setItems={setItems}
         hadForgoten={false}
         open={open}

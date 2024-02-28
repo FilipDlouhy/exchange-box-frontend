@@ -2,11 +2,11 @@ import { useSelector } from "react-redux";
 import Item from "./Item";
 import ItemHeading from "./ItemHeadings";
 import { RootState } from "../../../store/store";
-import CreateItemForm from "./CreateItemForm";
 import { ItemInterface } from "./Interfaces/ItemInterface";
 import { useFetchDataSearch } from "../../common-components/Hooks/FetchSearchDataHook";
 import { useState } from "react";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
+import CreateEditItemForm from "./CreateEditItemForm";
 
 function ForgotenItems() {
   const activeMenu = useSelector((state: RootState) => state.itemsMenu.value);
@@ -41,6 +41,7 @@ function ForgotenItems() {
           items.map((item) => {
             return (
               <Item
+                setOpen={setOpen}
                 setItems={setItems}
                 item={item}
                 showYourItems={false}
@@ -52,7 +53,7 @@ function ForgotenItems() {
         <LoadMoreButton />
       </div>
 
-      <CreateItemForm
+      <CreateEditItemForm
         setItems={setItems}
         hadForgoten={true}
         open={open}
