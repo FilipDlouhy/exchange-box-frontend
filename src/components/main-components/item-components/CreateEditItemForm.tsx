@@ -184,7 +184,7 @@ export default function CreateEditItemForm({
     }
 
     setOpen(false);
-
+    dispatch(resetItemToEdit());
     emptyForm();
   };
 
