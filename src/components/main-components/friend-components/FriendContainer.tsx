@@ -8,6 +8,7 @@ import { DynamicComponentRenderer } from "../../common-components/Helpers/ComonH
 import UserProfile from "./UserProfile";
 import { resetStarting } from "../../../store/paginationSlice";
 import { clearSearchText } from "../../../store/searchSlice";
+import CreateEditItemForm from "../../common-components/common-user-profile-components/CreateEditItemForm";
 
 function FriendContainer() {
   const activeMenu = useSelector((state: RootState) => state.friendsMenu.value);
@@ -40,6 +41,7 @@ function FriendContainer() {
       ) : (
         <UserProfile />
       )}
+      <CreateEditItemForm mustEditArray={false} />
     </div>
   );
 }

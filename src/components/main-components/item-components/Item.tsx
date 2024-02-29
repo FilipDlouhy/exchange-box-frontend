@@ -3,21 +3,22 @@ import { ItemInterface } from "./Interfaces/ItemInterface";
 import generateUrl from "../../../contants/url";
 import { setItemToEdit } from "../../../store/item-state/itemToEditSlice";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { openForm } from "../../../store/user-state/addItemToPersonFormState";
 
 function Item({
   item,
   showYourItems,
   setItems,
-  setOpen,
 }: {
   item: ItemInterface;
   showYourItems: boolean;
   setItems: React.Dispatch<React.SetStateAction<ItemInterface[] | undefined>>;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const dispatch = useDispatch();
 
+  const handleOpenForm = () => {
+    dispatch(openForm());
+  };
   const formatName = (name: string) => {
     return name.length > 9 ? `${name.substring(0, 9)}..` : name;
   };
@@ -87,7 +88,7 @@ function Item({
           <div className="w-full h-1/3 flex items-center justify-around ">
             <button
               onClick={() => {
-                setOpen(true);
+                handleOpenForm();
                 dispatch(setItemToEdit(item));
               }}
               type="button"

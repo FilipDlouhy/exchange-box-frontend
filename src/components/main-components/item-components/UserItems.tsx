@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Item from "./Item";
 import ItemHeading from "./ItemHeadings";
 import { RootState } from "../../../store/store";
@@ -6,13 +6,17 @@ import { useState } from "react";
 import { ItemInterface } from "./Interfaces/ItemInterface";
 import { useFetchDataSearch } from "../../common-components/Hooks/FetchSearchDataHook";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
-import CreateEditItemForm from "./CreateEditItemForm";
+import CreateEditItemForm from "../../common-components/common-user-profile-components/CreateEditItemForm";
+import { openForm } from "../../../store/user-state/addItemToPersonFormState";
 
 function UserItems() {
   const activeMenu = useSelector((state: RootState) => state.itemsMenu.value);
-  const [open, setOpen] = useState(false);
   const [items, setItems] = useState<ItemInterface[]>();
+  const dispatch = useDispatch();
 
+  const handleOpenForm = () => {
+    dispatch(openForm());
+  };
   useFetchDataSearch<ItemInterface[]>(
     "item/get-user-items",
     setItems,
@@ -27,7 +31,7 @@ function UserItems() {
       <div className="w-full h-16  flex items-center">
         <button
           onClick={() => {
-            setOpen(true);
+            handleOpenForm();
           }}
           type="button"
           className="rounded-sm bg-blue-500 ml-8 w-40 h-6 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -41,7 +45,6 @@ function UserItems() {
           items.map((item) => {
             return (
               <Item
-                setOpen={setOpen}
                 setItems={setItems}
                 item={item}
                 showYourItems={true}
@@ -53,10 +56,9 @@ function UserItems() {
       </div>
 
       <CreateEditItemForm
+        mustEditArray={true}
         setItems={setItems}
         hadForgoten={false}
-        open={open}
-        setOpen={setOpen}
       />
     </div>
   );

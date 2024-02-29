@@ -3,6 +3,7 @@ import friendsMenuReducer from "./friend-state/friendMenuSlice";
 import userReducer from "./user-state/userSlice";
 import errorPopUpReducer from "./errorSlice";
 import profileUserReducer from "./user-state/profileUserSlice";
+import addItemToPersonFormSlice from "./user-state/addItemToPersonFormState";
 import paginationSliceReducer from "./paginationSlice";
 import searchSlice from "./searchSlice";
 import activeModuleReduced from "./moduleSlice";
@@ -20,6 +21,7 @@ export const store = configureStore({
     activeModule: activeModuleReduced,
     itemsMenu: itemMenuReducer,
     itemToEdit: ItemToEditReducer,
+    addItemToPersonForm: addItemToPersonFormSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

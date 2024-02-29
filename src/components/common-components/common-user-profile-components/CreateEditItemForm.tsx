@@ -1,25 +1,24 @@
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/24/outline";
-import { FormUser } from "./Interfaces/FormUser";
-import { useFetchDataSimple } from "../../common-components/Hooks/FetchDataHookSimple";
+import { FormUser } from "../../main-components/item-components/Interfaces/FormUser";
+import { useFetchDataSimple } from "../Hooks/FetchDataHookSimple";
 import axios from "axios";
 import generateUrl from "../../../contants/url";
 import { RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { ItemInterface } from "./Interfaces/ItemInterface";
+import { ItemInterface } from "../../main-components/item-components/Interfaces/ItemInterface";
 import { resetItemToEdit } from "../../../store/item-state/itemToEditSlice";
+import { closeForm } from "../../../store/user-state/addItemToPersonFormState";
 
 export default function CreateEditItemForm({
   hadForgoten,
-  open,
-  setOpen,
   setItems,
+  mustEditArray,
 }: {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  open: boolean;
-  hadForgoten: boolean;
-  setItems: React.Dispatch<React.SetStateAction<ItemInterface[] | undefined>>;
+  hadForgoten?: boolean;
+  setItems?: React.Dispatch<React.SetStateAction<ItemInterface[] | undefined>>;
+  mustEditArray: boolean;
 }) {
   const [formItemData, setformItemData] = useState({
     name: "",
@@ -37,6 +36,18 @@ export default function CreateEditItemForm({
   const userId = useSelector((state: RootState) => state.user.id);
   const itemToEdit: ItemInterface = useSelector(
     (state) => state.itemToEdit.item
+  );
+
+  const userToAddItem = useSelector(
+    (state: RootState) => state.addItemToPersonForm.user
+  );
+
+  const handleCloseForm = () => {
+    dispatch(closeForm());
+  };
+
+  const isOpen = useSelector(
+    (state: RootState) => state.addItemToPersonForm.openForm
   );
 
   const dispatch = useDispatch();
@@ -66,7 +77,19 @@ export default function CreateEditItemForm({
       setIsEditing(false);
       emptyForm();
     }
-  }, [open, itemToEdit]);
+  }, [isOpen, itemToEdit]);
+
+  useEffect(() => {
+    const foundFriend = friends.find(
+      (friend) => friend.id === parseInt(userToAddItem?.id ?? "")
+    );
+
+    if (foundFriend) {
+      setSelectedName(foundFriend.name);
+      setSelectedFriend(foundFriend);
+      setFriends([foundFriend]);
+    }
+  }, [userToAddItem]);
 
   const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedName(e.target.value);
@@ -167,23 +190,25 @@ export default function CreateEditItemForm({
       }
     );
 
-    if (isEditing) {
-      setItems((prevItems) => {
-        const index = (prevItems || []).findIndex(
-          (item) => item.id === data.id
-        );
-        if (index !== -1) {
-          const updatedItems = [...(prevItems || [])];
-          updatedItems.splice(index, 1, data);
-          return updatedItems;
-        }
-        return prevItems;
-      });
-    } else {
-      setItems((prevItems) => [...(prevItems || []), data]);
+    if (mustEditArray && setItems) {
+      if (isEditing) {
+        setItems((prevItems) => {
+          const index = (prevItems || []).findIndex(
+            (item) => item.id === data.id
+          );
+          if (index !== -1) {
+            const updatedItems = [...(prevItems || [])];
+            updatedItems.splice(index, 1, data);
+            return updatedItems;
+          }
+          return prevItems;
+        });
+      } else {
+        setItems((prevItems) => [...(prevItems || []), data]);
+      }
     }
 
-    setOpen(false);
+    handleCloseForm();
     dispatch(resetItemToEdit());
     emptyForm();
   };
@@ -205,12 +230,12 @@ export default function CreateEditItemForm({
   );
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-10"
         onClose={() => {
-          setOpen(false);
+          handleCloseForm();
           dispatch(resetItemToEdit());
         }}
       >
@@ -330,7 +355,7 @@ export default function CreateEditItemForm({
                     <button
                       onClick={(e) => {
                         e.preventDefault();
-                        setOpen(false);
+                        handleCloseForm();
                       }}
                       className="w-40 mx-auto rounded-md flex items-center justify-center bg-indigo-600 h-9 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >

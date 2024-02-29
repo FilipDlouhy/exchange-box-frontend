@@ -12,6 +12,10 @@ import { AppDispatch, RootState } from "../../../store/store";
 import { setProfileUser } from "../../../store/user-state/profileUserSlice";
 import { setActiveModuleName } from "../../../store/moduleSlice";
 import { addOrRemoveFriend } from "../../main-components/friend-components/Helpers/FriendsHelper";
+import {
+  openForm,
+  setAddItemUser,
+} from "../../../store/user-state/addItemToPersonFormState";
 
 export default function Friend({
   person,
@@ -33,6 +37,12 @@ export default function Friend({
       prevFriends ? prevFriends.filter((friend) => friend.id !== friendId) : []
     );
   };
+
+  const handleSetUser = (user: FriendInfo | null) => {
+    dispatch(setAddItemUser(user));
+  };
+
+  const handleOpenForm = () => dispatch(openForm());
 
   const goToProfie = async (isFriend: boolean) => {
     if (isFromUserProfile) {
@@ -114,6 +124,10 @@ export default function Friend({
           <div>
             <div className="-mt-px flex divide-x divide-gray-200">
               <FriendButton
+                onClick={() => {
+                  handleOpenForm();
+                  handleSetUser(person);
+                }}
                 icon={
                   <ArchiveBoxIcon
                     className="h-5 w-5 text-gray-400"
