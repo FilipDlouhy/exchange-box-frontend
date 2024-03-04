@@ -1,5 +1,11 @@
+import Exchanges from "./exchnages";
+
 function ExchangeContainer() {
-  return <div>ExchangeContainer</div>;
+  return (
+    <div>
+      <Exchanges />
+    </div>
+  );
 }
 
 export default ExchangeContainer;
