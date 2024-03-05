@@ -1,10 +1,16 @@
+import { useState } from "react";
 import CreateExchange from "./CreateExchange";
 import Exchanges from "./Exchnages";
 
 function ExchangeContainer() {
+  const [isCreating, setIsCreating] = useState<boolean>();
   return (
     <div>
-      <CreateExchange />
+      {isCreating ? (
+        <CreateExchange setIsCreating={setIsCreating} />
+      ) : (
+        <Exchanges setIsCreating={setIsCreating} />
+      )}
     </div>
   );
 }
