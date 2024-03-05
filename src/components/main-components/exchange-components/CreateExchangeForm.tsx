@@ -1,6 +1,42 @@
+import { useEffect, useState } from "react";
 import LocationMap from "../../common-components/LocationMap";
+import axios from "axios";
+import generateUrl from "../../../contants/url";
+import { ExchangeFriend } from "./Interfaces/ExchangeFriendInterface";
 
-function CreateExchangeForm() {
+function CreateExchangeForm({
+  setSelectedFriend,
+}: {
+  setSelectedFriend: React.Dispatch<
+    React.SetStateAction<ExchangeFriend | undefined>
+  >;
+}) {
+  const [friends, setFiends] = useState<ExchangeFriend[]>();
+  const [isUserSelected, setIsUserSelected] = useState<boolean>(false);
+  const getFriends = async () => {
+    const { data } = await axios.get(
+      generateUrl("user/get-users-friends-simple"),
+      { withCredentials: true }
+    );
+
+    setFiends(data);
+  };
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedIndex = event.target.value;
+    if (selectedIndex !== "" && friends) {
+      setIsUserSelected(true);
+      const selectedFriend = friends[parseInt(selectedIndex)];
+      setSelectedFriend(selectedFriend);
+    } else {
+      setIsUserSelected(false);
+      setSelectedFriend(undefined);
+    }
+  };
+
+  useEffect(() => {
+    getFriends();
+  }, []);
   const handleCoordinatesChange = (lat: any, lng: any) => {};
 
   return (
@@ -46,8 +82,20 @@ function CreateExchangeForm() {
         <select
           id="other"
           name="other"
+          onChange={(e) => {
+            handleSelectChange(e);
+          }}
           className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        ></select>
+        >
+          {!isUserSelected && <option value="">Choose user</option>}
+          {friends?.map((friend, index) => {
+            return (
+              <option key={index} value={index}>
+                {friend.friendName}
+              </option>
+            );
+          })}
+        </select>
       </div>
 
       <div className="w-full my-3 ">
