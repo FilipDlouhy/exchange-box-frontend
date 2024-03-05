@@ -16,7 +16,9 @@ const clients = [
   },
 ];
 
-function classNames(...classes) {
+function classNames(
+  ...classes: (string | undefined | null | boolean)[]
+): string {
   return classes.filter(Boolean).join(" ");
 }
 

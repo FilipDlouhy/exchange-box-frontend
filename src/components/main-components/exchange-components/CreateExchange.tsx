@@ -14,6 +14,23 @@ function CreateExchange({
   const [selectedFriend, setSelectedFriend] = useState<ExchangeFriend>();
   const [itemsSimple, setItemsSimple] = useState<ExchangeItemInterface[]>();
 
+  const [itemsInExchnage, setItemsInExchnage] = useState<number[]>([]);
+  const [position, setPosition] = useState<number[]>([44, 55]);
+
+  const handleCoordinatesChange = (lat: number, lng: number) => {
+    setPosition([lat, lng]);
+  };
+
+  const handleItemsInExchangeChange = (id: number, isAdding: boolean) => {
+    if (isAdding) {
+      setItemsInExchnage((prevItems) => [...prevItems, id]);
+    } else {
+      setItemsInExchnage((prevItems) =>
+        prevItems.filter((itemId) => itemId !== id)
+      );
+    }
+  };
+
   const getItems = async () => {
     const { data } = await axios.get(
       generateUrl(`item/get-user-item-simple/${selectedFriend?.friendId}`),
@@ -45,8 +62,15 @@ function CreateExchange({
       </div>
 
       <div className="flex flex-col items-center justify-center p-8 w-full">
-        <CreateExchangeForm setSelectedFriend={setSelectedFriend} />
-        <ItemsForExchange itemsSimple={itemsSimple} />
+        <CreateExchangeForm
+          handleCoordinatesChange={handleCoordinatesChange}
+          setSelectedFriend={setSelectedFriend}
+        />
+        <ItemsForExchange
+          handleItemsInExchangeChange={handleItemsInExchangeChange}
+          itemsInExchnage={itemsInExchnage}
+          itemsSimple={itemsSimple}
+        />
         <div className=" my-6 flex items-center justify-between">
           <button
             type="submit"

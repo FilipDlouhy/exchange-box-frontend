@@ -1,25 +1,35 @@
 import { useEffect, useState } from "react";
-import LocationMap from "../../common-components/LocationMap";
 import axios from "axios";
 import generateUrl from "../../../contants/url";
 import { ExchangeFriend } from "./Interfaces/ExchangeFriendInterface";
+import { CenterInterface } from "./Interfaces/CenterInterFace";
+import CreateExchangeMap from "./CreateExchangeMap";
 
 function CreateExchangeForm({
   setSelectedFriend,
+  handleCoordinatesChange,
 }: {
   setSelectedFriend: React.Dispatch<
     React.SetStateAction<ExchangeFriend | undefined>
   >;
+  handleCoordinatesChange: (lat: number, lng: number) => void;
 }) {
   const [friends, setFiends] = useState<ExchangeFriend[]>();
+  const [centers, setCenters] = useState<CenterInterface[]>([]);
   const [isUserSelected, setIsUserSelected] = useState<boolean>(false);
-  const getFriends = async () => {
-    const { data } = await axios.get(
+  const fetchData = async () => {
+    const friends = await axios.get(
       generateUrl("user/get-users-friends-simple"),
       { withCredentials: true }
     );
 
-    setFiends(data);
+    const centers = await axios.get(generateUrl("center/get-centers"), {
+      withCredentials: true,
+    });
+
+    setCenters(centers.data);
+
+    setFiends(friends.data);
   };
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -35,9 +45,8 @@ function CreateExchangeForm({
   };
 
   useEffect(() => {
-    getFriends();
+    fetchData();
   }, []);
-  const handleCoordinatesChange = (lat: any, lng: any) => {};
 
   return (
     <form className="w-full sm:w-3/4 md:w-1/2">
@@ -102,10 +111,12 @@ function CreateExchangeForm({
         <h1 className="my-3 font-semibold text-2xl">
           Choose location for exchange
         </h1>
-        <LocationMap
-          handleCoordinatesChange={handleCoordinatesChange}
-          position={[44, 55]}
-        />
+        {centers.length > 0 && (
+          <CreateExchangeMap
+            centers={centers}
+            handleCoordinatesChange={handleCoordinatesChange}
+          />
+        )}
       </div>
     </form>
   );

@@ -3,14 +3,19 @@ import { Menu, Transition } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
 import { ExchangeItemInterface } from "./Interfaces/ExchnageItem";
 
-function classNames(...classes) {
+function classNames(
+  ...classes: (string | undefined | null | boolean)[]
+): string {
   return classes.filter(Boolean).join(" ");
 }
-
 export default function ItemsForExchange({
   itemsSimple,
+  handleItemsInExchangeChange,
+  itemsInExchnage,
 }: {
   itemsSimple: ExchangeItemInterface[] | undefined;
+  handleItemsInExchangeChange: (id: number, isAdding: boolean) => void;
+  itemsInExchnage: number[];
 }) {
   return (
     <div
@@ -46,18 +51,23 @@ export default function ItemsForExchange({
                 <Menu.Items className="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                   <Menu.Item>
                     {({ active }) => (
-                      <a
-                        href="#"
+                      <p
+                        onClick={() => {
+                          handleItemsInExchangeChange(
+                            item.id,
+                            !itemsInExchnage?.includes(item.id)
+                          );
+                        }}
                         className={classNames(
                           active ? "bg-gray-50" : "",
                           "block px-3 py-1 text-sm leading-6 text-gray-900"
                         )}
                       >
-                        Add{" "}
+                        {itemsInExchnage?.includes(item.id) ? "Remove" : "Add"}
                         <span className="sr-only">
                           , {item.name} to exchnage
                         </span>
-                      </a>
+                      </p>
                     )}
                   </Menu.Item>
                 </Menu.Items>
