@@ -1,4 +1,5 @@
 import LocationMap from "../../common-components/LocationMap";
+import ItemsForExchange from "./ItemsForExchange";
 
 function CreateExchange() {
   const handleCoordinatesChange = (lat: any, lng: any) => {};
@@ -15,7 +16,7 @@ function CreateExchange() {
         </button>
       </div>
 
-      <div className="flex justify-center p-8 w-full">
+      <div className="flex flex-col items-center justify-center p-8 w-full">
         <form className="w-full sm:w-3/4 md:w-1/2">
           <div className="mb-4">
             <label
@@ -53,7 +54,7 @@ function CreateExchange() {
               htmlFor="other"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
-              Other
+              Select user
             </label>
             <select
               id="other"
@@ -71,16 +72,16 @@ function CreateExchange() {
               position={[44, 55]}
             />
           </div>
-
-          <div className="flex items-center justify-between">
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-6 rounded focus:outline-none focus:shadow-outline"
-            >
-              Create exchange
-            </button>
-          </div>
         </form>
+        <ItemsForExchange />
+        <div className=" my-6 flex items-center justify-between">
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-6 rounded focus:outline-none focus:shadow-outline"
+          >
+            Create exchange
+          </button>
+        </div>
       </div>
     </div>
   );
