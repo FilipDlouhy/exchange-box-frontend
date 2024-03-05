@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -22,7 +22,7 @@ const customIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-const UsersLocationMap = ({
+const LocationMap = ({
   position,
   handleCoordinatesChange,
 }: {
@@ -60,4 +60,4 @@ const UsersLocationMap = ({
   );
 };
 
-export default UsersLocationMap;
+export default LocationMap;

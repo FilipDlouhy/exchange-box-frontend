@@ -7,7 +7,7 @@ import generateUrl from "../../../contants/url";
 import { CurrentUser } from "./Interfaces/CurrentUserInterface";
 import Friend from "../../common-components/common-user-profile-components/Friend";
 import { FriendInfo } from "../friend-components/Interfaces/FriendInterface";
-import UsersLocationMap from "./UsersLocationMap";
+import LocationMap from "../../common-components/LocationMap";
 import ChangePassword from "./ChangePassword";
 
 function UserContainer() {
@@ -139,7 +139,7 @@ function UserContainer() {
       )}
 
       {currentUser && (
-        <UsersLocationMap
+        <LocationMap
           position={[currentUser?.latitude, currentUser?.longitude]}
           handleCoordinatesChange={handleCoordinatesChange}
         />
