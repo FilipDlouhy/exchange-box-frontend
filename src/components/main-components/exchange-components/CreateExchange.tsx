@@ -13,9 +13,10 @@ function CreateExchange({
 }) {
   const [selectedFriend, setSelectedFriend] = useState<ExchangeFriend>();
   const [itemsSimple, setItemsSimple] = useState<ExchangeItemInterface[]>();
-
+  const [name, setName] = useState<string>("");
+  const [size, setSize] = useState<string>("");
   const [itemsInExchnage, setItemsInExchnage] = useState<number[]>([]);
-  const [position, setPosition] = useState<number[]>([44, 55]);
+  const [position, setPosition] = useState<number[]>();
 
   const handleCoordinatesChange = (lat: number, lng: number) => {
     setPosition([lat, lng]);
@@ -38,6 +39,16 @@ function CreateExchange({
     );
 
     setItemsSimple(data);
+  };
+
+  const createExchange = async () => {
+    console.log({
+      selectedFriend,
+      name,
+      size,
+      itemsInExchnage,
+      position,
+    });
   };
 
   useEffect(() => {
@@ -63,6 +74,8 @@ function CreateExchange({
 
       <div className="flex flex-col items-center justify-center p-8 w-full">
         <CreateExchangeForm
+          setName={setName}
+          setSize={setSize}
           handleCoordinatesChange={handleCoordinatesChange}
           setSelectedFriend={setSelectedFriend}
         />
@@ -73,6 +86,9 @@ function CreateExchange({
         />
         <div className=" my-6 flex items-center justify-between">
           <button
+            onClick={() => {
+              createExchange();
+            }}
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-6 rounded focus:outline-none focus:shadow-outline"
           >

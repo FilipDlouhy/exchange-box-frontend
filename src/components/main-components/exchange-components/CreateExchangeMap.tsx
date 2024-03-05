@@ -1,11 +1,4 @@
-import { useEffect, useState } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
@@ -23,15 +16,6 @@ const customIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-const redIcon = new L.Icon({
-  iconUrl: "path/to/red/marker-icon.png",
-  shadowUrl,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
-
 const CreateExchangeMap = ({
   handleCoordinatesChange,
   centers = [],
@@ -39,49 +23,29 @@ const CreateExchangeMap = ({
   handleCoordinatesChange: (lat: number, lng: number) => void;
   centers?: CenterInterface[];
 }) => {
-  const MapEvents = () => {
-    useMapEvents({
-      click: (e) => {
-        const { lat, lng } = e.latlng;
-        handleCoordinatesChange(lat, lng);
-      },
-    });
-    return null;
-  };
-
-  const handleMarkerClick = () => {
-    return { icon: redIcon };
-  };
+  const defaultCenter =
+    centers.length > 0 ? [centers[0].latitude, centers[0].longitude] : [0, 0];
 
   return (
     <MapContainer
-      center={[centers[0].longitude, centers[0].latitude] || [0, 0]}
+      center={defaultCenter}
       zoom={13}
       style={{ height: "400px", width: "80%" }}
       className="mx-auto"
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <MapEvents />
-      <Marker
-        position={[centers[0].longitude, centers[0].latitude]}
-        icon={customIcon}
-        eventHandlers={{
-          click: handleMarkerClick,
-        }}
-      >
-        <Popup>You are here!</Popup>
-      </Marker>
-
       {centers.map((center, index) => (
         <Marker
           key={index}
           position={[center.longitude, center.latitude]}
           icon={customIcon}
           eventHandlers={{
-            click: handleMarkerClick,
+            click: () => {
+              handleCoordinatesChange(center.latitude, center.longitude);
+            },
           }}
         >
-          <Popup>{"Center"}</Popup>
+          <Popup>{"Your echange is set to be here"}</Popup>
         </Marker>
       ))}
     </MapContainer>

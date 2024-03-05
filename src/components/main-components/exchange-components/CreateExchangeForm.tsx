@@ -8,11 +8,15 @@ import CreateExchangeMap from "./CreateExchangeMap";
 function CreateExchangeForm({
   setSelectedFriend,
   handleCoordinatesChange,
+  setName,
+  setSize,
 }: {
   setSelectedFriend: React.Dispatch<
     React.SetStateAction<ExchangeFriend | undefined>
   >;
   handleCoordinatesChange: (lat: number, lng: number) => void;
+  setSize: React.Dispatch<React.SetStateAction<string>>;
+  setName: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [friends, setFiends] = useState<ExchangeFriend[]>();
   const [centers, setCenters] = useState<CenterInterface[]>([]);
@@ -61,6 +65,9 @@ function CreateExchangeForm({
           type="text"
           id="name"
           name="name"
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
@@ -72,6 +79,9 @@ function CreateExchangeForm({
           Size
         </label>
         <select
+          onChange={(e) => {
+            setSize(e.target.value);
+          }}
           id="size"
           name="size"
           className="shadow border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
