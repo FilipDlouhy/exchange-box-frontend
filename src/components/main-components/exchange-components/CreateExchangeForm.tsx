@@ -10,13 +10,15 @@ function CreateExchangeForm({
   handleCoordinatesChange,
   setName,
   setSize,
+  setPickUpDate,
 }: {
   setSelectedFriend: React.Dispatch<
     React.SetStateAction<ExchangeFriend | undefined>
   >;
-  handleCoordinatesChange: (lat: number, lng: number) => void;
+  handleCoordinatesChange: (center: CenterInterface | undefined) => void;
   setSize: React.Dispatch<React.SetStateAction<string>>;
   setName: React.Dispatch<React.SetStateAction<string>>;
+  setPickUpDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
 }) {
   const [friends, setFiends] = useState<ExchangeFriend[]>();
   const [centers, setCenters] = useState<CenterInterface[]>([]);
@@ -49,6 +51,7 @@ function CreateExchangeForm({
   };
 
   useEffect(() => {
+    setSize("Large");
     fetchData();
   }, []);
 
@@ -86,10 +89,27 @@ function CreateExchangeForm({
           name="size"
           className="shadow border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
         >
-          <option value="large">Large</option>
-          <option value="medium">Medium</option>
-          <option value="small">Small</option>
+          <option value="Large">Large</option>
+          <option value="Medium">Medium</option>
+          <option value="Small">Small</option>
         </select>
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="date"
+          className="block text-gray-700 text-sm font-bold mb-2"
+        >
+          Pick up date for exchange
+        </label>
+        <input
+          type="datetime-local"
+          id="date"
+          name="date"
+          onChange={(e) => {
+            setPickUpDate(new Date(e.target.value));
+          }}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
       </div>
       <div className="mb-6">
         <label

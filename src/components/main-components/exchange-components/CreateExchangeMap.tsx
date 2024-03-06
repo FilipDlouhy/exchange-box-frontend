@@ -20,7 +20,7 @@ const CreateExchangeMap = ({
   handleCoordinatesChange,
   centers = [],
 }: {
-  handleCoordinatesChange: (lat: number, lng: number) => void;
+  handleCoordinatesChange: (center: CenterInterface | undefined) => void;
   centers?: CenterInterface[];
 }) => {
   const defaultCenter =
@@ -41,7 +41,15 @@ const CreateExchangeMap = ({
           icon={customIcon}
           eventHandlers={{
             click: () => {
-              handleCoordinatesChange(center.latitude, center.longitude);
+              const targetLatitude = center.latitude;
+              const targetLongitude = center.longitude;
+              const foundCenter = centers.find(
+                (center) =>
+                  center.latitude === targetLatitude &&
+                  center.longitude === targetLongitude
+              );
+
+              handleCoordinatesChange(foundCenter);
             },
           }}
         >

@@ -1,8 +1,6 @@
-import { TrashIcon } from "@heroicons/react/16/solid";
-import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/20/solid";
 import {
-  CursorArrowRaysIcon,
   DocumentMagnifyingGlassIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 
 const people = [

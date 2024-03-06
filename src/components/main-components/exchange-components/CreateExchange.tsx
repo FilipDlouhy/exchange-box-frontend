@@ -5,6 +5,10 @@ import ItemsForExchange from "./ItemsForExchange";
 import axios from "axios";
 import generateUrl from "../../../contants/url";
 import { ExchangeItemInterface } from "./Interfaces/ExchnageItem";
+import { CreateExchangeDto } from "../../../Dtos/CenterDtos/create.exchnage.dto";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+import { CenterInterface } from "./Interfaces/CenterInterFace";
 
 function CreateExchange({
   setIsCreating,
@@ -14,12 +18,14 @@ function CreateExchange({
   const [selectedFriend, setSelectedFriend] = useState<ExchangeFriend>();
   const [itemsSimple, setItemsSimple] = useState<ExchangeItemInterface[]>();
   const [name, setName] = useState<string>("");
+  const [pickUpDate, setPickUpDate] = useState<Date>();
   const [size, setSize] = useState<string>("");
   const [itemsInExchnage, setItemsInExchnage] = useState<number[]>([]);
-  const [position, setPosition] = useState<number[]>();
+  const [center, setCenter] = useState<CenterInterface | undefined>();
+  const userId = useSelector((state: RootState) => state.user.id);
 
-  const handleCoordinatesChange = (lat: number, lng: number) => {
-    setPosition([lat, lng]);
+  const handleCoordinatesChange = (center: CenterInterface | undefined) => {
+    setCenter(center);
   };
 
   const handleItemsInExchangeChange = (id: number, isAdding: boolean) => {
@@ -42,13 +48,47 @@ function CreateExchange({
   };
 
   const createExchange = async () => {
-    console.log({
-      selectedFriend,
-      name,
+    if (
+      typeof selectedFriend === "undefined" ||
+      typeof name === "undefined" ||
+      typeof size === "undefined" ||
+      typeof itemsInExchnage === "undefined" ||
+      typeof center === "undefined" ||
+      typeof pickUpDate === "undefined"
+    ) {
+      return;
+    }
+
+    const createExchangeDto = new CreateExchangeDto(
+      parseInt(userId),
+      selectedFriend.friendId,
       size,
+      name,
       itemsInExchnage,
-      position,
-    });
+      parseInt(center.id),
+      pickUpDate
+    );
+    await axios.post(
+      generateUrl("exchange/create-exchange"),
+      createExchangeDto
+    );
+
+    setIsCreating(false);
+
+    try {
+      await axios.post(
+        generateUrl("exchange/create-exchange"),
+        createExchangeDto
+      );
+
+      setIsCreating(false);
+    } catch (error) {
+      console.error("Failed to create exchange:", error);
+
+      alert("Failed to create exchange. Please try again.");
+
+      setIsCreating(false);
+    }
   };
 
   useEffect(() => {
@@ -73,7 +113,13 @@ function CreateExchange({
       </div>
 
       <div className="flex flex-col items-center justify-center p-8 w-full">
+        <div className="w-full h-10 text-center">
+          <h1 className="text-2xl font-bold">
+            {pickUpDate ? "You have two hours to put items into your box" : ""}
+          </h1>
+        </div>
         <CreateExchangeForm
+          setPickUpDate={setPickUpDate}
           setName={setName}
           setSize={setSize}
           handleCoordinatesChange={handleCoordinatesChange}
