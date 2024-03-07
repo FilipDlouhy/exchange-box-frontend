@@ -9,11 +9,16 @@ import { CreateExchangeDto } from "../../../Dtos/CenterDtos/create.exchnage.dto"
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { CenterInterface } from "./Interfaces/CenterInterFace";
+import { ExchangeSimpleInterface } from "./Interfaces/ExchnageSImpleInterFace";
 
 function CreateExchange({
   setIsCreating,
+  setExchanges,
 }: {
   setIsCreating: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+  setExchanges: React.Dispatch<
+    React.SetStateAction<ExchangeSimpleInterface[] | undefined>
+  >;
 }) {
   const [selectedFriend, setSelectedFriend] = useState<ExchangeFriend>();
   const [itemsSimple, setItemsSimple] = useState<ExchangeItemInterface[]>();
@@ -76,10 +81,15 @@ function CreateExchange({
     setIsCreating(false);
 
     try {
-      await axios.post(
+      const { data } = await axios.post(
         generateUrl("exchange/create-exchange"),
         createExchangeDto
       );
+
+      setExchanges((prevExchanges) => {
+        const newExchanges = prevExchanges ? [data, ...prevExchanges] : [data];
+        return newExchanges;
+      });
 
       setIsCreating(false);
     } catch (error) {
