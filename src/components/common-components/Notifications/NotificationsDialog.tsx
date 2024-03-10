@@ -2,10 +2,10 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { BellAlertIcon } from "@heroicons/react/24/outline";
 import Notification from "./Notification";
-import { useFetchData } from "../Hooks/FetchDataHook";
-import { INotification } from "./Interfaces/NotificationInterface";
+import { useFetchData } from "../hooks/FetchDataHook";
+import { INotification } from "./interfaces/NotificationInterface";
 import LoadMoreButton from "../LoadMoreButton";
-import { NotificationDialogProps } from "./Props/NotificationDialogProps";
+import { NotificationDialogProps } from "./props/NotificationDialogProps";
 
 export default function NotificationsDialog({
   openNotifications,

@@ -2,7 +2,7 @@ import { useState } from "react";
 import FriendRequest from "./FriendRequest";
 import { IFriendRequest } from "./Interfaces/FriendRequestInterFace";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
-import { useFetchDataSearch } from "../../common-components/Hooks/FetchSearchDataHook";
+import { useFetchDataSearch } from "../../common-components/hooks/FetchSearchDataHook";
 
 function FriendRequests() {
   const [newRequests, setNewRequests] = useState<IFriendRequest[]>();

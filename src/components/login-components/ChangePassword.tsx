@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { handleChangePasswordHelper } from "./Helpers/ChangePasswordHelper";
-import { FormProps } from "./Props/FormProps";
+import { handleChangePasswordHelper } from "./helpers/ChangePasswordHelper";
+import { FormProps } from "./props/FormProps";
 
 export default function ChangePassword({
   setIsLoggingIn,

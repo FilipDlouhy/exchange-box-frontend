@@ -1,7 +1,7 @@
 import { useState } from "react";
 import MenuButton from "./MenuButton";
-import { MenuItem } from "./Helpers/ComonInterfaces";
-import "./style.css";
+import { MenuItem } from "./helpers/ComonInterfaces";
+import "./Helpers/style.css";
 
 export default function Menu({
   menu,

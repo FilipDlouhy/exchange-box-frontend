@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import CreateExchangeForm from "./CreateExchangeForm";
-import { ExchangeFriend } from "./Interfaces/ExchangeFriendInterface";
+import { ExchangeFriend } from "./interfaces/ExchangeFriendInterface";
 import ItemsForExchange from "./ItemsForExchange";
 import axios from "axios";
 import generateUrl from "../../../contants/url";
-import { ExchangeItemInterface } from "./Interfaces/ExchnageItem";
+import { ExchangeItemInterface } from "./interfaces/ExchnageItem";
 import { CreateExchangeDto } from "../../../Dtos/CenterDtos/create.exchnage.dto";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
-import { CenterInterface } from "./Interfaces/CenterInterFace";
-import { ExchangeSimpleInterface } from "./Interfaces/ExchnageSImpleInterFace";
+import { CenterInterface } from "./interfaces/CenterInterFace";
+import { ExchangeSimpleInterface } from "./interfaces/ExchnageSImpleInterFace";
 
 function CreateExchange({
   setIsCreating,

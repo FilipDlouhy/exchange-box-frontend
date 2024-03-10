@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { isAuthenticated } from "../Helpers/IsAuthenticated";
+import { isAuthenticated } from "../helpers/IsAuthenticated";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 

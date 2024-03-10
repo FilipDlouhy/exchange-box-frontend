@@ -1,4 +1,4 @@
-import { MenuItem } from "../../../common-components/Helpers/ComonInterfaces";
+import { MenuItem } from "../../../common-components/helpers/ComonInterfaces";
 import ForgotenItems from "../ForgotenItems";
 import UserItems from "../UserItems";
 import { ItemInterface } from "../Interfaces/ItemInterface";

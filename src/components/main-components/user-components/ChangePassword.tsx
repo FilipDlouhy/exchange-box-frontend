@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { LockClosedIcon } from "@heroicons/react/24/outline";
-import { handleChangePasswordHelper } from "../../login-components/Helpers/ChangePasswordHelper";
+import { handleChangePasswordHelper } from "../../login-components/helpers/ChangePasswordHelper";
 
 export default function ChangePassword({
   open,

@@ -1,5 +1,5 @@
 import React from "react";
-import { INotification } from "../Interfaces/NotificationInterface";
+import { INotification } from "../interfaces/NotificationInterface";
 
 export interface NotificationProps {
   notification: INotification;

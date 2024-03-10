@@ -1,5 +1,5 @@
 import React from "react";
-import { ExchangeDetailDataItemProps } from "../Interfaces/ExhcnageDataItemPropsIterface";
+import { ExchangeDetailDataItemProps } from "../interfaces/ExhcnageDataItemPropsIterface";
 
 const ExchangeDetailDataItem: React.FC<ExchangeDetailDataItemProps> = ({
   name,

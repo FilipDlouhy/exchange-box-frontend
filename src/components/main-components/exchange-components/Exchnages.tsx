@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import generateUrl from "../../../contants/url";
-import { ExchangeSimpleInterface } from "./Interfaces/ExchnageSImpleInterFace";
+import { ExchangeSimpleInterface } from "./interfaces/ExchnageSImpleInterFace";
 import ExhcnagesItems from "./exhchnage-detail/ExhcnagesItems";
 
 export default function Exchanges({

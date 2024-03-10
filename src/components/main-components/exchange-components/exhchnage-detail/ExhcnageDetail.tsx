@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 import axios from "axios";
 import generateUrl from "../../../../contants/url";
-import { FullExchangeInterafce } from "../Interfaces/FullExchangeInterface";
+import { FullExchangeInterafce } from "../interfaces/FullExchangeInterface";
 
 const customIcon = new L.DivIcon({
   className: "custom-icon",

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { handleInputChange } from "./Helpers/InputHelper";
+import { handleInputChange } from "./helpers/InputHelper";
 import axios from "axios";
 import generateUrl from "../../contants/url";
 import { LoginUserDto } from "../../Dtos/UserDtos/login.user.dto";
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { AppDispatch } from "../../store/store";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/user-state/userSlice";
-import { FormProps } from "./Props/FormProps";
+import { FormProps } from "./props/FormProps";
 
 export default function LoginForm({
   setIsLoggingIn,

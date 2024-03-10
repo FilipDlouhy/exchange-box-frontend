@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import generateUrl from "../../../contants/url";
-import { ExchangeFriend } from "./Interfaces/ExchangeFriendInterface";
-import { CenterInterface } from "./Interfaces/CenterInterFace";
+import { ExchangeFriend } from "./interfaces/ExchangeFriendInterface";
+import { CenterInterface } from "./interfaces/CenterInterFace";
 import CreateExchangeMap from "./CreateExchangeMap";
 
 function CreateExchangeForm({

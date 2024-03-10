@@ -3,7 +3,7 @@ import Item from "./Item";
 import ItemHeading from "./ItemHeadings";
 import { RootState } from "../../../store/store";
 import { ItemInterface } from "./Interfaces/ItemInterface";
-import { useFetchDataSearch } from "../../common-components/Hooks/FetchSearchDataHook";
+import { useFetchDataSearch } from "../../common-components/hooks/FetchSearchDataHook";
 import { useState } from "react";
 import LoadMoreButton from "../../common-components/LoadMoreButton";
 import CreateEditItemForm from "../../common-components/common-user-profile-components/CreateEditItemForm";

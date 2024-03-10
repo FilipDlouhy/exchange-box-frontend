@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CreateExchange from "./CreateExchange";
 import Exchanges from "./Exchnages";
-import { ExchangeSimpleInterface } from "./Interfaces/ExchnageSImpleInterFace";
+import { ExchangeSimpleInterface } from "./interfaces/ExchnageSImpleInterFace";
 import ExhcnageDetail from "./exhchnage-detail/ExhcnageDetail";
 
 function ExchangeContainer() {

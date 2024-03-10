@@ -7,4 +7,5 @@ export interface ExchangeSimpleInterface {
   friendName: string;
   id: number;
   pickUpDate?: Date | null;
+  exchangeState: string;
 }

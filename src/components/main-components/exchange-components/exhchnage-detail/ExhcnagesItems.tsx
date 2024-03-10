@@ -1,9 +1,9 @@
 import {
   DocumentMagnifyingGlassIcon,
-  TrashIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import { ExchangeSimpleInterface } from "../Interfaces/ExchnageSImpleInterFace";
+import { ExchangeSimpleInterface } from "../interfaces/ExchnageSImpleInterFace";
+import { LockOpenIcon } from "@heroicons/react/24/solid";
 
 function ExhcnagesItems({
   exchages,
@@ -75,11 +75,11 @@ function ExhcnagesItems({
                 </div>
                 <div className="-ml-px cursor-pointer flex w-0 flex-1">
                   <p className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-                    <TrashIcon
+                    <LockOpenIcon
                       className="h-5 w-5 text-gray-400"
                       aria-hidden="true"
                     />
-                    Delete
+                    Open box
                   </p>
                 </div>
               </div>

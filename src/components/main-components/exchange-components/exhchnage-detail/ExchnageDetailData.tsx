@@ -1,5 +1,5 @@
 import ExchangeDetailDataItem from "./ExhnageDetailDataItem";
-import { FullExchangeInterafce } from "../Interfaces/FullExchangeInterface";
+import { FullExchangeInterafce } from "../interfaces/FullExchangeInterface";
 
 const bgColors = [
   "bg-red-500",

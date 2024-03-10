@@ -7,7 +7,7 @@ import {
   classNames,
   initialNavigation,
   userNavigation,
-} from "./Helpers/ExchangeHelper";
+} from "./helpers/ExchangeHelper";
 import { getMainComponentByName } from "../components/main-components/Helpers/Navigations";
 import PopUp from "../components/common-components/PopUp";
 import SearchInput from "../components/common-components/SearchInput";
@@ -19,7 +19,7 @@ import NotificationsDialog from "../components/common-components/Notifications/N
 import io from "socket.io-client";
 import axios from "axios";
 import generateUrl from "../contants/url";
-import { NotificationEvent } from "../components/common-components/Notifications/Interfaces/NotificationEventInterface";
+import { NotificationEvent } from "../components/common-components/Notifications/interfaces/NotificationEventInterface";
 
 export default function ExchangeBox() {
   const [sidebarOpen, setSidebarOpen] = useState(false);

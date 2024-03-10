@@ -12,8 +12,8 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "./store/store";
 import { setUser } from "./store/user-state/userSlice";
-import { isAuthenticated } from "./components/common-components/Helpers/IsAuthenticated";
-import useCheckAuth from "./components/common-components/Hooks/UseCheckAuth";
+import { isAuthenticated } from "./components/common-components/helpers/IsAuthenticated";
+import useCheckAuth from "./components/common-components/hooks/UseCheckAuth";
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   children,

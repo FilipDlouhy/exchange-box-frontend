@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { MenuItem } from "./Helpers/ComonInterfaces";
+import { MenuItem } from "./helpers/ComonInterfaces";
 import { resetProfileUser } from "../../store/user-state/profileUserSlice";
 
 function MenuButton({

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { resetStarting } from "../../../store/paginationSlice";
 import { clearSearchText } from "../../../store/searchSlice";
-import { DynamicComponentRenderer } from "../../common-components/Helpers/ComonHelpers";
+import { DynamicComponentRenderer } from "../../common-components/helpers/ComonHelpers";
 import Menu from "../../common-components/Menu";
 import { itemMenuItems } from "./Helpers/ItemHelper";
 import { AppDispatch, RootState } from "../../../store/store";

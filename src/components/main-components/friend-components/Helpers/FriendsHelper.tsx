@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ToggleFriendDto } from "../../../../Dtos/UserDtos/toggle.friend.dto";
 import generateUrl from "../../../../contants/url";
-import { MenuItem } from "../../../common-components/Helpers/ComonInterfaces";
+import { MenuItem } from "../../../common-components/helpers/ComonInterfaces";
 import FriendRequests from "../FriendRequests";
 import MyFriends from "../MyFriends";
 import NewFriends from "../NewFriends";

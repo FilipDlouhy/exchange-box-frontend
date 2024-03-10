@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { FormUser } from "../../main-components/item-components/Interfaces/FormUser";
-import { useFetchDataSimple } from "../Hooks/FetchDataHookSimple";
+import { useFetchDataSimple } from "../hooks/FetchDataHookSimple";
 import axios from "axios";
 import generateUrl from "../../../contants/url";
 import { RootState } from "../../../store/store";

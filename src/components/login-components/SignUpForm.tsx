@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import generateUrl from "../../contants/url";
 import axios from "axios";
 import { CreateUserDto } from "../../Dtos/UserDtos/create.user.dto";
-import { handleInputChange } from "./Helpers/InputHelper";
-import { FormProps } from "./Props/FormProps";
+import { handleInputChange } from "./helpers/InputHelper";
+import { FormProps } from "./props/FormProps";
 
 export default function SingUpForm({
   setIsLoggingIn,
