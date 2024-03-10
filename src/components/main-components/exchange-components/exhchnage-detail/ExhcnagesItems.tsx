@@ -1,9 +1,12 @@
 import {
+  CheckBadgeIcon,
+  ClockIcon,
   DocumentMagnifyingGlassIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { ExchangeSimpleInterface } from "../interfaces/ExchnageSImpleInterFace";
 import { LockOpenIcon } from "@heroicons/react/24/solid";
+import { exchnageStatus, statusTexts } from "../helpers/ExchnageStatus";
 
 function ExhcnagesItems({
   exchages,
@@ -20,6 +23,10 @@ function ExhcnagesItems({
     >
   >;
 }) {
+  const getStatusText = (status: string) => {
+    return statusTexts[status];
+  };
+
   return (
     <div className="w-full flex flex-wrap">
       {exchages?.map((exchage, index) => (
@@ -74,12 +81,24 @@ function ExhcnagesItems({
                   </p>
                 </div>
                 <div className="-ml-px cursor-pointer flex w-0 flex-1">
-                  <p className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-                    <LockOpenIcon
-                      className="h-5 w-5 text-gray-400"
-                      aria-hidden="true"
-                    />
-                    Open box
+                  <p className=" text-centerrelative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+                    {exchage.exchangeState === exchnageStatus.done ? (
+                      <CheckBadgeIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    ) : exchage.exchangeState === exchnageStatus.unscheduled ? (
+                      <ClockIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <LockOpenIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    )}
+                    {getStatusText(exchage.exchangeState)}
                   </p>
                 </div>
               </div>
