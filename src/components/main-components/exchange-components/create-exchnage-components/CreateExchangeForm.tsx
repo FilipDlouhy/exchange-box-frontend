@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import generateUrl from "../../../contants/url";
-import { ExchangeFriend } from "./interfaces/ExchangeFriendInterface";
-import { CenterInterface } from "./interfaces/CenterInterFace";
+import generateUrl from "../../../../contants/url";
+import { ExchangeFriend } from "../interfaces/ExchangeFriendInterface";
+import { CenterInterface } from "../interfaces/CenterInterFace";
 import CreateExchangeMap from "./CreateExchangeMap";
 
 function CreateExchangeForm({
@@ -11,6 +11,7 @@ function CreateExchangeForm({
   setName,
   setSize,
   setPickUpDate,
+  size,
 }: {
   setSelectedFriend: React.Dispatch<
     React.SetStateAction<ExchangeFriend | undefined>
@@ -19,6 +20,7 @@ function CreateExchangeForm({
   setSize: React.Dispatch<React.SetStateAction<string>>;
   setName: React.Dispatch<React.SetStateAction<string>>;
   setPickUpDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  size: string;
 }) {
   const [friends, setFiends] = useState<ExchangeFriend[]>();
   const [centers, setCenters] = useState<CenterInterface[]>([]);
@@ -143,6 +145,7 @@ function CreateExchangeForm({
         </h1>
         {centers.length > 0 && (
           <CreateExchangeMap
+            size={size}
             centers={centers}
             handleCoordinatesChange={handleCoordinatesChange}
           />

@@ -1,8 +1,9 @@
 import { useState } from "react";
-import CreateExchange from "./CreateExchange";
+import CreateExchange from "./create-exchnage-components/CreateExchange";
 import Exchanges from "./Exchnages";
 import { ExchangeSimpleInterface } from "./interfaces/ExchnageSImpleInterFace";
 import ExhcnageDetail from "./exhchnage-detail/ExhcnageDetail";
+import OpenEchnageBoxDialog from "./OpenEchnageBoxDialog";
 
 function ExchangeContainer() {
   const [isCreating, setIsCreating] = useState<boolean>();
@@ -32,6 +33,8 @@ function ExchangeContainer() {
           setIsCreating={setIsCreating}
         />
       )}
+
+      <OpenEchnageBoxDialog />
     </div>
   );
 }
