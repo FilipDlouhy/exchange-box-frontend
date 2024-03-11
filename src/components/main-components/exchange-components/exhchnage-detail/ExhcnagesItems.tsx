@@ -7,6 +7,9 @@ import {
 import { ExchangeSimpleInterface } from "../interfaces/ExchnageSImpleInterFace";
 import { LockOpenIcon } from "@heroicons/react/24/solid";
 import { exchnageStatus, statusTexts } from "../helpers/ExchnageStatus";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store/store";
 
 function ExhcnagesItems({
   exchages,
@@ -27,6 +30,10 @@ function ExhcnagesItems({
     return statusTexts[status];
   };
 
+  useEffect(() => {
+    console.log(exchages);
+  }, []);
+  const userId = useSelector((state: RootState) => state.user.id);
   return (
     <div className="w-full flex flex-wrap">
       {exchages?.map((exchage, index) => (
@@ -92,11 +99,20 @@ function ExhcnagesItems({
                         className="h-5 w-5 text-gray-400"
                         aria-hidden="true"
                       />
-                    ) : (
+                    ) : exchage.exchangeState === exchnageStatus.reserved &&
+                      exchage.creatorId === userId ? (
                       <LockOpenIcon
                         className="h-5 w-5 text-gray-400"
                         aria-hidden="true"
                       />
+                    ) : exchage.exchangeState === exchnageStatus.inBox &&
+                      exchage.pickUpPersonId === userId ? (
+                      <LockOpenIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <div></div>
                     )}
                     {getStatusText(exchage.exchangeState)}
                   </p>
