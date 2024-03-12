@@ -1,20 +1,30 @@
 import {
   CheckBadgeIcon,
-  ClockIcon,
   DocumentMagnifyingGlassIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import { ExchangeSimpleInterface } from "../interfaces/ExchnageSImpleInterFace";
+import { ExchangeSimpleInterface } from "./interfaces/ExchnageSImpleInterFace";
 import { LockOpenIcon } from "@heroicons/react/24/solid";
-import { exchnageStatus, statusTexts } from "../helpers/ExchnageStatus";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../store/store";
+import { exchnageStatus } from "./helpers/ExchnageStatus";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+import axios from "axios";
+import generateUrl from "../../../contants/url";
+import { setOpenBoxCode } from "../../../store/echange-state/openBoxCodeSlice";
+import { showError } from "../../../store/errorSlice";
 
 function ExhcnagesItems({
   exchages,
   setExchangeDetail,
+  setOpen,
 }: {
+  setOpen: React.Dispatch<
+    React.SetStateAction<{
+      showOpenBoxForm: boolean;
+      exchnageId: number;
+      userId: number;
+    }>
+  >;
   exchages: ExchangeSimpleInterface[] | undefined;
   setExchangeDetail: React.Dispatch<
     React.SetStateAction<
@@ -26,19 +36,66 @@ function ExhcnagesItems({
     >
   >;
 }) {
-  const getStatusText = (status: string) => {
-    return statusTexts[status];
+  const dispatch = useDispatch();
+  const getStatusText = (status: string): string | undefined => {
+    const statusTexts: Record<string, string> = {
+      reserved: "Reserved",
+      inBox: "In Box",
+      done: "Done",
+    };
+
+    const matchedStatus = Object.keys(statusTexts).find(
+      (key) => key === status
+    );
+
+    return matchedStatus ? statusTexts[matchedStatus] : undefined;
   };
 
-  useEffect(() => {
-    console.log(exchages);
-  }, []);
+  const handleShowError = (message: string) => {
+    dispatch(showError(message));
+  };
+
   const userId = useSelector((state: RootState) => state.user.id);
+
+  const handleOpenBox = async (exchage: ExchangeSimpleInterface) => {
+    try {
+      if (
+        (exchage.exchangeState === exchnageStatus.reserved &&
+          exchage.creatorId === parseInt(userId)) ||
+        (exchage.exchangeState === exchnageStatus.inBox &&
+          exchage.pickUpPersonId === parseInt(userId))
+      ) {
+        const { data } = await axios.post(
+          generateUrl("exchange/get-code-for-exchnage-box"),
+          { id: exchage.id, userId: parseInt(userId) },
+          { withCredentials: true }
+        );
+
+        dispatch(setOpenBoxCode(data));
+
+        setOpen({
+          exchnageId: exchage.id,
+          showOpenBoxForm: true,
+          userId: exchage.pickUpPersonId,
+        });
+      }
+    } catch (error) {
+      handleShowError("You tried to open box recently try later");
+      console.error("An error occurred:", error);
+    }
+  };
+
   return (
     <div className="w-full flex flex-wrap">
       {exchages?.map((exchage, index) => (
         <div key={index} className="h-56 w-80 m-5">
-          <div className="divide-y divide-gray-200 rounded-lg bg-white shadow">
+          <div
+            className={`divide-y divide-black-200 bgb rounded-lg ${
+              exchage.creatorId === parseInt(userId)
+                ? "bg-blue-100"
+                : "bg-green-100"
+            }  shadow`}
+          >
             <div className="flex items-center justify-between space-x-6 p-6">
               <div className="flex-1 truncate">
                 <div className="flex items-center space-x-3">
@@ -58,27 +115,27 @@ function ExhcnagesItems({
               </div>
               {exchage.friendImgUrl ? (
                 <img
-                  className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
+                  className="h-10 w-10 flex-shrink-0 rounded-full "
                   src={exchage.friendImgUrl}
                   alt=""
                 />
               ) : (
-                <div className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300">
+                <div className="h-10 w-10 flex-shrink-0 rounded-full ">
                   <UserCircleIcon />
                 </div>
               )}
             </div>
             <div>
-              <div
-                onClick={() => {
-                  setExchangeDetail({
-                    activeExchangeId: exchage.id,
-                    seeDetail: true,
-                  });
-                }}
-                className="cursor-pointer -mt-px flex divide-x divide-gray-200"
-              >
-                <div className="flex w-0 flex-1">
+              <div className="cursor-pointer -mt-px flex divide-x divide-gray-200">
+                <div
+                  onClick={() => {
+                    setExchangeDetail({
+                      activeExchangeId: exchage.id,
+                      seeDetail: true,
+                    });
+                  }}
+                  className="flex w-0 flex-1"
+                >
                   <p className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
                     <DocumentMagnifyingGlassIcon
                       className="h-5 w-5 text-gray-400"
@@ -87,33 +144,31 @@ function ExhcnagesItems({
                     See detail
                   </p>
                 </div>
-                <div className="-ml-px cursor-pointer flex w-0 flex-1">
+                <div
+                  onClick={() => {
+                    handleOpenBox(exchage);
+                  }}
+                  className="-ml-px cursor-pointer flex w-0 flex-1"
+                >
                   <p className=" text-centerrelative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
                     {exchage.exchangeState === exchnageStatus.done ? (
                       <CheckBadgeIcon
                         className="h-5 w-5 text-gray-400"
                         aria-hidden="true"
                       />
-                    ) : exchage.exchangeState === exchnageStatus.unscheduled ? (
-                      <ClockIcon
-                        className="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
                     ) : exchage.exchangeState === exchnageStatus.reserved &&
-                      exchage.creatorId === userId ? (
+                      exchage.creatorId === parseInt(userId) ? (
                       <LockOpenIcon
                         className="h-5 w-5 text-gray-400"
                         aria-hidden="true"
                       />
                     ) : exchage.exchangeState === exchnageStatus.inBox &&
-                      exchage.pickUpPersonId === userId ? (
+                      exchage.pickUpPersonId === parseInt(userId) ? (
                       <LockOpenIcon
                         className="h-5 w-5 text-gray-400"
                         aria-hidden="true"
                       />
-                    ) : (
-                      <div></div>
-                    )}
+                    ) : null}
                     {getStatusText(exchage.exchangeState)}
                   </p>
                 </div>

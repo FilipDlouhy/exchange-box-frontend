@@ -29,10 +29,6 @@ const CreateExchangeMap = ({
   const defaultCenter =
     centers.length > 0 ? [centers[0].latitude, centers[0].longitude] : [0, 0];
 
-  useEffect(() => {
-    console.log(centers);
-  }, [size, centers]);
-
   return (
     <MapContainer
       center={defaultCenter}

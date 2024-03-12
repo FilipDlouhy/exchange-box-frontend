@@ -45,7 +45,6 @@ function ExchangeDetail({
       { userId: userId, id: exchangeDetail?.activeExchangeId },
       { withCredentials: true }
     );
-    console.log(data);
     setFullExchnage(data);
   };
 

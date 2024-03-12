@@ -1,21 +1,21 @@
-import axios from "axios";
-import { useEffect } from "react";
-import generateUrl from "../../../contants/url";
 import { ExchangeSimpleInterface } from "./interfaces/ExchnageSImpleInterFace";
-import ExhcnagesItems from "./exhchnage-detail/ExhcnagesItems";
+import ExhcnagesItems from "./ExhcnagesItems";
 
 export default function Exchanges({
   setIsCreating,
   exchages,
-  setExchanges,
   setExchangeDetail,
+  setOpen,
 }: {
   setIsCreating: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   exchages: ExchangeSimpleInterface[] | undefined;
-  setExchanges: React.Dispatch<
-    React.SetStateAction<ExchangeSimpleInterface[] | undefined>
+  setOpen: React.Dispatch<
+    React.SetStateAction<{
+      showOpenBoxForm: boolean;
+      exchnageId: number;
+      userId: number;
+    }>
   >;
-
   setExchangeDetail: React.Dispatch<
     React.SetStateAction<
       | {
@@ -26,28 +26,6 @@ export default function Exchanges({
     >
   >;
 }) {
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        generateUrl("exchange/get-user-exchanges"),
-        { withCredentials: true }
-      );
-      const dataWithDates = response.data.map(
-        (exchage: ExchangeSimpleInterface) => ({
-          ...exchage,
-          pickUpDate: exchage.pickUpDate ? new Date(exchage.pickUpDate) : null,
-        })
-      );
-      setExchanges(dataWithDates);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      throw error;
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
   return (
     <div className="flex flex-wrap  m-2">
       <div className="w-full h-28  flex justify-around  flex-col">
@@ -63,6 +41,7 @@ export default function Exchanges({
         </button>
       </div>
       <ExhcnagesItems
+        setOpen={setOpen}
         setExchangeDetail={setExchangeDetail}
         exchages={exchages}
       />

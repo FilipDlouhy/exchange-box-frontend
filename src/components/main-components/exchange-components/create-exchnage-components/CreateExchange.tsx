@@ -73,12 +73,6 @@ function CreateExchange({
       parseInt(center.id),
       pickUpDate
     );
-    await axios.post(
-      generateUrl("exchange/create-exchange"),
-      createExchangeDto
-    );
-
-    setIsCreating(false);
 
     try {
       const { data } = await axios.post(
@@ -86,8 +80,11 @@ function CreateExchange({
         createExchangeDto
       );
 
+      data.pickUpDate = new Date(data.pickUpDate);
+
       setExchanges((prevExchanges) => {
         const newExchanges = prevExchanges ? [data, ...prevExchanges] : [data];
+
         return newExchanges;
       });
 
