@@ -8,8 +8,7 @@ import {
   initialNavigation,
   userNavigation,
 } from "./helpers/ExchangeHelper";
-import { getMainComponentByName } from "../components/main-components/Helpers/Navigations";
-import PopUp from "../components/common-components/PopUp";
+import ErrorModal from "../components/common-components/ErrorModal";
 import SearchInput from "../components/common-components/SearchInput";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +19,8 @@ import io from "socket.io-client";
 import axios from "axios";
 import generateUrl from "../contants/url";
 import { NotificationEvent } from "../components/common-components/Notifications/interfaces/NotificationEventInterface";
+import { getMainComponentByName } from "../components/main-components/Helpers/Navigations";
+import InfoModal from "../components/common-components/InfoModal";
 
 export default function ExchangeBox() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -332,7 +333,10 @@ export default function ExchangeBox() {
         </div>
       </div>
 
-      <PopUp />
+      <ErrorModal />
+
+      <InfoModal />
+
       <NotificationsDialog
         numberOfNotifications={numberOfNotifications}
         setNumberOfNotifications={setNumberOfNotifications}
