@@ -1,11 +1,11 @@
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from "react-redux";
 import { ErrorPopUpState, hideError } from "../../store/errorSlice";
 import { RootState } from "../../store/store";
 
-export default function PopUp() {
+export default function ErrorModal() {
   const error: ErrorPopUpState = useSelector(
     (state: RootState) => state.errorPopUp
   );
