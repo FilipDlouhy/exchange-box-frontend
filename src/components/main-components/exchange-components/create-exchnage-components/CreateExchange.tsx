@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CreateExchangeForm from "./CreateExchangeForm";
 import { ExchangeFriend } from "../interfaces/ExchangeFriendInterface";
-import ItemsForExchange from "../ItemsForExchange";
+import ItemsForExchange from "./ItemsForExchange";
 import axios from "axios";
 import generateUrl from "../../../../contants/url";
 import { ExchangeItemInterface } from "../interfaces/ExchnageItem";
@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 import { CenterInterface } from "../interfaces/CenterInterFace";
 import { ExchangeSimpleInterface } from "../interfaces/ExchnageSImpleInterFace";
+import { ItemInExchnageInterface } from "../interfaces/ItemInExchnageInterface";
 
 function CreateExchange({
   setIsCreating,
@@ -25,7 +26,9 @@ function CreateExchange({
   const [name, setName] = useState<string>("");
   const [pickUpDate, setPickUpDate] = useState<Date>();
   const [size, setSize] = useState<string>("Large");
-  const [itemsInExchnage, setItemsInExchnage] = useState<number[]>([]);
+  const [itemsInExchnage, setItemsInExchnage] = useState<
+    ItemInExchnageInterface[]
+  >([]);
   const [center, setCenter] = useState<CenterInterface | undefined>();
   const userId = useSelector((state: RootState) => state.user.id);
 
@@ -33,19 +36,28 @@ function CreateExchange({
     setCenter(center);
   };
 
-  const handleItemsInExchangeChange = (id: number, isAdding: boolean) => {
+  const handleItemsInExchangeChange = (item: ItemInExchnageInterface) => {
+    const isAdding = !itemsInExchnage.some(
+      (itemInExchnage) => itemInExchnage.id === item.id
+    );
+
+    console.log(item);
+    console.log(isAdding);
+
     if (isAdding) {
-      setItemsInExchnage((prevItems) => [...prevItems, id]);
+      setItemsInExchnage((prevItems) => [...prevItems, item]);
     } else {
       setItemsInExchnage((prevItems) =>
-        prevItems.filter((itemId) => itemId !== id)
+        prevItems.filter((existingItem) => existingItem.id !== item.id)
       );
     }
   };
 
   const getItems = async () => {
     const { data } = await axios.get(
-      generateUrl(`item/get-user-item-simple/${selectedFriend?.friendId}`),
+      generateUrl(
+        `item/get-user-item-simple-for-exchange/${selectedFriend?.friendId}`
+      ),
       { withCredentials: true }
     );
 
@@ -64,12 +76,16 @@ function CreateExchange({
       return;
     }
 
+    const itemsInExchnageIds = itemsInExchnage.map((item) => {
+      return item.id;
+    });
+
     const createExchangeDto = new CreateExchangeDto(
       parseInt(userId),
       selectedFriend.friendId,
       size,
       name,
-      itemsInExchnage,
+      itemsInExchnageIds,
       parseInt(center.id),
       pickUpDate
     );
