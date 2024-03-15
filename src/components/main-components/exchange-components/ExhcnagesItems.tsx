@@ -18,6 +18,7 @@ function ExhcnagesItems({
   exchages,
   setExchangeDetail,
   setOpen,
+  setExchanges,
 }: {
   setOpen: React.Dispatch<
     React.SetStateAction<{
@@ -35,6 +36,9 @@ function ExhcnagesItems({
         }
       | undefined
     >
+  >;
+  setExchanges: React.Dispatch<
+    React.SetStateAction<ExchangeSimpleInterface[] | undefined>
   >;
 }) {
   const dispatch = useDispatch();
@@ -87,13 +91,24 @@ function ExhcnagesItems({
   };
 
   const handleExhcnageDelete = async (id: number) => {
-    await axios.post(
-      generateUrl("exchange/delete-exchange"),
-      { id: id },
-      { withCredentials: true }
-    );
+    try {
+      await axios.post(
+        generateUrl("exchange/delete-exchange"),
+        { id: id },
+        { withCredentials: true }
+      );
 
-    dispatch(showInfo("You have deleted items beloning to this exchange"));
+      dispatch(showInfo("You have deleted items belonging to this exchange"));
+
+      if (exchages) {
+        const updatedExchanges = exchages.filter(
+          (exchange) => exchange.id !== id
+        );
+        setExchanges(updatedExchanges);
+      }
+    } catch (error) {
+      console.error("Error deleting exchange:", error);
+    }
   };
 
   return (

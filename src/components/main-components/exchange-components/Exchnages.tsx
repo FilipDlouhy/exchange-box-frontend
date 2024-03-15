@@ -6,6 +6,7 @@ export default function Exchanges({
   exchages,
   setExchangeDetail,
   setOpen,
+  setExchanges,
 }: {
   setIsCreating: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   exchages: ExchangeSimpleInterface[] | undefined;
@@ -25,6 +26,10 @@ export default function Exchanges({
       | undefined
     >
   >;
+
+  setExchanges: React.Dispatch<
+    React.SetStateAction<ExchangeSimpleInterface[] | undefined>
+  >;
 }) {
   return (
     <div className="flex flex-wrap  m-2">
@@ -41,6 +46,7 @@ export default function Exchanges({
         </button>
       </div>
       <ExhcnagesItems
+        setExchanges={setExchanges}
         setOpen={setOpen}
         setExchangeDetail={setExchangeDetail}
         exchages={exchages}

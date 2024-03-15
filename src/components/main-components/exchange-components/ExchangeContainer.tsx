@@ -56,6 +56,7 @@ function ExchangeContainer() {
         />
       ) : (
         <Exchanges
+          setExchanges={setExchanges}
           setOpen={setOpen}
           setExchangeDetail={setExchangeDetail}
           exchages={exchages}
