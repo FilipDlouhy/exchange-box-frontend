@@ -175,7 +175,6 @@ function ExhcnagesItems({
                     if (exchage.exchangeState === exchnageStatus.done) {
                       handleExhcnageDelete(exchage.id);
                     } else {
-                      return;
                       handleOpenBox(exchage);
                     }
                   }}
