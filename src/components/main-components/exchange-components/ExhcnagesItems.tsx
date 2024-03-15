@@ -12,6 +12,7 @@ import axios from "axios";
 import generateUrl from "../../../contants/url";
 import { setOpenBoxCode } from "../../../store/echange-state/openBoxCodeSlice";
 import { showError } from "../../../store/errorSlice";
+import { showInfo } from "../../../store/infoSlice";
 
 function ExhcnagesItems({
   exchages,
@@ -85,6 +86,16 @@ function ExhcnagesItems({
     }
   };
 
+  const handleExhcnageDelete = async (id: number) => {
+    await axios.post(
+      generateUrl("exchange/delete-exchange"),
+      { id: id },
+      { withCredentials: true }
+    );
+
+    dispatch(showInfo("You have deleted items beloning to this exchange"));
+  };
+
   return (
     <div className="w-full flex flex-wrap">
       {exchages?.map((exchage, index) => (
@@ -146,7 +157,12 @@ function ExhcnagesItems({
                 </div>
                 <div
                   onClick={() => {
-                    handleOpenBox(exchage);
+                    if (exchage.exchangeState === exchnageStatus.done) {
+                      handleExhcnageDelete(exchage.id);
+                    } else {
+                      return;
+                      handleOpenBox(exchage);
+                    }
                   }}
                   className="-ml-px cursor-pointer flex w-0 flex-1"
                 >
