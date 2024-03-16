@@ -1,5 +1,5 @@
 import { ArchiveBoxIcon } from "@heroicons/react/24/outline";
-import { ItemSimpleInterafce } from "../interfaces/FullExchangeInterface";
+import { ItemSimpleInterafce } from "../../interfaces/FullExchangeInterface";
 
 export default function ExchangeDetailItems({
   items,

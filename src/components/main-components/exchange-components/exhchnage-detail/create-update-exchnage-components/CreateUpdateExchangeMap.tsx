@@ -1,11 +1,12 @@
+import { useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
 import iconUrl from "leaflet/dist/images/marker-icon.png";
 import shadowUrl from "leaflet/dist/images/marker-shadow.png";
-import { CenterInterface } from "../interfaces/CenterInterFace";
-import { useEffect } from "react";
+import { CreateUpdateExchangeMapProps } from "../props/ExchnageCreateUpdateProps";
+import { CenterInterface } from "../../interfaces/CenterInterFace";
 
 const customIcon = new L.Icon({
   iconUrl,
@@ -17,17 +18,32 @@ const customIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-const CreateExchangeMap = ({
+const CreateUpdateExchangeMap = ({
   handleCoordinatesChange,
   size,
   centers = [],
-}: {
-  handleCoordinatesChange: (center: CenterInterface | undefined) => void;
-  centers?: CenterInterface[];
-  size: string;
-}) => {
-  const defaultCenter =
-    centers.length > 0 ? [centers[0].latitude, centers[0].longitude] : [0, 0];
+  centerLong,
+  centerLat,
+  isUpdating,
+}: CreateUpdateExchangeMapProps) => {
+  const defaultCenter = [centerLong, centerLat];
+  const markerRefs = useRef<L.Marker[]>([]);
+
+  useEffect(() => {
+    if (isUpdating) {
+      setTimeout(() => {
+        const targetIndex = centers.findIndex(
+          (center) =>
+            center.latitude === centerLat && center.longitude === centerLong
+        );
+        if (targetIndex !== -1 && markerRefs.current[targetIndex]) {
+          const currentCenter: CenterInterface = centers[targetIndex];
+          handleCoordinatesChange(currentCenter);
+          markerRefs.current[targetIndex].openPopup();
+        }
+      }, 500);
+    }
+  }, [isUpdating, centerLat, centerLong, centers]);
 
   return (
     <MapContainer
@@ -49,20 +65,19 @@ const CreateExchangeMap = ({
               key={index}
               position={[center.longitude, center.latitude]}
               icon={customIcon}
+              ref={(ref) => (markerRefs.current[index] = ref)}
               eventHandlers={{
                 click: () => {
-                  const targetLatitude = center.latitude;
-                  const targetLongitude = center.longitude;
                   const foundCenter = centers.find(
                     (c) =>
-                      c.latitude === targetLatitude &&
-                      c.longitude === targetLongitude
+                      c.latitude === center.latitude &&
+                      c.longitude === center.longitude
                   );
                   handleCoordinatesChange(foundCenter);
                 },
               }}
             >
-              <Popup>{"Your exchange is set to be here"}</Popup>
+              <Popup>Your exchange is set to be here</Popup>
             </Marker>
           );
         }
@@ -72,4 +87,4 @@ const CreateExchangeMap = ({
   );
 };
 
-export default CreateExchangeMap;
+export default CreateUpdateExchangeMap;

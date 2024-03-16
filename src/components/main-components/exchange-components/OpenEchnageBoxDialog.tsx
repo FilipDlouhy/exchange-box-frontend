@@ -64,14 +64,6 @@ export default function OpenExchangeBoxDialog({
     try {
       const openBoxDto = new OpenBoxDto(open.exchnageId, code);
 
-      console.log(
-        generateUrl(
-          parseInt(userId) === open.userId
-            ? "exchange/open-box-via-exchnage-pick-up-person"
-            : "exchange/open-box-via-exchnage-creator"
-        )
-      );
-
       await axios.post(
         generateUrl(
           parseInt(userId) === open.userId

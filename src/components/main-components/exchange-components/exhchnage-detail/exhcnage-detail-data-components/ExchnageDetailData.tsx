@@ -1,5 +1,5 @@
 import ExchangeDetailDataItem from "./ExhnageDetailDataItem";
-import { FullExchangeInterafce } from "../interfaces/FullExchangeInterface";
+import { FullExchangeInterafce } from "../../interfaces/FullExchangeInterface";
 
 const bgColors = [
   "bg-red-500",
@@ -13,7 +13,6 @@ const bgColors = [
   "bg-teal-500",
   "bg-cyan-500",
   "bg-gray-500",
-  "bg-brown-500",
 ];
 
 export default function ExchangeDetailData({
@@ -31,6 +30,12 @@ export default function ExchangeDetailData({
       <div className="flex flex-wrap justify-center sm:justify-start">
         {fullExchange && (
           <>
+            <ExchangeDetailDataItem
+              bgColor={getRandomBgColor()}
+              initials="N"
+              text={fullExchange.name}
+              name="Name"
+            />
             <ExchangeDetailDataItem
               bgColor={getRandomBgColor()}
               initials="P"

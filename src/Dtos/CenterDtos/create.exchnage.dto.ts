@@ -1,4 +1,4 @@
-export class CreateExchangeDto {
+export class CreateUpdateExchangeDto {
   creatorId: number;
   pickUpPersonId: number;
   boxSize: string;

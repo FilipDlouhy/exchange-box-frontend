@@ -1,8 +1,7 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
-import { ExchangeItemInterface } from "../interfaces/ExchnageItem";
-import { ItemInExchnageInterface } from "../interfaces/ItemInExchnageInterface";
+import { ItemsForExchangeProps } from "../props/ExchnageCreateUpdateProps";
 
 function classNames(
   ...classes: (string | undefined | null | boolean)[]
@@ -13,11 +12,7 @@ export default function ItemsForExchange({
   itemsSimple,
   handleItemsInExchangeChange,
   itemsInExchnage,
-}: {
-  itemsSimple: ExchangeItemInterface[] | undefined;
-  handleItemsInExchangeChange: (item: ItemInExchnageInterface) => void;
-  itemsInExchnage: ItemInExchnageInterface[];
-}) {
+}: ItemsForExchangeProps) {
   return (
     <div>
       <div className="my-10">

@@ -1,27 +1,25 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import generateUrl from "../../../../contants/url";
-import { ExchangeFriend } from "../interfaces/ExchangeFriendInterface";
-import { CenterInterface } from "../interfaces/CenterInterFace";
-import CreateExchangeMap from "./CreateExchangeMap";
+import generateUrl from "../../../../../contants/url";
+import { ExchangeFriend } from "../../interfaces/ExchangeFriendInterface";
+import { CenterInterface } from "../../interfaces/CenterInterFace";
+import CreateUpdateExchangeMap from "./CreateUpdateExchangeMap";
+import { CreateUpdateExchangeFormProps } from "../props/ExchnageCreateUpdateProps";
 
-function CreateExchangeForm({
+function CreateUpdateExchangeForm({
   setSelectedFriend,
   handleCoordinatesChange,
   setName,
   setSize,
   setPickUpDate,
   size,
-}: {
-  setSelectedFriend: React.Dispatch<
-    React.SetStateAction<ExchangeFriend | undefined>
-  >;
-  handleCoordinatesChange: (center: CenterInterface | undefined) => void;
-  setSize: React.Dispatch<React.SetStateAction<string>>;
-  setName: React.Dispatch<React.SetStateAction<string>>;
-  setPickUpDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  size: string;
-}) {
+  name,
+  pickUpDate,
+  selectedFriend,
+  centerLong,
+  centerLat,
+  isUpdating,
+}: CreateUpdateExchangeFormProps) {
   const [friends, setFiends] = useState<ExchangeFriend[]>();
   const [centers, setCenters] = useState<CenterInterface[]>([]);
   const [isUserSelected, setIsUserSelected] = useState<boolean>(false);
@@ -57,6 +55,12 @@ function CreateExchangeForm({
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (selectedFriend != null) {
+      setIsUserSelected(true);
+    }
+  }, [selectedFriend]);
+
   return (
     <form className="w-full sm:w-3/4 md:w-1/2">
       <div className="mb-4">
@@ -70,6 +74,7 @@ function CreateExchangeForm({
           type="text"
           id="name"
           name="name"
+          value={name}
           onChange={(e) => {
             setName(e.target.value);
           }}
@@ -89,6 +94,7 @@ function CreateExchangeForm({
           }}
           id="size"
           name="size"
+          value={size}
           className="shadow border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
         >
           <option value="Large">Large</option>
@@ -103,10 +109,17 @@ function CreateExchangeForm({
         >
           Pick up date for exchange
         </label>
+
         <input
           type="datetime-local"
           id="date"
           name="date"
+          value={
+            pickUpDate instanceof Date
+              ? pickUpDate.toISOString().slice(0, 16)
+              : ""
+          }
+          min={new Date().toISOString().slice(0, 16)}
           onChange={(e) => {
             setPickUpDate(new Date(e.target.value));
           }}
@@ -123,6 +136,7 @@ function CreateExchangeForm({
         <select
           id="other"
           name="other"
+          value={selectedFriend?.friendName}
           onChange={(e) => {
             handleSelectChange(e);
           }}
@@ -143,16 +157,21 @@ function CreateExchangeForm({
         <h1 className="my-3 font-semibold text-2xl">
           Choose location for exchange
         </h1>
-        {centers.length > 0 && (
-          <CreateExchangeMap
+        {centers.length > 0 ? (
+          <CreateUpdateExchangeMap
+            centerLong={centerLong}
+            isUpdating={isUpdating}
+            centerLat={centerLat}
             size={size}
             centers={centers}
             handleCoordinatesChange={handleCoordinatesChange}
           />
+        ) : (
+          <div>Centers for this size are full</div>
         )}
       </div>
     </form>
   );
 }
 
-export default CreateExchangeForm;
+export default CreateUpdateExchangeForm;

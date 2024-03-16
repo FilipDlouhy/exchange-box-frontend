@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import CreateExchange from "./create-exchnage-components/CreateExchange";
 import Exchanges from "./Exchnages";
 import { ExchangeSimpleInterface } from "./interfaces/ExchnageSImpleInterFace";
 import ExhcnageDetail from "./exhchnage-detail/ExhcnageDetail";
 import OpenEchnageBoxDialog from "./OpenEchnageBoxDialog";
 import generateUrl from "../../../contants/url";
 import axios from "axios";
+import CreateUpdateExchange from "./exhchnage-detail/create-update-exchnage-components/CreateUpdateExchange";
 
 function ExchangeContainer() {
   const [isCreating, setIsCreating] = useState<boolean>();
@@ -46,11 +46,12 @@ function ExchangeContainer() {
     <div>
       {exchnageDetail?.seeDetail ? (
         <ExhcnageDetail
+          setExchanges={setExchanges}
           exchangeDetail={exchnageDetail}
           setExchangeDetail={setExchangeDetail}
         />
       ) : isCreating ? (
-        <CreateExchange
+        <CreateUpdateExchange
           setExchanges={setExchanges}
           setIsCreating={setIsCreating}
         />
