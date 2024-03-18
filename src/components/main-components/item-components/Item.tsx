@@ -122,12 +122,14 @@ function Item({
               Create exchange
             </button>
 
-            <button
-              type="button"
-              className="rounded-md bg-indigo-600  w-28  h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Show exchange
-            </button>
+            {item.exhcangeId && (
+              <button
+                type="button"
+                className="rounded-md bg-indigo-600  w-28  h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Show exchange
+              </button>
+            )}
           </div>
         )}
       </div>
