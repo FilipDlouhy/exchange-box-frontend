@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { PaginationState } from "../contants/PaginationInteface";
 
 const initialState: PaginationState = {
-  starting: 1,
+  starting: 0,
   max: 10,
   showLoadMorButtons: true,
 };
