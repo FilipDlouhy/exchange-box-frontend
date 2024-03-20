@@ -1,4 +1,6 @@
 import { FriendInfo } from "../../friend-components/Interfaces/FriendInterface";
+import { CurrentUserExchnageInterface } from "./CurrentUserExchnageInterface";
+import { CurrentUserItemInterface } from "./CurrentUserItemInterface";
 
 export interface CurrentUser {
   id: number;
@@ -13,6 +15,6 @@ export interface CurrentUser {
   longitude?: number | null;
   latitude?: number | null;
   friends?: FriendInfo[];
-  items?: any[];
-  exchanges?: any[];
+  items?: CurrentUserItemInterface[];
+  exchanges?: CurrentUserExchnageInterface[];
 }

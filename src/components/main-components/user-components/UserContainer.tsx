@@ -9,6 +9,7 @@ import Friend from "../../common-components/common-user-profile-components/Frien
 import { FriendInfo } from "../friend-components/Interfaces/FriendInterface";
 import LocationMap from "../../common-components/LocationMap";
 import ChangePassword from "./ChangePassword";
+import UserItems from "./UserItems";
 
 function UserContainer() {
   const [wasUpdated, setWasUpdated] = useState<boolean>(false);
@@ -104,6 +105,8 @@ function UserContainer() {
             withCredentials: true,
           }
         );
+
+        console.log(data);
         setCurrentUser(data);
         setCurreuntUserFriends(data.friends);
       } catch (error) {
@@ -166,8 +169,14 @@ function UserContainer() {
       </div>
 
       <div className="w-full mt-4 flex items-center justify-center flex-wrap mb-10">
-        <UserExchanges />
+        <UserExchanges exhhanges={currentUser?.exchanges} />
       </div>
+
+      {currentUser?.items && (
+        <div className="w-full mt-4 flex items-center justify-center flex-wrap mb-10">
+          <UserItems userItems={currentUser?.items} />
+        </div>
+      )}
 
       <ChangePassword open={open} setOpen={setOpen} />
     </div>
