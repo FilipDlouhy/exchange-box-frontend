@@ -6,6 +6,7 @@ import OpenEchnageBoxDialog from "./OpenEchnageBoxDialog";
 import generateUrl from "../../../contants/url";
 import axios from "axios";
 import CreateUpdateExchange from "./exhchnage-detail/create-update-exchnage-components/CreateUpdateExchange";
+import { useSelector } from "react-redux";
 
 function ExchangeContainer() {
   const [isCreating, setIsCreating] = useState<boolean>();
@@ -19,6 +20,9 @@ function ExchangeContainer() {
     activeExchangeId: number;
     seeDetail: boolean;
   }>();
+  const exchangeIdFromItem = useSelector(
+    (state) => state.exchangeIdFromItem.exchangeIdFromItem
+  );
 
   const fetchData = async () => {
     try {
@@ -42,6 +46,18 @@ function ExchangeContainer() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (exchangeIdFromItem == null) {
+      return;
+    }
+
+    setExchangeDetail({
+      activeExchangeId: exchangeIdFromItem,
+      seeDetail: true,
+    });
+  }, [exchangeIdFromItem]);
+
   return (
     <div>
       {exchnageDetail?.seeDetail ? (

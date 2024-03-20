@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import axios from "axios";
 import generateUrl from "../../../contants/url";
-import { setOpenBoxCode } from "../../../store/echange-state/openBoxCodeSlice";
+import { setOpenBoxCode } from "../../../store/exchange-state/openBoxCodeSlice";
 import { showError } from "../../../store/errorSlice";
 import { showInfo } from "../../../store/infoSlice";
 
