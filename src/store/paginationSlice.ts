@@ -20,7 +20,7 @@ const paginationSlice = createSlice({
       }
     },
     resetStarting: (state) => {
-      state.starting = 1;
+      state.starting = 0;
       state.max = 10;
       state.showLoadMorButtons = true;
     },

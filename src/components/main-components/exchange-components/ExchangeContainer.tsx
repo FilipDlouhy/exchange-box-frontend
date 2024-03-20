@@ -7,6 +7,7 @@ import generateUrl from "../../../contants/url";
 import axios from "axios";
 import CreateUpdateExchange from "./exhchnage-detail/create-update-exchnage-components/CreateUpdateExchange";
 import { useSelector } from "react-redux";
+import { useFetchDataSearch } from "../../common-components/hooks/FetchSearchDataHook";
 
 function ExchangeContainer() {
   const [isCreating, setIsCreating] = useState<boolean>();
@@ -24,28 +25,12 @@ function ExchangeContainer() {
     (state) => state.exchangeIdFromItem.exchangeIdFromItem
   );
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        generateUrl("exchange/get-user-exchanges"),
-        { withCredentials: true }
-      );
-      const dataWithDates = response.data.map(
-        (exchage: ExchangeSimpleInterface) => ({
-          ...exchage,
-          pickUpDate: exchage.pickUpDate ? new Date(exchage.pickUpDate) : null,
-        })
-      );
-      setExchanges(dataWithDates);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      throw error;
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useFetchDataSearch<ExchangeSimpleInterface[]>(
+    "exchange/get-user-exchanges",
+    setExchanges,
+    exchages,
+    "name"
+  );
 
   useEffect(() => {
     if (exchangeIdFromItem == null) {

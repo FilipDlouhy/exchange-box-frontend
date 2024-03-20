@@ -135,7 +135,7 @@ function ExhcnagesItems({
 
                 {exchage.pickUpDate && (
                   <p className="text-wrap">
-                    Pick Up Date: {exchage.pickUpDate.toDateString()}
+                    Pick Up Date: {new Date(exchage.pickUpDate).toDateString()}
                   </p>
                 )}
               </div>

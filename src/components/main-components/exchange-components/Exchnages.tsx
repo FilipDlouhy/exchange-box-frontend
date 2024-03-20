@@ -1,5 +1,6 @@
 import { ExchangeSimpleInterface } from "./interfaces/ExchnageSImpleInterFace";
 import ExhcnagesItems from "./ExhcnagesItems";
+import LoadMoreButton from "../../common-components/LoadMoreButton";
 
 export default function Exchanges({
   setIsCreating,
@@ -51,6 +52,8 @@ export default function Exchanges({
         setExchangeDetail={setExchangeDetail}
         exchages={exchages}
       />
+
+      <LoadMoreButton />
     </div>
   );
 }
