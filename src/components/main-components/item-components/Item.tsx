@@ -86,32 +86,38 @@ function Item({
         </div>
         {showYourItems ? (
           <div className="w-full h-1/3 flex items-center justify-around ">
-            <button
-              onClick={() => {
-                handleOpenForm();
-                dispatch(setItemToEdit(item));
-              }}
-              type="button"
-              className="rounded-md bg-indigo-600 w-28  h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Edit item
-            </button>
+            {item.exchangeId == null && (
+              <button
+                onClick={() => {
+                  handleOpenForm();
+                  dispatch(setItemToEdit(item));
+                }}
+                type="button"
+                className="rounded-md bg-indigo-600 w-28  h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Edit item
+              </button>
+            )}
 
-            <button
-              type="button"
-              className="rounded-md bg-indigo-600  w-28  h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Show exchange
-            </button>
-            <button
-              onClick={() => {
-                handleDeleteItem(item.id);
-              }}
-              type="button"
-              className="rounded-md bg-indigo-600  w-28  h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Delete item
-            </button>
+            {item.exchangeId != null && (
+              <button
+                type="button"
+                className="rounded-md bg-indigo-600  w-28  h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Show exchange
+              </button>
+            )}
+            {item.exchangeId == null && (
+              <button
+                onClick={() => {
+                  handleDeleteItem(item.id);
+                }}
+                type="button"
+                className="rounded-md bg-indigo-600  w-28  h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Delete item
+              </button>
+            )}
           </div>
         ) : (
           <div className="w-full h-1/3 flex items-center justify-around ">
@@ -122,7 +128,7 @@ function Item({
               Create exchange
             </button>
 
-            {item.exhcangeId && (
+            {item.exchangeId != null && (
               <button
                 type="button"
                 className="rounded-md bg-indigo-600  w-28  h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

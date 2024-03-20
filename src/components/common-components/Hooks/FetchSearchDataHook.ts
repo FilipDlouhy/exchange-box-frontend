@@ -92,7 +92,7 @@ export const useFetchDataSearch = <T extends unknown[]>(
       dispatch,
       paginationRef.current.starting,
       paginationRef.current.max,
-    ] // Ensure all dependencies are included
+    ]
   );
 
   useEffect(() => {

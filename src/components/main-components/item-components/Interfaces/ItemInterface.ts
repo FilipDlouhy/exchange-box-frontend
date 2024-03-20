@@ -9,5 +9,5 @@ export interface ItemInterface {
   weightInGrams: number;
   id: number;
   imageURL?: string;
-  exhcangeId?: number;
+  exchangeId: number;
 }
