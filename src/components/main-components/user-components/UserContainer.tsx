@@ -10,6 +10,7 @@ import { FriendInfo } from "../friend-components/Interfaces/FriendInterface";
 import LocationMap from "../../common-components/LocationMap";
 import ChangePassword from "./ChangePassword";
 import UserItems from "./UserItems";
+import CreateEditItemForm from "../../common-components/common-user-profile-components/CreateEditItemForm";
 
 function UserContainer() {
   const [wasUpdated, setWasUpdated] = useState<boolean>(false);
@@ -179,6 +180,7 @@ function UserContainer() {
       )}
 
       <ChangePassword open={open} setOpen={setOpen} />
+      <CreateEditItemForm mustEditArray={false} />
     </div>
   );
 }
