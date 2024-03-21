@@ -2,6 +2,10 @@ import { CurrentUserExchnageInterface } from "./Interfaces/CurrentUserExchnageIn
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
+import { useDispatch } from "react-redux";
+import { setExchangeIdFromItem } from "../../../store/exchange-state/exhcnageFromItemsSlice";
+import { setActiveModuleName } from "../../../store/moduleSlice";
+import { setProfileUser } from "../../../store/user-state/profileUserSlice";
 function classNames(
   ...classes: (string | undefined | null | boolean)[]
 ): string {
@@ -12,6 +16,23 @@ function UserExchange({
 }: {
   exchange: CurrentUserExchnageInterface;
 }) {
+  const dispatch = useDispatch();
+  const showExhcnage = () => {
+    dispatch(setExchangeIdFromItem(exchange.id));
+    dispatch(setActiveModuleName("Exchanges"));
+  };
+
+  const goToProfile = () => {
+    dispatch(setActiveModuleName("Friends"));
+    dispatch(
+      setProfileUser({
+        email: "",
+        id: exchange.pickUpPersonId.toString(),
+        isFriend: true,
+      })
+    );
+  };
+
   return (
     <div
       key={exchange.id}
@@ -38,8 +59,10 @@ function UserExchange({
             <Menu.Items className="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
               <Menu.Item>
                 {({ active }) => (
-                  <a
-                    href="#"
+                  <p
+                    onClick={() => {
+                      showExhcnage();
+                    }}
                     className={classNames(
                       active ? "bg-gray-50" : "",
                       "block px-3 py-1 text-sm leading-6 text-gray-900"
@@ -47,13 +70,15 @@ function UserExchange({
                   >
                     View
                     <span className="sr-only">, {exchange.exchangeName}</span>
-                  </a>
+                  </p>
                 )}
               </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
-                  <a
-                    href="#"
+                  <p
+                    onClick={() => {
+                      goToProfile();
+                    }}
                     className={classNames(
                       active ? "bg-gray-50" : "",
                       "block px-3 py-1 text-sm leading-6 text-gray-900"
@@ -61,7 +86,7 @@ function UserExchange({
                   >
                     Go to friends profile
                     <span className="sr-only">, {exchange.friendName}</span>
-                  </a>
+                  </p>
                 )}
               </Menu.Item>
             </Menu.Items>
