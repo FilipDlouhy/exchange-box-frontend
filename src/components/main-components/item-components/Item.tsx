@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { openForm } from "../../../store/user-state/addItemToPersonFormState";
 import { setActiveModuleName } from "../../../store/moduleSlice";
 import { setExchangeIdFromItem } from "../../../store/exchange-state/exhcnageFromItemsSlice";
+import { setExchangeCreationState } from "../../../store/exchange-state/createExchnageFomItemSlice";
 
 function Item({
   item,
@@ -46,6 +47,17 @@ function Item({
 
   const showExhcnage = () => {
     dispatch(setExchangeIdFromItem(item.exchangeId));
+    dispatch(setActiveModuleName("Exchanges"));
+  };
+
+  const createExchnageFromItems = () => {
+    dispatch(
+      setExchangeCreationState({
+        isCreatingFromItems: true,
+        friendId: item.userId,
+        itemId: item.id,
+      })
+    );
     dispatch(setActiveModuleName("Exchanges"));
   };
 
@@ -119,7 +131,10 @@ function Item({
             </button>
           )}
           {!showYourItems && item.exchangeId == null && (
-            <button className="rounded-md bg-indigo-600 w-28 h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <button
+              onClick={createExchnageFromItems}
+              className="rounded-md bg-indigo-600 w-28 h-9 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
               Create exchange
             </button>
           )}

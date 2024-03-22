@@ -5,6 +5,7 @@ import { ExchangeFriend } from "../../interfaces/ExchangeFriendInterface";
 import { CenterInterface } from "../../interfaces/CenterInterFace";
 import CreateUpdateExchangeMap from "./CreateUpdateExchangeMap";
 import { CreateUpdateExchangeFormProps } from "../props/ExchnageCreateUpdateProps";
+import { useSelector } from "react-redux";
 
 function CreateUpdateExchangeForm({
   setSelectedFriend,
@@ -23,6 +24,10 @@ function CreateUpdateExchangeForm({
   const [friends, setFiends] = useState<ExchangeFriend[]>();
   const [centers, setCenters] = useState<CenterInterface[]>([]);
   const [isUserSelected, setIsUserSelected] = useState<boolean>(false);
+  const [lockSelect, setLockSelect] = useState<boolean>(false);
+  const friendIdFromItems = useSelector(
+    (state) => state.createExchangeFromItem.friendId
+  );
   const fetchData = async () => {
     const friends = await axios.get(
       generateUrl("user/get-users-friends-simple"),
@@ -53,6 +58,7 @@ function CreateUpdateExchangeForm({
   useEffect(() => {
     setSize("Large");
     fetchData();
+    setLockSelect(false);
   }, []);
 
   useEffect(() => {
@@ -60,6 +66,18 @@ function CreateUpdateExchangeForm({
       setIsUserSelected(true);
     }
   }, [selectedFriend]);
+
+  useEffect(() => {
+    if (friends !== undefined) {
+      friends.map((friend) => {
+        if (friend.friendId === friendIdFromItems) {
+          setSelectedFriend(friend);
+          setIsUserSelected(true);
+          setLockSelect(true);
+        }
+      });
+    }
+  }, [friendIdFromItems, friends]);
 
   return (
     <form className="w-full sm:w-3/4 md:w-1/2">
@@ -134,6 +152,7 @@ function CreateUpdateExchangeForm({
           Select user
         </label>
         <select
+          disabled={lockSelect}
           id="other"
           name="other"
           value={selectedFriend?.friendName}

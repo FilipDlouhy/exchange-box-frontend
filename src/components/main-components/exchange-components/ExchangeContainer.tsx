@@ -3,13 +3,15 @@ import Exchanges from "./Exchnages";
 import { ExchangeSimpleInterface } from "./interfaces/ExchnageSImpleInterFace";
 import ExhcnageDetail from "./exhchnage-detail/ExhcnageDetail";
 import OpenEchnageBoxDialog from "./OpenEchnageBoxDialog";
-import generateUrl from "../../../contants/url";
-import axios from "axios";
 import CreateUpdateExchange from "./exhchnage-detail/create-update-exchnage-components/CreateUpdateExchange";
 import { useSelector } from "react-redux";
 import { useFetchDataSearch } from "../../common-components/hooks/FetchSearchDataHook";
 
 function ExchangeContainer() {
+  const isCreatingFromItems = useSelector(
+    (state) => state.createExchangeFromItem.isCreatingFromItems
+  );
+
   const [isCreating, setIsCreating] = useState<boolean>();
   const [exchages, setExchanges] = useState<ExchangeSimpleInterface[]>();
   const [open, setOpen] = useState<{
@@ -42,6 +44,12 @@ function ExchangeContainer() {
       seeDetail: true,
     });
   }, [exchangeIdFromItem]);
+
+  useEffect(() => {
+    if (isCreatingFromItems) {
+      setIsCreating(true);
+    }
+  }, [isCreatingFromItems]);
 
   return (
     <div>

@@ -12,6 +12,7 @@ import itemMenuReducer from "./item-state/itemMenuSlice";
 import ItemToEditReducer from "./item-state/itemToEditSlice";
 import openBoxSlice from "./exchange-state/openBoxCodeSlice";
 import exchangeIdFromItemSlice from "./exchange-state/exhcnageFromItemsSlice";
+import createExchangeFromItemReducer from "./exchange-state/createExchnageFomItemSlice";
 
 export const store = configureStore({
   reducer: {
@@ -28,6 +29,7 @@ export const store = configureStore({
     addItemToPersonForm: addItemToPersonFormSlice,
     openBox: openBoxSlice,
     exchangeIdFromItem: exchangeIdFromItemSlice,
+    createExchangeFromItem: createExchangeFromItemReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

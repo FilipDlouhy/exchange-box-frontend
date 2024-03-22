@@ -6,12 +6,12 @@ import axios from "axios";
 import generateUrl from "../../../../../contants/url";
 import { ExchangeItemInterface } from "../../interfaces/ExchnageItem";
 import { CreateUpdateExchangeDto } from "../../../../../Dtos/CenterDtos/create.exchnage.dto";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../store/store";
 import { CenterInterface } from "../../interfaces/CenterInterFace";
 import { ItemInExchnageInterface } from "../../interfaces/ItemInExchnageInterface";
 import { CreateUpdateExchangeProps } from "../props/ExchnageCreateUpdateProps";
-import { hasAllRequiredData } from "./helpers/CreateUpdateExhcnageHelper";
+import { resetExchangeCreationState } from "../../../../../store/exchange-state/createExchnageFomItemSlice";
 
 function CreateUpdateExchange({
   setIsCreating,
@@ -33,6 +33,15 @@ function CreateUpdateExchange({
     (state: RootState) => state.user
   );
 
+  const itemIdFromItems = useSelector(
+    (state) => state.createExchangeFromItem.itemId
+  );
+  const friendIdFromItems = useSelector(
+    (state) => state.createExchangeFromItem.friendId
+  );
+
+  const dispatch = useDispatch();
+
   const handleCoordinatesChange = (center: CenterInterface | undefined) => {
     setCenter(center);
   };
@@ -51,10 +60,12 @@ function CreateUpdateExchange({
     }
   };
 
-  const getItems = async () => {
+  const getItems = async (isForgoten: boolean) => {
     const { data } = await axios.get(
       generateUrl(
-        `item/get-user-item-simple-for-exchange/${selectedFriend?.friendId}`
+        isForgoten
+          ? `item/get-user-forgoten-item-simple-for-exchange/${selectedFriend?.friendId}`
+          : `item/get-user-item-simple-for-exchange/${selectedFriend?.friendId}`
       ),
       { withCredentials: true }
     );
@@ -81,15 +92,26 @@ function CreateUpdateExchange({
       return item.id;
     });
 
-    const createExchangeDto = new CreateUpdateExchangeDto(
-      parseInt(id),
-      selectedFriend.friendId,
-      size,
-      name,
-      itemsInExchnageIds,
-      parseInt(center.id),
-      pickUpDate
-    );
+    const createExchangeDto =
+      friendIdFromItems != null
+        ? new CreateUpdateExchangeDto(
+            selectedFriend.friendId,
+            parseInt(id),
+            size,
+            name,
+            itemsInExchnageIds,
+            parseInt(center.id),
+            pickUpDate
+          )
+        : new CreateUpdateExchangeDto(
+            parseInt(id),
+            selectedFriend.friendId,
+            size,
+            name,
+            itemsInExchnageIds,
+            parseInt(center.id),
+            pickUpDate
+          );
 
     try {
       const { data } = await axios.post(
@@ -178,9 +200,22 @@ function CreateUpdateExchange({
 
   useEffect(() => {
     if (selectedFriend != null) {
-      getItems();
+      getItems(false);
     }
-  }, [selectedFriend]);
+
+    if (itemIdFromItems != null) {
+      getItems(true);
+    }
+  }, [selectedFriend, itemIdFromItems]);
+
+  useEffect(() => {
+    setItemsInExchnage([]);
+    itemsSimple?.forEach((item) => {
+      if (item.id === itemIdFromItems) {
+        setItemsInExchnage((prevItems) => [...prevItems, item]);
+      }
+    });
+  }, [itemIdFromItems, itemsSimple]);
 
   useEffect(() => {
     if (isUpdating && fullExchange) {
@@ -214,6 +249,8 @@ function CreateUpdateExchange({
               if (setIsCreating) {
                 setIsCreating(false);
               }
+
+              dispatch(resetExchangeCreationState());
             }}
             type="button"
             className="rounded bg-blue-500 ml-8 w-40 h-7 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
