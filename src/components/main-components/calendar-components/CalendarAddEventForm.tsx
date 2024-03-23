@@ -1,5 +1,10 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { useSelector } from "react-redux";
+import { CreateEventDto } from "./dtos/CreateEventDto";
+import { RootState } from "../../../store/store";
+import axios from "axios";
+import generateUrl from "../../../contants/url";
 
 export default function CalendarAddEventForm({
   open,
@@ -9,9 +14,12 @@ export default function CalendarAddEventForm({
   open: boolean;
 }) {
   const cancelButtonRef = useRef(null);
+  const { id } = useSelector((state: RootState) => state.user);
 
-  const [eventName, setEventName] = useState("");
-  const [eventType, setEventType] = useState("");
+  const [eventName, setEventName] = useState<string>("");
+  const [errorText, setErrorText] = useState<string>("");
+  const [eventType, setEventType] = useState<string>("");
+  const [eventDescription, setEventDescription] = useState<string>("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const eventTypes = [
@@ -22,7 +30,46 @@ export default function CalendarAddEventForm({
     "Call",
     "Productive",
   ];
+  const clearForm = () => {
+    setEventName("");
+    setEventType("");
+    setEventDescription("");
+    setStartTime("");
+    setEndTime("");
+    setErrorText("Create your event");
+  };
+  useEffect(() => {
+    setErrorText("Create your event");
+    clearForm();
+  }, []);
 
+  const createEvent = async () => {
+    if (!eventName || !eventType || !startTime || !endTime) {
+      setErrorText("Please fill all fields");
+      return;
+    }
+
+    const createEventDto = new CreateEventDto(
+      new Date(startTime),
+      new Date(endTime),
+      eventName,
+      parseInt(id),
+      eventDescription
+    );
+
+    try {
+      await axios.post(generateUrl("event/create-event"), {
+        createEvent: createEventDto,
+      });
+      setOpen(false);
+      clearForm();
+    } catch (error) {
+      console.error("Error creating event:", error);
+      setErrorText(
+        "An error occurred while creating the event. Please try again."
+      );
+    }
+  };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -55,7 +102,7 @@ export default function CalendarAddEventForm({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                <h1>Add event</h1>
+                <h1>{errorText}</h1>
 
                 <div className="space-y-4">
                   <input
@@ -91,21 +138,30 @@ export default function CalendarAddEventForm({
                     min={new Date().toISOString().slice(0, 16)}
                     onChange={(e) => setEndTime(e.target.value)}
                   />
+                  <textarea
+                    className="mt-1 block h-28 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm resize-y"
+                    placeholder="Additional Event Details..."
+                    value={eventDescription}
+                    onChange={(e) => setEventDescription(e.target.value)}
+                  ></textarea>
                 </div>
 
                 <div className="mt-5 sm:mt-6 flex justify-around">
                   <button
                     type="button"
                     className="rounded-md bg-indigo-600 w-48 flex items-center justify-center h-8 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                      setOpen(false);
+                      clearForm();
+                    }}
                   >
-                    Deactivate
+                    Go back
                   </button>
 
                   <button
                     type="button"
                     className="rounded-md bg-indigo-600 w-48 flex items-center justify-center h-8 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
-                    onClick={() => setOpen(false)}
+                    onClick={createEvent}
                   >
                     Create event
                   </button>

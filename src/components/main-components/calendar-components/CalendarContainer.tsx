@@ -14,11 +14,17 @@ function CalendarContainer() {
   const renderCalendarView = () => {
     switch (calendarView) {
       case CalendarViewEnum.DAY:
-        return <CalendarToday setCalendarView={setCalendarView} />;
+        return (
+          <CalendarToday setOpen={setOpen} setCalendarView={setCalendarView} />
+        );
       case CalendarViewEnum.WEEK:
-        return <CalendarWeek setCalendarView={setCalendarView} />;
+        return (
+          <CalendarWeek setOpen={setOpen} setCalendarView={setCalendarView} />
+        );
       case CalendarViewEnum.MONTH:
-        return <CalendarMoth setCalendarView={setCalendarView} />;
+        return (
+          <CalendarMoth setOpen={setOpen} setCalendarView={setCalendarView} />
+        );
     }
   };
 
