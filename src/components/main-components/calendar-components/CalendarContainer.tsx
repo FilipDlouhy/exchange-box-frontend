@@ -3,11 +3,13 @@ import CalendarToday from "./CalendarToday";
 import CalendarWeek from "./CalendarWeek";
 import { CalendarViewEnum } from "./helpers/CalendarViewEnum";
 import CalendarMoth from "./CalendarMoth";
+import CalendarAddEventForm from "./CalendarAddEventForm";
 
 function CalendarContainer() {
   const [calendarView, setCalendarView] = useState<CalendarViewEnum>(
     CalendarViewEnum.DAY
   );
+  const [open, setOpen] = useState(false);
 
   const renderCalendarView = () => {
     switch (calendarView) {
@@ -20,7 +22,12 @@ function CalendarContainer() {
     }
   };
 
-  return <div>{renderCalendarView()}</div>;
+  return (
+    <div>
+      {renderCalendarView()}{" "}
+      <CalendarAddEventForm open={open} setOpen={setOpen} />
+    </div>
+  );
 }
 
 export default CalendarContainer;
