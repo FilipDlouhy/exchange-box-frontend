@@ -107,7 +107,6 @@ function UserContainer() {
           }
         );
 
-        console.log(data);
         setCurrentUser(data);
         setCurreuntUserFriends(data.friends);
       } catch (error) {
