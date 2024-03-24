@@ -71,7 +71,7 @@ export default function CalendarAddEventForm({
     }
   };
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition show={open} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-10"
@@ -101,8 +101,9 @@ export default function CalendarAddEventForm({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                <h1>{errorText}</h1>
+              {/* Responsive modal panel */}
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:my-8 sm:w-full md:max-w-lg lg:max-w-xl xl:max-w-2xl p-6">
+                <h1 className="text-lg font-semibold">{errorText}</h1>
 
                 <div className="space-y-4">
                   <input
@@ -146,7 +147,9 @@ export default function CalendarAddEventForm({
                   ></textarea>
                 </div>
 
-                <div className="mt-5 sm:mt-6 flex justify-around">
+                <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row justify-around space-y-3 sm:space-y-0 sm:space-x-3">
+                  {" "}
+                  {/* Adjust layout for actions */}
                   <button
                     type="button"
                     className="rounded-md bg-indigo-600 w-48 flex items-center justify-center h-8 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
@@ -157,7 +160,6 @@ export default function CalendarAddEventForm({
                   >
                     Go back
                   </button>
-
                   <button
                     type="button"
                     className="rounded-md bg-indigo-600 w-48 flex items-center justify-center h-8 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
@@ -171,6 +173,6 @@ export default function CalendarAddEventForm({
           </div>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }
