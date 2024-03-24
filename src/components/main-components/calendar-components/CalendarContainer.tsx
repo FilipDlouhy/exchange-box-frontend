@@ -15,15 +15,27 @@ function CalendarContainer() {
     switch (calendarView) {
       case CalendarViewEnum.DAY:
         return (
-          <CalendarToday setOpen={setOpen} setCalendarView={setCalendarView} />
+          <CalendarToday
+            calendarView={calendarView}
+            setOpen={setOpen}
+            setCalendarView={setCalendarView}
+          />
         );
       case CalendarViewEnum.WEEK:
         return (
-          <CalendarWeek setOpen={setOpen} setCalendarView={setCalendarView} />
+          <CalendarWeek
+            calendarView={calendarView}
+            setOpen={setOpen}
+            setCalendarView={setCalendarView}
+          />
         );
       case CalendarViewEnum.MONTH:
         return (
-          <CalendarMoth setOpen={setOpen} setCalendarView={setCalendarView} />
+          <CalendarMoth
+            calendarView={calendarView}
+            setOpen={setOpen}
+            setCalendarView={setCalendarView}
+          />
         );
     }
   };

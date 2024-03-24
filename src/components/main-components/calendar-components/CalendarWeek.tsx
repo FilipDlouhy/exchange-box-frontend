@@ -5,9 +5,11 @@ import CalendarHeader from "./CalendarHeader";
 export default function CalendarWeek({
   setCalendarView,
   setOpen,
+  calendarView,
 }: {
   setCalendarView: React.Dispatch<React.SetStateAction<CalendarViewEnum>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  calendarView: CalendarViewEnum;
 }) {
   const container = useRef(null);
   const containerNav = useRef(null);
@@ -25,7 +27,11 @@ export default function CalendarWeek({
 
   return (
     <div className="flex h-full flex-col">
-      <CalendarHeader setOpen={setOpen} setCalendarView={setCalendarView} />
+      <CalendarHeader
+        calendarView={calendarView}
+        setOpen={setOpen}
+        setCalendarView={setCalendarView}
+      />
       <div
         ref={container}
         className="isolate flex flex-auto flex-col overflow-auto bg-white"

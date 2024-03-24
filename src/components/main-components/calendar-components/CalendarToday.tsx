@@ -1,70 +1,104 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { CalendarViewEnum } from "./helpers/CalendarViewEnum";
 import CalendarHeader from "./CalendarHeader";
-
-const days = [
-  { date: "2021-12-27" },
-  { date: "2021-12-28" },
-  { date: "2021-12-29" },
-  { date: "2021-12-30" },
-  { date: "2021-12-31" },
-  { date: "2022-01-01", isCurrentMonth: true },
-  { date: "2022-01-02", isCurrentMonth: true },
-  { date: "2022-01-03", isCurrentMonth: true },
-  { date: "2022-01-04", isCurrentMonth: true },
-  { date: "2022-01-05", isCurrentMonth: true },
-  { date: "2022-01-06", isCurrentMonth: true },
-  { date: "2022-01-07", isCurrentMonth: true },
-  { date: "2022-01-08", isCurrentMonth: true },
-  { date: "2022-01-09", isCurrentMonth: true },
-  { date: "2022-01-10", isCurrentMonth: true },
-  { date: "2022-01-11", isCurrentMonth: true },
-  { date: "2022-01-12", isCurrentMonth: true },
-  { date: "2022-01-13", isCurrentMonth: true },
-  { date: "2022-01-14", isCurrentMonth: true },
-  { date: "2022-01-15", isCurrentMonth: true },
-  { date: "2022-01-16", isCurrentMonth: true },
-  { date: "2022-01-17", isCurrentMonth: true },
-  { date: "2022-01-18", isCurrentMonth: true },
-  { date: "2022-01-19", isCurrentMonth: true },
-  { date: "2022-01-20", isCurrentMonth: true, isToday: true },
-  { date: "2022-01-21", isCurrentMonth: true },
-  { date: "2022-01-22", isCurrentMonth: true, isSelected: true },
-  { date: "2022-01-23", isCurrentMonth: true },
-  { date: "2022-01-24", isCurrentMonth: true },
-  { date: "2022-01-25", isCurrentMonth: true },
-  { date: "2022-01-26", isCurrentMonth: true },
-  { date: "2022-01-27", isCurrentMonth: true },
-  { date: "2022-01-28", isCurrentMonth: true },
-  { date: "2022-01-29", isCurrentMonth: true },
-  { date: "2022-01-30", isCurrentMonth: true },
-  { date: "2022-01-31", isCurrentMonth: true },
-  { date: "2022-02-01" },
-  { date: "2022-02-02" },
-  { date: "2022-02-03" },
-  { date: "2022-02-04" },
-  { date: "2022-02-05" },
-  { date: "2022-02-06" },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNames } from "../../../pages/helpers/ExchangeHelper";
+import { CalendarDay } from "./interfaces/CalendarDay";
 
 export default function CalendarToday({
   setCalendarView,
+  calendarView,
   setOpen,
 }: {
   setCalendarView: React.Dispatch<React.SetStateAction<CalendarViewEnum>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  calendarView: CalendarViewEnum;
 }) {
+  const [daysInMonth, setDaysInMonth] = useState<CalendarDay[]>();
+  const [monthName, setMonthName] = useState<string>("");
+  const [monthIndex, setMonthIndex] = useState<number>(0);
   const container = useRef(null);
   const containerNav = useRef(null);
   const containerOffset = useRef(null);
+  const [todayIndex, setTodayIndex] = useState<number>(0);
+
+  const getDaysInAMonth = (dateString?: string) => {
+    const today = dateString != null ? new Date(dateString) : new Date();
+
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+    const startDayOfWeek = firstDayOfMonth.getDay();
+
+    const daysInMonth = [];
+    for (let emptyDay = 0; emptyDay < startDayOfWeek; emptyDay++) {
+      daysInMonth.push({ date: "", isToday: false, isSelected: false });
+    }
+
+    const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    for (let day = 1; day <= lastDayOfMonth; day++) {
+      const dateString = `${currentYear}-${(currentMonth + 1)
+        .toString()
+        .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+      const isToday =
+        currentMonth === today.getMonth() && day === today.getDate();
+      const isSelected = isToday;
+
+      daysInMonth.push({ date: dateString, isToday, isSelected });
+    }
+
+    if (daysInMonth[0].date.length === 0) {
+      daysInMonth.shift();
+    }
+    const foundIndex = daysInMonth.findIndex((day) => day.isToday);
+
+    setTodayIndex(foundIndex);
+
+    return daysInMonth;
+  };
+  const transformDateString = (input: string): string => {
+    const [yearString, monthString] = input.split(" ");
+    const month = new Date(`${monthString} 1, 2000`).getMonth() + 1;
+    const paddedMonth = month.toString().padStart(2, "0");
+    return `${yearString}-${paddedMonth}-01`;
+  };
+  const getMonthString = (offset: number = 0): string => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    let targetMonth = today.getMonth() + offset;
+    let targetYear = year;
+
+    while (targetMonth < 0) {
+      targetMonth += 12;
+      targetYear--;
+    }
+    targetMonth %= 12;
+
+    return `${targetYear} ${monthNames[targetMonth]}`;
+  };
+
+  const updateTodayIndex = (isAdding: boolean) => {
+    setTodayIndex(isAdding ? todayIndex + 1 : todayIndex - 1);
+  };
 
   useEffect(() => {
-    // Set the container scroll position based on the current time.
     const currentMinute = new Date().getHours() * 60;
     container.current.scrollTop =
       ((container.current.scrollHeight -
@@ -72,11 +106,44 @@ export default function CalendarToday({
         containerOffset.current.offsetHeight) *
         currentMinute) /
       1440;
+
+    setDaysInMonth(getDaysInAMonth());
+    setMonthIndex(0);
+    setMonthName(getMonthString(monthIndex));
   }, []);
+
+  useEffect(() => {
+    if (monthIndex === 0) {
+      setDaysInMonth(getDaysInAMonth());
+      return;
+    }
+    setMonthName(getMonthString(monthIndex));
+    setDaysInMonth(
+      getDaysInAMonth(transformDateString(getMonthString(monthIndex)))
+    );
+  }, [monthIndex]);
+
+  useEffect(() => {
+    if (daysInMonth == null) {
+      return;
+    }
+
+    const updatedDays = daysInMonth?.map((day, index) => ({
+      ...day,
+      isSelected: index === todayIndex,
+    }));
+
+    setDaysInMonth(updatedDays);
+  }, [todayIndex]);
 
   return (
     <div className="flex h-full flex-col">
-      <CalendarHeader setOpen={setOpen} setCalendarView={setCalendarView} />
+      <CalendarHeader
+        monthName={monthName}
+        calendarView={calendarView}
+        setOpen={setOpen}
+        setCalendarView={setCalendarView}
+      />
       <div className="isolate flex flex-auto overflow-hidden bg-white">
         <div ref={container} className="flex flex-auto flex-col overflow-auto">
           <div
@@ -88,7 +155,6 @@ export default function CalendarToday({
               className="flex flex-col items-center pb-1.5 pt-3"
             >
               <span>W</span>
-              {/* Default: "text-gray-900", Selected: "bg-gray-900 text-white", Today (Not Selected): "text-indigo-600", Today (Selected): "bg-indigo-600 text-white" */}
               <span className="mt-3 flex h-8 w-8 items-center justify-center rounded-full text-base font-semibold text-gray-900">
                 19
               </span>
@@ -303,7 +369,6 @@ export default function CalendarToday({
                 <div />
               </div>
 
-              {/* Events */}
               <ol
                 className="col-start-1 col-end-2 row-start-1 grid grid-cols-1"
                 style={{
@@ -371,14 +436,20 @@ export default function CalendarToday({
         <div className="hidden w-1/2 max-w-md flex-none border-l border-gray-100 px-8 py-10 md:block">
           <div className="flex items-center text-center text-gray-900">
             <button
+              onClick={() => {
+                setMonthIndex(monthIndex - 1);
+              }}
               type="button"
               className="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
             >
               <span className="sr-only">Previous month</span>
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
             </button>
-            <div className="flex-auto text-sm font-semibold">January 2022</div>
+            <div className="flex-auto text-sm font-semibold"> {monthName}</div>
             <button
+              onClick={() => {
+                setMonthIndex(monthIndex + 1);
+              }}
               type="button"
               className="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
             >
@@ -396,28 +467,24 @@ export default function CalendarToday({
             <div>S</div>
           </div>
           <div className="isolate mt-2 grid grid-cols-7 gap-px rounded-lg bg-gray-200 text-sm shadow ring-1 ring-gray-200">
-            {days.map((day, dayIdx) => (
+            {daysInMonth?.map((day, dayIdx) => (
               <button
-                key={day.date}
+                onClick={() => {
+                  setTodayIndex(dayIdx);
+                }}
+                key={dayIdx}
                 type="button"
                 className={classNames(
-                  "py-1.5 hover:bg-gray-100 focus:z-10",
-                  day.isCurrentMonth ? "bg-white" : "bg-gray-50",
+                  "py-1.5 hover:bg-gray-100 focus:z-10 bg-white",
                   (day.isSelected || day.isToday) && "font-semibold",
                   day.isSelected && "text-white",
-                  !day.isSelected &&
-                    day.isCurrentMonth &&
-                    !day.isToday &&
-                    "text-gray-900",
-                  !day.isSelected &&
-                    !day.isCurrentMonth &&
-                    !day.isToday &&
-                    "text-gray-400",
+                  !day.isSelected && !day.isToday && "text-gray-900",
+                  !day.isSelected && !day.isToday && "text-gray-400",
                   day.isToday && !day.isSelected && "text-indigo-600",
                   dayIdx === 0 && "rounded-tl-lg",
                   dayIdx === 6 && "rounded-tr-lg",
-                  dayIdx === days.length - 7 && "rounded-bl-lg",
-                  dayIdx === days.length - 1 && "rounded-br-lg"
+                  dayIdx === daysInMonth.length - 7 && "rounded-bl-lg",
+                  dayIdx === daysInMonth.length - 1 && "rounded-br-lg"
                 )}
               >
                 <time

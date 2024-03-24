@@ -138,13 +138,19 @@ function classNames(...classes) {
 export default function CalendarMoth({
   setCalendarView,
   setOpen,
+  calendarView,
 }: {
   setCalendarView: React.Dispatch<React.SetStateAction<CalendarViewEnum>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  calendarView: CalendarViewEnum;
 }) {
   return (
     <div className="lg:flex lg:h-full lg:flex-col">
-      <CalendarHeader setOpen={setOpen} setCalendarView={setCalendarView} />
+      <CalendarHeader
+        calendarView={calendarView}
+        setOpen={setOpen}
+        setCalendarView={setCalendarView}
+      />
       <div className="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col">
         <div className="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none">
           <div className="bg-white py-2">
