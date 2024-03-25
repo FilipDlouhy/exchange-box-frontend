@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CalendarViewEnum } from "./helpers/CalendarViewEnum";
 import CalendarHeader from "./CalendarHeader";
+import { Day } from "./DayInWeek";
 
 export default function CalendarWeek({
   setCalendarView,
@@ -11,18 +12,54 @@ export default function CalendarWeek({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   calendarView: CalendarViewEnum;
 }) {
+  const [weekIndex, setWeekIndex] = useState<number>(0);
+
   const container = useRef(null);
   const containerNav = useRef(null);
   const containerOffset = useRef(null);
 
+  const today = new Date();
+  const currentDayOfWeek = today.getDay();
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const updateIndex = (isAdding: boolean) => {
+    setWeekIndex((prevWeekIndex) =>
+      isAdding ? prevWeekIndex + 1 : prevWeekIndex - 1
+    );
+  };
+
+  const getMonthAndYear = (weekIndex: number) => {
+    const currentDate = new Date();
+    currentDate.setDate(
+      currentDate.getDate() - currentDate.getDay() + weekIndex * 7
+    );
+
+    const month = currentDate.toLocaleString("en-US", { month: "long" });
+    const year = currentDate.getFullYear();
+    return `${year} ${month}`;
+  };
+
+  const getDateOfWeek = (dayIndex: number, weekIndex: number = 0) => {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDay();
+    const difference = dayIndex - currentDay;
+    const daysToMove = difference + weekIndex * 7;
+    currentDate.setDate(currentDate.getDate() + daysToMove);
+    return currentDate.getDate();
+  };
+  const [activeDate, setActiveDate] = useState<number | null>(null);
+  const handleDayClick = (date: number) => {
+    setActiveDate(date);
+  };
+
   useEffect(() => {
     const currentMinute = new Date().getHours() * 60;
     container.current.scrollTop =
-      ((container.current.scrollHeight -
+      (container.current.scrollHeight -
         containerNav.current.offsetHeight -
         containerOffset.current.offsetHeight) *
-        currentMinute) /
-      1440;
+      currentMinute;
+    1440;
   }, []);
 
   return (
@@ -31,6 +68,8 @@ export default function CalendarWeek({
         calendarView={calendarView}
         setOpen={setOpen}
         setCalendarView={setCalendarView}
+        updateIndex={updateIndex}
+        monthName={getMonthAndYear(weekIndex)}
       />
       <div
         ref={container}
@@ -111,63 +150,18 @@ export default function CalendarWeek({
             </div>
 
             <div className="-mr-px hidden grid-cols-7 divide-x divide-gray-100 border-r border-gray-100 text-sm leading-6 text-gray-500 sm:grid">
-              <div className="col-end-1 w-14" />
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Mon{" "}
-                  <span className="items-center justify-center font-semibold text-gray-900">
-                    10
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Tue{" "}
-                  <span className="items-center justify-center font-semibold text-gray-900">
-                    11
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span className="flex items-baseline">
-                  Wed{" "}
-                  <span className="ml-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white">
-                    12
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Thu{" "}
-                  <span className="items-center justify-center font-semibold text-gray-900">
-                    13
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Fri{" "}
-                  <span className="items-center justify-center font-semibold text-gray-900">
-                    14
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Sat{" "}
-                  <span className="items-center justify-center font-semibold text-gray-900">
-                    15
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Sun{" "}
-                  <span className="items-center justify-center font-semibold text-gray-900">
-                    16
-                  </span>
-                </span>
-              </div>
+              {daysOfWeek.map((dayName, index) => {
+                const date = getDateOfWeek(index, weekIndex);
+                return (
+                  <Day
+                    key={dayName}
+                    dayName={dayName}
+                    date={date}
+                    isActive={index === currentDayOfWeek}
+                    onClick={() => handleDayClick(date)}
+                  />
+                );
+              })}
             </div>
           </div>
           <div className="flex flex-auto">
@@ -186,7 +180,7 @@ export default function CalendarWeek({
                 </div>
                 <div />
                 <div>
-                  <div className="sticky left-0 z-20 -ml-14 -mt-2.5 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
+                  <div className="sticky left-0 z -20 -ml-14 -mt-2.5 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
                     1AM
                   </div>
                 </div>

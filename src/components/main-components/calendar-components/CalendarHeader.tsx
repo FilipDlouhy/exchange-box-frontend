@@ -13,12 +13,13 @@ function CalendarHeader({
   setOpen,
   calendarView,
   monthName,
+  updateIndex,
 }: {
   setCalendarView: React.Dispatch<React.SetStateAction<CalendarViewEnum>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   calendarView: CalendarViewEnum;
   monthName?: string;
-  calendarManipulationFunction?: any;
+  updateIndex?: (isAdding: boolean) => void;
 }) {
   const handleDateChange = (e) => {
     setCalendarView(e.target.value);
@@ -31,6 +32,9 @@ function CalendarHeader({
       <div className="flex items-center">
         <div className="relative flex items-center rounded-md bg-white shadow-sm md:items-stretch">
           <button
+            onClick={() => {
+              if (updateIndex) updateIndex(false);
+            }}
             type="button"
             className="flex h-9 w-12 items-center justify-center rounded-l-md border-y border-l border-gray-300 pr-1 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:pr-0 md:hover:bg-gray-50"
           >
@@ -40,6 +44,9 @@ function CalendarHeader({
 
           <span className="relative -mx-px h-5 w-px bg-gray-300 md:hidden" />
           <button
+            onClick={() => {
+              if (updateIndex) updateIndex(true);
+            }}
             type="button"
             className="flex h-9 w-12 items-center justify-center rounded-r-md border-y border-r border-gray-300 pl-1 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:pl-0 md:hover:bg-gray-50"
           >
