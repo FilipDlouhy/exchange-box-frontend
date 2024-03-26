@@ -99,20 +99,6 @@ export default function CalendarToday({
   };
 
   useEffect(() => {
-    const currentMinute = new Date().getHours() * 60;
-    container.current.scrollTop =
-      ((container.current.scrollHeight -
-        containerNav.current.offsetHeight -
-        containerOffset.current.offsetHeight) *
-        currentMinute) /
-      1440;
-
-    setDaysInMonth(getDaysInAMonth());
-    setMonthIndex(0);
-    setMonthName(getMonthString(monthIndex));
-  }, []);
-
-  useEffect(() => {
     if (monthIndex === 0) {
       setDaysInMonth(getDaysInAMonth());
       return;
@@ -487,16 +473,18 @@ export default function CalendarToday({
                   dayIdx === daysInMonth.length - 1 && "rounded-br-lg"
                 )}
               >
-                <time
-                  dateTime={day.date}
-                  className={classNames(
-                    "mx-auto flex h-7 w-7 items-center justify-center rounded-full",
-                    day.isSelected && day.isToday && "bg-indigo-600",
-                    day.isSelected && !day.isToday && "bg-gray-900"
-                  )}
-                >
-                  {day.date.split("-").pop().replace(/^0/, "")}
-                </time>
+                {day.date && typeof day.date === "string" && (
+                  <time
+                    dateTime={day.date}
+                    className={classNames(
+                      "mx-auto flex h-7 w-7 items-center justify-center rounded-full",
+                      day.isSelected && day.isToday && "bg-indigo-600",
+                      day.isSelected && !day.isToday && "bg-gray-900"
+                    )}
+                  >
+                    {day.date.split("-").pop()?.replace(/^0/, "")}
+                  </time>
+                )}
               </button>
             ))}
           </div>

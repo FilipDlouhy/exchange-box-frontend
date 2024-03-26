@@ -1,6 +1,7 @@
 import { ClockIcon } from "@heroicons/react/20/solid";
 import { CalendarViewEnum } from "./helpers/CalendarViewEnum";
 import CalendarHeader from "./CalendarHeader";
+import { classNames } from "../../../pages/helpers/ExchangeHelper";
 
 const days = [
   { date: "2021-12-27", events: ["AAA"] },
@@ -131,10 +132,6 @@ const days = [
 ];
 const selectedDay = days.find((day) => day.isSelected);
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function CalendarMoth({
   setCalendarView,
   setOpen,
@@ -185,16 +182,18 @@ export default function CalendarMoth({
                   "relative px-3 py-2"
                 )}
               >
-                <time
-                  dateTime={day.date}
-                  className={
-                    day.isToday
-                      ? "flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white"
-                      : undefined
-                  }
-                >
-                  {day.date.split("-").pop().replace(/^0/, "")}
-                </time>
+                {day.date && typeof day.date === "string" && (
+                  <time
+                    dateTime={day.date}
+                    className={classNames(
+                      "mx-auto flex h-7 w-7 items-center justify-center rounded-full",
+                      day.isSelected && day.isToday && "bg-indigo-600",
+                      day.isSelected && !day.isToday && "bg-gray-900"
+                    )}
+                  >
+                    {day.date.split("-").pop()?.replace(/^0/, "")}
+                  </time>
+                )}
                 {day.events.length > 0 && (
                   <ol className="mt-2">
                     {day.events.slice(0, 2).map((event) => (
@@ -243,18 +242,18 @@ export default function CalendarMoth({
                   "flex h-14 flex-col px-3 py-2 hover:bg-gray-100 focus:z-10"
                 )}
               >
-                <time
-                  dateTime={day.date}
-                  className={classNames(
-                    day.isSelected &&
-                      "flex h-6 w-6 items-center justify-center rounded-full",
-                    day.isSelected && day.isToday && "bg-indigo-600",
-                    day.isSelected && !day.isToday && "bg-gray-900",
-                    "ml-auto"
-                  )}
-                >
-                  {day.date.split("-").pop().replace(/^0/, "")}
-                </time>
+                {day.date && typeof day.date === "string" && (
+                  <time
+                    dateTime={day.date}
+                    className={classNames(
+                      "mx-auto flex h-7 w-7 items-center justify-center rounded-full",
+                      day.isSelected && day.isToday && "bg-indigo-600",
+                      day.isSelected && !day.isToday && "bg-gray-900"
+                    )}
+                  >
+                    {day.date.split("-").pop()?.replace(/^0/, "")}
+                  </time>
+                )}
                 <span className="sr-only">{day.events.length} events</span>
                 {day.events.length > 0 && (
                   <span className="-mx-0.5 mt-auto flex flex-wrap-reverse">

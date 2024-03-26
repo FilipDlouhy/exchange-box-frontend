@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { CalendarViewEnum } from "./helpers/CalendarViewEnum";
 import CalendarHeader from "./CalendarHeader";
 import { Day } from "./DayInWeek";
@@ -13,10 +13,6 @@ export default function CalendarWeek({
   calendarView: CalendarViewEnum;
 }) {
   const [weekIndex, setWeekIndex] = useState<number>(0);
-
-  const container = useRef(null);
-  const containerNav = useRef(null);
-  const containerOffset = useRef(null);
 
   const today = new Date();
   const currentDayOfWeek = today.getDay();
@@ -52,16 +48,6 @@ export default function CalendarWeek({
     setActiveDate(date);
   };
 
-  useEffect(() => {
-    const currentMinute = new Date().getHours() * 60;
-    container.current.scrollTop =
-      (container.current.scrollHeight -
-        containerNav.current.offsetHeight -
-        containerOffset.current.offsetHeight) *
-      currentMinute;
-    1440;
-  }, []);
-
   return (
     <div className="flex h-full flex-col">
       <CalendarHeader
@@ -71,18 +57,12 @@ export default function CalendarWeek({
         updateIndex={updateIndex}
         monthName={getMonthAndYear(weekIndex)}
       />
-      <div
-        ref={container}
-        className="isolate flex flex-auto flex-col overflow-auto bg-white"
-      >
+      <div className="isolate flex flex-auto flex-col overflow-auto bg-white">
         <div
           style={{ width: "165%" }}
           className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full"
         >
-          <div
-            ref={containerNav}
-            className="sticky top-0 z-30 flex-none bg-white shadow ring-1 ring-black ring-opacity-5 sm:pr-8"
-          >
+          <div className="sticky top-0 z-30 flex-none bg-white shadow ring-1 ring-black ring-opacity-5 sm:pr-8">
             <div className="grid grid-cols-7 text-sm leading-6 text-gray-500 sm:hidden">
               <button
                 type="button"
@@ -172,7 +152,7 @@ export default function CalendarWeek({
                 className="col-start-1 col-end-2 row-start-1 grid divide-y divide-gray-100"
                 style={{ gridTemplateRows: "repeat(48, minmax(3.5rem, 1fr))" }}
               >
-                <div ref={containerOffset} className="row-end-1 h-7"></div>
+                <div className="row-end-1 h-7"></div>
                 <div>
                   <div className="sticky left-0 z-20 -ml-14 -mt-2.5 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
                     12AM
